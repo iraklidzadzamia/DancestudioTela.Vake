@@ -1,0 +1,14 @@
+node_modules
+dist
+.pnpm-store
+.env
+.env.*
+!.env.example
+.vercel
+*.log
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+media/originals
+media/analysis
+tools
