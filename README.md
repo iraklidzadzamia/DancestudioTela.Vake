@@ -26,6 +26,8 @@ pnpm build
 
 The project is configured for Vercel. `vercel.json` preserves direct access to the `/en/`, `/ka/`, and `/ru/` language paths.
 
+Production: https://dancestudio-tela-vake.vercel.app
+
 ## Content
 
 - Site copy and translations: `src/content.ts`

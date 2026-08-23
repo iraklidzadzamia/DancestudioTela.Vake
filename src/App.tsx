@@ -7,6 +7,12 @@ const languagePath: Record<Language, string> = {
   RU: "/ru/",
 };
 
+const siteOrigin = "https://dancestudio-tela-vake.vercel.app";
+
+function updateMeta(selector: string, value: string) {
+  document.querySelector(selector)?.setAttribute("content", value);
+}
+
 function languageFromPath(): Language {
   const segment = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
   if (segment === "ka") return "KA";
@@ -35,8 +41,15 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = copy.languageCode;
     document.title = copy.pageTitle;
-    document.querySelector('meta[name="description"]')?.setAttribute("content", copy.pageDescription);
-  }, [copy]);
+    const canonicalUrl = `${siteOrigin}${languagePath[language]}`;
+    document.querySelector('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
+    updateMeta('meta[name="description"]', copy.pageDescription);
+    updateMeta('meta[property="og:url"]', canonicalUrl);
+    updateMeta('meta[property="og:title"]', copy.pageTitle);
+    updateMeta('meta[property="og:description"]', copy.pageDescription);
+    updateMeta('meta[name="twitter:title"]', copy.pageTitle);
+    updateMeta('meta[name="twitter:description"]', copy.pageDescription);
+  }, [copy, language]);
 
   useEffect(() => {
     const syncLanguage = () => setLanguage(languageFromPath());
