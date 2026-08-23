@@ -35,6 +35,7 @@ function SectionLabel({ children, light = false }: { children: string; light?: b
 export default function App() {
   const [language, setLanguage] = useState<Language>(languageFromPath);
   const [activeSchedule, setActiveSchedule] = useState(scheduleGroups[0].id);
+  const [showMobileBook, setShowMobileBook] = useState(false);
   const copy = siteCopy[language];
   const selectedSchedule = scheduleGroups.find((group) => group.id === activeSchedule) ?? scheduleGroups[0];
 
@@ -57,6 +58,19 @@ export default function App() {
     return () => window.removeEventListener("popstate", syncLanguage);
   }, []);
 
+  useEffect(() => {
+    const hero = document.querySelector(".hero");
+    if (!hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowMobileBook(!entry.isIntersecting),
+      { threshold: 0.08 },
+    );
+
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
   const changeLanguage = (nextLanguage: Language) => {
     setLanguage(nextLanguage);
     window.history.pushState({}, "", languagePath[nextLanguage]);
@@ -69,6 +83,12 @@ export default function App() {
         <div className="hero-material" aria-hidden="true" />
         <div className="hero-orbit hero-orbit-one" aria-hidden="true" />
         <div className="hero-orbit hero-orbit-two" aria-hidden="true" />
+        <div className="hero-film" aria-label={copy.hero.media}>
+          <div className="hero-film-surface" aria-hidden="true">
+            <div className="hero-film-mark"><Logo /></div>
+            <i />
+          </div>
+        </div>
 
         <header className="header">
           <a className="brand" href="#top" aria-label={copy.footer.studio}>
@@ -127,17 +147,6 @@ export default function App() {
             </ul>
           </div>
 
-          <div className="hero-stage" aria-label={copy.hero.media}>
-            <div className="stage-frame">
-              <div className="stage-glow" aria-hidden="true" />
-              <div className="stage-monogram"><Logo /></div>
-              <p>{copy.hero.media}</p>
-            </div>
-            <div className="stage-caption">
-              <span>01</span>
-              <p>Movement<br />Presence<br />Possibility</p>
-            </div>
-          </div>
         </div>
 
         <div className="scroll-cue" aria-hidden="true">
@@ -231,16 +240,17 @@ export default function App() {
             <p>{copy.programs.body}</p>
           </div>
           <div className="program-grid">
-            {copy.programs.items.map((program, index) => (
-              <article className={`program-card program-card-${index + 1}`} key={program.number}>
-                <div className="program-art" aria-hidden="true">
-                  <span>{program.number}</span>
-                  <i />
-                </div>
+            {copy.programs.items.map((program) => (
+              <article className="program-entry" key={program.number}>
+                <span className="program-number">{program.number}</span>
                 <div className="program-copy">
                   <p>{program.tag}</p>
                   <h3>{program.title}</h3>
                   <span>{program.body}</span>
+                </div>
+                <div className="program-gesture" aria-hidden="true">
+                  <i />
+                  <span>↗</span>
                 </div>
               </article>
             ))}
@@ -365,7 +375,9 @@ export default function App() {
         </div>
       </footer>
 
-      <a className="mobile-book" href="#contact">{copy.hero.primary}<span aria-hidden="true">↗</span></a>
+      {showMobileBook && (
+        <a className="mobile-book" href="#contact">{copy.hero.primary}<span aria-hidden="true">↗</span></a>
+      )}
     </main>
   );
 }
