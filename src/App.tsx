@@ -1,5 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { AutoPlayVideo } from "./AutoPlayVideo";
+import ConsentBanner, { ConsentSettingsButton } from "./ConsentBanner";
+import { trackBeginLead, trackContactChannel, trackPageView } from "./analytics";
 import { scheduleGroups, siteCopy, type Language, type SiteCopy } from "./content";
 import { getProgramMedia } from "./programMedia";
 import { useFirstVideoFrame, VideoPoster } from "./VideoPoster";
@@ -7,11 +9,34 @@ import { attemptVideoPlayback } from "./videoPlayback";
 
 const languagePath: Record<Language, string> = { EN: "/en/", KA: "/ka/", RU: "/ru/" };
 const siteOrigin = "https://dancestudio-tela-vake.vercel.app";
+const contactUrls: Record<string, string | undefined> = {
+  WhatsApp: optionalPublicUrl(import.meta.env.VITE_WHATSAPP_URL),
+  Instagram: optionalPublicUrl(import.meta.env.VITE_INSTAGRAM_URL),
+  Facebook: optionalPublicUrl(import.meta.env.VITE_FACEBOOK_URL),
+  Phone: optionalPhoneUrl(import.meta.env.VITE_PHONE_NUMBER),
+};
+const phoneLabels: Record<Language, string> = { EN: "Phone", KA: "ტელეფონი", RU: "Телефон" };
 const programSlugs: Record<string, string> = {
   "01": "ballroom-latin", "02": "womens-tango", "03": "ballet", "04": "georgian-dance",
   "05": "ballroom-latin", "06": "ballet", "07": "georgian-dance",
 };
 type Program = SiteCopy["programs"]["items"][number];
+
+function optionalPublicUrl(value: string | undefined) {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function optionalPhoneUrl(value: string | undefined) {
+  if (!value) return undefined;
+  const normalized = value.replace(/[^+\d]/g, "");
+  return /^\+?\d{7,15}$/.test(normalized) ? `tel:${normalized}` : undefined;
+}
 
 type FilmCopy = { kicker: string; title: string; body: string; caption: string; note: string };
 type InterfaceCopy = {
@@ -150,6 +175,7 @@ function SectionLabel({ children, light = false }: { children: string; light?: b
   return <p className={"section-label" + (light ? " section-label-light" : "")}>{children}</p>;
 }
 function SocialIcon({ channel }: { channel: string }) {
+  if (channel === "Phone") return <span className="phone-symbol" aria-hidden="true">☎</span>;
   if (channel === "Google Maps") return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21s6-5.35 6-11a6 6 0 1 0-12 0c0 5.65 6 11 6 11Z" /><circle cx="12" cy="10" r="2.15" /></svg>;
   if (channel === "Instagram") return <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5.25" /><circle cx="12" cy="12" r="4.1" /><circle className="social-icon-fill" cx="17.45" cy="6.65" r="1.05" /></svg>;
   if (channel === "Facebook") return <svg aria-hidden="true" viewBox="0 0 24 24"><path className="social-icon-fill" d="M13.65 21v-8h2.75l.42-3.1h-3.17V7.92c0-.9.25-1.5 1.58-1.5H17V3.65c-.31-.04-1.35-.13-2.56-.13-2.53 0-4.26 1.55-4.26 4.39V9.9H7.32V13h2.86v8h3.47Z" /></svg>;
@@ -164,7 +190,7 @@ function Header({ language, copy, onLanguage, internal = false }: { language: La
   return <header className={"header" + (internal ? " header-internal" : "")}>
     <a className="brand" href={home} aria-label={copy.footer.studio}><Logo header /><span className="brand-type">Dance Studio Tela</span></a>
     <nav className="desktop-nav" aria-label={interfaceCopy[language].navigationLabel}>{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
-    <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"}>{copy.bookShort}</a></div>
+    <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"} onClick={() => trackBeginLead("header", language)}>{copy.bookShort}</a></div>
   </header>;
 }
 
@@ -189,6 +215,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
   const childrenPrograms = copy.programs.items.filter((program) => program.audience === "children");
   const visiblePrograms = audience === "adults" ? adultPrograms : childrenPrograms;
   const selectedSchedule = scheduleGroups.find((group) => group.id === activeSchedule) ?? scheduleGroups[0];
+  const contactChannels = [...copy.contact.channels.split(" · "), ...(contactUrls.Phone ? ["Phone"] : [])];
 
   const requestHeroPlayback = () => {
     const video = heroVideoRef.current;
@@ -294,7 +321,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
             </div>
           </div>
           <h1 id="hero-title">{copy.hero.title}<em>{copy.hero.accent}</em></h1><p className="hero-body">{copy.hero.body}</p>
-          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}</a><a className="button button-secondary" href="#contact">{copy.hero.secondary}</a></div>
+          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}</a><a className="button button-secondary" href="#contact" onClick={() => trackBeginLead("hero", language)}>{copy.hero.secondary}</a></div>
           <ul className="reassurance" aria-label="Beginner reassurance">{copy.hero.notes.map((note) => <li key={note}><span aria-hidden="true">✦</span>{note}</li>)}</ul>
         </div>
         <a className="hero-scroll" href="#orientation" aria-label={ui.nextSection}><span aria-hidden="true" /></a>
@@ -361,16 +388,23 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     <section className="closing-reel section-dark" aria-labelledby="closing-title"><div className="section-wrap closing-reel-stage">
       <div className="closing-reel-copy"><SectionLabel light>{ui.films.closing.kicker}</SectionLabel><h2 id="closing-title">{ui.films.closing.title}</h2><p>{ui.films.closing.body}</p></div>
       <AutoPlayVideo base="closing-emotional" caption={{ title: ui.films.closing.caption, note: ui.films.closing.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="closing-reel-video" loop={false} />
-      <div className="closing-reel-cta"><a className="button button-light" href="#contact">{copy.hero.secondary}</a></div>
+      <div className="closing-reel-cta"><a className="button button-light" href="#contact" onClick={() => trackBeginLead("closing_film", language)}>{copy.hero.secondary}</a></div>
     </div></section>
 
-    <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2 id="contact-title">{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><div className="contact-channels" aria-label={copy.contact.channels}>{copy.contact.channels.split(" · ").map((channel) => <span className="contact-channel" key={channel}><span><i className="social-icon"><SocialIcon channel={channel} /></i>{channel}</span></span>)}</div><p className="contact-pending">{copy.contact.pending}</p></div></div></section>
-    <Footer copy={copy} />
+    <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2 id="contact-title">{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><div className="contact-channels" aria-label={copy.contact.channels}>{contactChannels.map((channel) => {
+      const destination = contactUrls[channel];
+      const label = channel === "Phone" ? phoneLabels[language] : channel;
+      const content = <span><i className="social-icon"><SocialIcon channel={channel} /></i>{label}</span>;
+      return destination
+        ? <a className="contact-channel is-connected" href={destination} target={channel === "Phone" ? undefined : "_blank"} rel={channel === "Phone" ? undefined : "noreferrer"} key={channel} onClick={() => trackContactChannel(channel, language)}>{content}</a>
+        : <span className="contact-channel" key={channel}>{content}</span>;
+    })}</div>{!Object.values(contactUrls).some(Boolean) && <p className="contact-pending">{copy.contact.pending}</p>}</div></div></section>
+    <Footer copy={copy} language={language} />
   </main>;
 }
 
-function Footer({ copy }: { copy: SiteCopy }) {
-  return <footer className="footer"><div className="section-wrap footer-grid"><div className="footer-brand"><Logo /><strong>{copy.footer.studio}</strong></div><p>{copy.footer.location}</p><p>© {new Date().getFullYear()} · {copy.footer.rights}</p></div></footer>;
+function Footer({ copy, language }: { copy: SiteCopy; language: Language }) {
+  return <footer className="footer"><div className="section-wrap footer-grid"><div className="footer-brand"><Logo /><strong>{copy.footer.studio}</strong></div><p>{copy.footer.location}</p><div className="footer-legal"><p>© {new Date().getFullYear()} · {copy.footer.rights}</p><ConsentSettingsButton language={language} /></div></div></footer>;
 }
 
 function ProgramPage({ language, copy, onLanguage, audience, slug }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void; audience: "adults" | "kids"; slug: string }) {
@@ -387,13 +421,13 @@ function ProgramPage({ language, copy, onLanguage, audience, slug }: { language:
   if (!title || !body || !programMedia) return <HomePage language={language} copy={copy} onLanguage={onLanguage} />;
 
   return <main className={"site-shell detail-shell language-" + language.toLowerCase()}>
-    <section className="detail-hero"><Header language={language} copy={copy} onLanguage={onLanguage} internal /><div className="section-wrap detail-hero-grid"><div className="detail-hero-copy"><a className="detail-back" href={languagePath[language] + "#programs"}>← {ui.back}</a><p className="eyebrow">{ui.programFor} · {tag}</p><h1>{title}</h1><p>{body}</p><a className="button button-primary" href={languagePath[language] + "#contact"}>{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div>{programMedia.kind === "video" ? <AutoPlayVideo base={programMedia.base} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="program-hero-film" /> : <figure className="program-hero-image"><img src={programMedia.src} alt={title} /></figure>}</div></section>
+    <section className="detail-hero"><Header language={language} copy={copy} onLanguage={onLanguage} internal /><div className="section-wrap detail-hero-grid"><div className="detail-hero-copy"><a className="detail-back" href={languagePath[language] + "#programs"}>← {ui.back}</a><p className="eyebrow">{ui.programFor} · {tag}</p><h1>{title}</h1><p>{body}</p><a className="button button-primary" href={languagePath[language] + "#contact"} onClick={() => trackBeginLead("program_hero", language)}>{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div>{programMedia.kind === "video" ? <AutoPlayVideo base={programMedia.base} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="program-hero-film" /> : <figure className="program-hero-image"><img src={programMedia.src} alt={title} /></figure>}</div></section>
     <section className="detail-proof section-sand"><div className="section-wrap">{copy.hero.notes.map((note) => <span key={note}>{note}</span>)}</div></section>
     <section className="detail-content section-ivory"><div className="section-wrap detail-content-grid"><article><SectionLabel>{ui.whoTitle}</SectionLabel><h2>{ui.whoTitle}</h2><p>{audience === "adults" ? ui.whoBodyAdult : ui.whoBodyChild}</p></article><article><SectionLabel>{ui.lessonTitle}</SectionLabel><h2>{ui.lessonTitle}</h2><p>{ui.lessonBody}</p></article><article><SectionLabel>{ui.practicalTitle}</SectionLabel><h2>{ui.practicalTitle}</h2><p>{ui.practicalBody}</p><a className="text-link" href={languagePath[language] + "#schedule"}>{ui.scheduleLink}<span aria-hidden="true">↗</span></a></article></div></section>
     {isProAm && <section className="detail-proam section-plum"><div className="section-wrap proam-points">{copy.proam.points.map((point) => <article className="proam-point" key={point.number}><div><h3>{point.title}</h3><p>{point.body}</p></div></article>)}</div></section>}
     <section className="related section-dark"><div className="section-wrap"><SectionLabel light>{ui.related}</SectionLabel><div className="related-grid">{related.map((program) => <a href={programHref(language, program)} key={program.number}><h2>{program.title}</h2><p>{program.body}</p><i aria-hidden="true">↗</i></a>)}</div></div></section>
-    <section className="contact-section detail-contact" id="contact"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2>{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><a className="button button-light" href={languagePath[language] + "#contact"}>{copy.bookShort}<span aria-hidden="true">↗</span></a></div></div></section>
-    <Footer copy={copy} />
+    <section className="contact-section detail-contact" id="contact"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2>{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><a className="button button-light" href={languagePath[language] + "#contact"} onClick={() => trackBeginLead("program_contact", language)}>{copy.bookShort}<span aria-hidden="true">↗</span></a></div></div></section>
+    <Footer copy={copy} language={language} />
   </main>;
 }
 
@@ -417,13 +451,16 @@ export default function App() {
     updateMeta('meta[name="description"]', pageDescription); updateMeta('meta[property="og:url"]', canonicalUrl);
     updateMeta('meta[property="og:title"]', pageTitle); updateMeta('meta[property="og:description"]', pageDescription);
     updateMeta('meta[name="twitter:title"]', pageTitle); updateMeta('meta[name="twitter:description"]', pageDescription);
-  }, [audience, copy, path, slug]);
+    trackPageView(path, pageTitle, language);
+  }, [audience, copy, language, path, slug]);
 
   const changeLanguage = (nextLanguage: Language) => {
     const parts = path.split("/").filter(Boolean); if (parts.length === 0) parts.push(nextLanguage.toLowerCase()); else parts[0] = nextLanguage.toLowerCase();
     const nextPath = "/" + parts.join("/") + "/"; window.history.pushState({}, "", nextPath); setPath(nextPath); window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (audience && slug) return <ProgramPage language={language} copy={copy} onLanguage={changeLanguage} audience={audience} slug={slug} />;
-  return <HomePage language={language} copy={copy} onLanguage={changeLanguage} />;
+  const page = audience && slug
+    ? <ProgramPage language={language} copy={copy} onLanguage={changeLanguage} audience={audience} slug={slug} />
+    : <HomePage language={language} copy={copy} onLanguage={changeLanguage} />;
+  return <>{page}<ConsentBanner language={language} /></>;
 }

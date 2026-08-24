@@ -42,6 +42,25 @@ The project is configured for Vercel. `vercel.json` preserves direct access to t
 
 Production: https://dancestudio-tela-vake.vercel.app
 
+## Google Analytics and Google Ads measurement
+
+Copy `.env.example` to `.env.local` for local testing, or add the same public values to the Vercel project environment:
+
+- `VITE_GA_MEASUREMENT_ID`: GA4 web stream ID (`G-...`).
+- `VITE_GOOGLE_ADS_ID` and `VITE_GOOGLE_ADS_LEAD_LABEL`: optional direct Google Ads website conversion destination (`AW-.../label`). Leave these blank when importing the same GA4 `generate_lead` event as the Primary Google Ads conversion.
+- `VITE_WHATSAPP_URL`, `VITE_INSTAGRAM_URL`, `VITE_FACEBOOK_URL`, `VITE_PHONE_NUMBER`: final public contact destinations.
+
+The site loads the Google tag only when at least one Google ID is configured. Consent Mode defaults advertising and analytics storage to denied, shows a localized consent banner, and stores the visitor's choice locally.
+
+Measurement events:
+
+- `page_view`: manual page views for language and program routes.
+- `begin_lead`: a visitor opens the contact journey from a CTA; diagnostic only.
+- `contact_channel_click`: any connected social/contact destination; diagnostic only.
+- `generate_lead`: WhatsApp, phone, or a future successfully submitted website form; use as the Primary GA4 key event.
+
+Recommended Google Ads setup: link GA4 to Google Ads, enable auto-tagging, mark `generate_lead` as a GA4 key event, then import it into Google Ads as a Primary conversion. Keep calls from ads as a separate Primary conversion. Do not make `page_view`, `begin_lead`, or social profile visits Primary conversions.
+
 ## Content
 
 - Site copy and translations: `src/content.ts`
