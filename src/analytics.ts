@@ -13,7 +13,11 @@ declare global {
 }
 
 const consentStorageKey = "tela_google_consent_v1";
-const gaMeasurementId = (import.meta.env.VITE_GA_MEASUREMENT_ID ?? "").trim();
+const productionGaMeasurementId = "G-ZREYM9M7W";
+const gaMeasurementId = (
+  import.meta.env.VITE_GA_MEASUREMENT_ID
+  ?? (import.meta.env.PROD ? productionGaMeasurementId : "")
+).trim();
 const googleAdsId = (import.meta.env.VITE_GOOGLE_ADS_ID ?? "").trim();
 const configuredTagIds = [...new Set([gaMeasurementId, googleAdsId].filter(Boolean))];
 const contactEventNames: Record<ContactChannel, string> = {
