@@ -13,7 +13,7 @@ declare global {
 }
 
 const consentStorageKey = "tela_google_consent_v1";
-const productionGaMeasurementId = "G-ZREYM9M7W";
+const productionGaMeasurementId = "G-YZREYM9M7W";
 const gaMeasurementId = (
   import.meta.env.VITE_GA_MEASUREMENT_ID
   ?? (import.meta.env.PROD ? productionGaMeasurementId : "")

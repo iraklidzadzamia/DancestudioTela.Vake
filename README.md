@@ -46,7 +46,7 @@ Production: https://dancestudio-tela-vake.vercel.app
 
 Copy `.env.example` to `.env.local` for local testing, or add the same public values to the Vercel project environment:
 
-- `VITE_GA_MEASUREMENT_ID`: optional GA4 web stream override. Production defaults to Tela's `G-ZREYM9M7W` stream.
+- `VITE_GA_MEASUREMENT_ID`: optional GA4 web stream override. Production defaults to Tela's `G-YZREYM9M7W` stream.
 - `VITE_GOOGLE_ADS_ID`: optional Google Ads tag destination (`AW-...`). Import the GA4 key events rather than sending duplicate direct conversion labels.
 - `VITE_INSTAGRAM_DM_URL`, `VITE_FACEBOOK_MESSENGER_URL`, `VITE_GOOGLE_MAPS_URL`, `VITE_WHATSAPP_NUMBER`, `VITE_PHONE_NUMBER`: optional public contact overrides. The approved Instagram Direct, Facebook Messenger, Maps, WhatsApp, and phone defaults live in `src/contacts.ts`.
 
