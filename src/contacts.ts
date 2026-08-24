@@ -4,11 +4,12 @@ export type ContactChannel = "Google Maps" | "Instagram" | "Facebook" | "WhatsAp
 export type ContactPlacement = "hero" | "contact_section" | "booking_modal";
 
 const defaultInstagramDirect = "https://ig.me/m/dancestudiotela.vake";
+const defaultFacebookMessenger = "https://m.me/Dancestudiotelavake";
 const defaultGoogleMaps = "https://maps.app.goo.gl/5v5F8D6VXWXjL9tk7";
 const defaultPhoneNumber = "995505051614";
 
 const instagramDirect = optionalPublicUrl(import.meta.env.VITE_INSTAGRAM_DM_URL) ?? defaultInstagramDirect;
-const facebookMessenger = optionalPublicUrl(import.meta.env.VITE_FACEBOOK_MESSENGER_URL);
+const facebookMessenger = optionalPublicUrl(import.meta.env.VITE_FACEBOOK_MESSENGER_URL) ?? defaultFacebookMessenger;
 const googleMaps = optionalPublicUrl(import.meta.env.VITE_GOOGLE_MAPS_URL) ?? defaultGoogleMaps;
 const whatsappNumber = normalizedPhone(import.meta.env.VITE_WHATSAPP_NUMBER) ?? defaultPhoneNumber;
 const phoneNumber = normalizedPhone(import.meta.env.VITE_PHONE_NUMBER) ?? defaultPhoneNumber;

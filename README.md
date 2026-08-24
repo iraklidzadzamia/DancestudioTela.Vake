@@ -8,7 +8,7 @@ Premium mobile-first website for DanceStudio Tela in Vake, Tbilisi.
 - The existing Tela logo is preserved.
 - The first lesson is free.
 - Pro-Am Ballroom & Latin is the primary adult proposition.
-- Instagram, Facebook, and WhatsApp will receive booking enquiries once final links are supplied.
+- Instagram Direct, Facebook Messenger, WhatsApp, phone, and Google Maps are connected to the approved public destinations.
 - The real vertical studio film is used in the hero.
 - Six additional approved content videos are prepared for Pro-Am, kids, Women's Tango, Georgian dance, and the emotional closing section.
 - Program pages reuse the matching approved films; adult ballet temporarily uses an AI-generated photograph based on the real Tela interior and should be replaced when authentic ballet media is supplied.
@@ -48,7 +48,7 @@ Copy `.env.example` to `.env.local` for local testing, or add the same public va
 
 - `VITE_GA_MEASUREMENT_ID`: GA4 web stream ID (`G-...`).
 - `VITE_GOOGLE_ADS_ID`: optional Google Ads tag destination (`AW-...`). Import the GA4 key events rather than sending duplicate direct conversion labels.
-- `VITE_INSTAGRAM_DM_URL`, `VITE_FACEBOOK_MESSENGER_URL`, `VITE_GOOGLE_MAPS_URL`, `VITE_WHATSAPP_NUMBER`, `VITE_PHONE_NUMBER`: optional public contact overrides. The approved Instagram Direct, Maps, WhatsApp, and phone defaults live in `src/contacts.ts`; Facebook stays hidden until its Messenger URL is configured.
+- `VITE_INSTAGRAM_DM_URL`, `VITE_FACEBOOK_MESSENGER_URL`, `VITE_GOOGLE_MAPS_URL`, `VITE_WHATSAPP_NUMBER`, `VITE_PHONE_NUMBER`: optional public contact overrides. The approved Instagram Direct, Facebook Messenger, Maps, WhatsApp, and phone defaults live in `src/contacts.ts`.
 
 The site loads the Google tag only when at least one Google ID is configured. Consent Mode defaults advertising and analytics storage to denied, shows a localized consent banner, and stores the visitor's choice locally.
 

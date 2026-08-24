@@ -180,7 +180,7 @@ describe("program hero media", () => {
     expect(play).toHaveBeenCalledTimes(2);
   });
 
-  it("connects the hero icons to directions and direct conversations while Facebook stays hidden", () => {
+  it("connects the hero icons to directions and every approved direct conversation", () => {
     window.history.replaceState({}, "", "/en/");
 
     const { container } = render(<App />);
@@ -189,9 +189,10 @@ describe("program hero media", () => {
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "https://maps.app.goo.gl/5v5F8D6VXWXjL9tk7",
       "https://ig.me/m/dancestudiotela.vake",
+      "https://m.me/Dancestudiotelavake",
       expect.stringContaining("https://wa.me/995505051614?text="),
     ]);
-    expect(container.querySelector('.hero-meta-icons [aria-label="Messenger"]')).not.toBeInTheDocument();
+    expect(container.querySelector('.hero-meta-icons [aria-label="Messenger"]')).toBeInTheDocument();
   });
 
   it("opens booking choices in place with WhatsApp, Instagram Direct and phone", () => {
@@ -207,9 +208,10 @@ describe("program hero media", () => {
     expect(options.map((option) => option.getAttribute("href"))).toEqual([
       expect.stringContaining("https://wa.me/995505051614?text="),
       "https://ig.me/m/dancestudiotela.vake",
+      "https://m.me/Dancestudiotelavake",
       "tel:+995505051614",
     ]);
-    expect(dialog.textContent).not.toContain("Messenger");
+    expect(dialog.textContent).toContain("Messenger");
 
     fireEvent.click(dialog.querySelector(".booking-close")!);
     expect(dialog).not.toHaveAttribute("open");
