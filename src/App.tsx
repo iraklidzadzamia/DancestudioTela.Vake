@@ -111,7 +111,7 @@ function LanguageSwitcher({ language, onChange }: { language: Language; onChange
 function Header({ language, copy, onLanguage, internal = false }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void; internal?: boolean }) {
   const home = languagePath[language];
   return <header className={"header" + (internal ? " header-internal" : "")}>
-    <a className="brand" href={home} aria-label={copy.footer.studio}><Logo /><span className="brand-type"><small>Dance Studio</small><strong>Tela</strong></span></a>
+    <a className="brand" href={home} aria-label={copy.footer.studio}><Logo /><span className="brand-type">Dance Studio Tela</span></a>
     <nav className="desktop-nav" aria-label="Primary navigation">{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
     <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"}>{copy.bookShort}</a></div>
   </header>;
