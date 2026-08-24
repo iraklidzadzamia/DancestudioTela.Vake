@@ -99,6 +99,7 @@ function SectionLabel({ children, light = false }: { children: string; light?: b
   return <p className={"section-label" + (light ? " section-label-light" : "")}>{children}</p>;
 }
 function SocialIcon({ channel }: { channel: string }) {
+  if (channel === "Google Maps") return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21s6-5.35 6-11a6 6 0 1 0-12 0c0 5.65 6 11 6 11Z" /><circle cx="12" cy="10" r="2.15" /></svg>;
   if (channel === "Instagram") return <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5.25" /><circle cx="12" cy="12" r="4.1" /><circle className="social-icon-fill" cx="17.45" cy="6.65" r="1.05" /></svg>;
   if (channel === "Facebook") return <svg aria-hidden="true" viewBox="0 0 24 24"><path className="social-icon-fill" d="M13.65 21v-8h2.75l.42-3.1h-3.17V7.92c0-.9.25-1.5 1.58-1.5H17V3.65c-.31-.04-1.35-.13-2.56-.13-2.53 0-4.26 1.55-4.26 4.39V9.9H7.32V13h2.86v8h3.47Z" /></svg>;
   return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.15 11.75a8.12 8.12 0 0 1-11.97 7.14L4 20l1.13-4.08a8.12 8.12 0 1 1 15.02-4.17Z" /><path d="M8.72 8.06c.2-.47.42-.48.72-.49h.61c.2 0 .39.07.49.34l.78 1.88c.09.22.05.41-.08.59l-.58.74c-.14.17-.19.33-.07.55.5.9 1.27 1.65 2.2 2.12.2.1.37.08.51-.09l.83-.96c.17-.2.37-.25.6-.16l1.78.83c.27.12.4.22.41.39.03.38-.17 1.16-.48 1.58-.44.59-1.23.94-1.96.93-1.22-.02-2.87-.65-4.5-2.1-1.33-1.19-2.24-2.65-2.42-3.84-.13-.88.21-1.74.46-2.18l.2-.17Z" /></svg>;
@@ -110,7 +111,7 @@ function LanguageSwitcher({ language, onChange }: { language: Language; onChange
 function Header({ language, copy, onLanguage, internal = false }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void; internal?: boolean }) {
   const home = languagePath[language];
   return <header className={"header" + (internal ? " header-internal" : "")}>
-    <a className="brand" href={home} aria-label={copy.footer.studio}><Logo /><span className="brand-type"><strong>Tela</strong><small>DanceStudio · Vake</small></span></a>
+    <a className="brand" href={home} aria-label={copy.footer.studio}><Logo /><span className="brand-type"><small>Dance Studio</small><strong>Tela</strong></span></a>
     <nav className="desktop-nav" aria-label="Primary navigation">{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
     <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"}>{copy.bookShort}</a></div>
   </header>;
@@ -172,11 +173,18 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
       <div className="hero-video-shade" aria-hidden="true" />
       <Header language={language} copy={copy} onLanguage={onLanguage} />
       <div className="hero-stage" id="top">
-        <div className="hero-copy"><p className="eyebrow">{copy.hero.eyebrow}</p><h1 id="hero-title">{copy.hero.title}<em>{copy.hero.accent}</em></h1><p className="hero-body">{copy.hero.body}</p>
-          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}<span aria-hidden="true">↗</span></a><a className="button button-secondary" href="#contact">{copy.hero.secondary}</a></div>
+        <div className="hero-copy">
+          <div className="hero-meta">
+            <p className="eyebrow">{copy.hero.eyebrow}</p>
+            <div className="hero-meta-icons" aria-label="Location and social channels">
+              {["Google Maps", "Instagram", "Facebook"].map((channel) => <span className="hero-meta-icon" role="img" aria-label={channel} key={channel}><SocialIcon channel={channel} /></span>)}
+            </div>
+          </div>
+          <h1 id="hero-title">{copy.hero.title}<em>{copy.hero.accent}</em></h1><p className="hero-body">{copy.hero.body}</p>
+          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}<span aria-hidden="true">↗</span></a><a className="button button-secondary" href="#contact">{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div>
           <ul className="reassurance" aria-label="Beginner reassurance">{copy.hero.notes.map((note) => <li key={note}><span aria-hidden="true">✦</span>{note}</li>)}</ul>
         </div>
-        <a className="hero-scroll" href="#orientation"><span>Scroll</span><i aria-hidden="true">↓</i></a>
+        <a className="hero-scroll" href="#orientation" aria-label="Continue to the next section"><span aria-hidden="true" /></a>
       </div>
     </section>
 
