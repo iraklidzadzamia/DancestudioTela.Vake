@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { AutoPlayVideo } from "./AutoPlayVideo";
 import { scheduleGroups, siteCopy, type Language, type SiteCopy } from "./content";
+import { getProgramMedia } from "./programMedia";
 
 const languagePath: Record<Language, string> = { EN: "/en/", KA: "/ka/", RU: "/ru/" };
 const siteOrigin = "https://dancestudio-tela-vake.vercel.app";
@@ -169,108 +171,6 @@ function PortraitMedia({ label, reserved, number, image = false, warm = false }:
   </figure>;
 }
 
-function CinematicVideo({ base, number, copy, playLabel, pauseLabel, className = "", loop = true }: {
-  base: string; number: string; copy: FilmCopy; playLabel: string; pauseLabel: string; className?: string; loop?: boolean;
-}) {
-  const frameRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const manuallyPaused = useRef(false);
-  const userActivated = useRef(false);
-  const [shouldLoad, setShouldLoad] = useState(false);
-  const [inView, setInView] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState(false);
-  const [playRequest, setPlayRequest] = useState(0);
-  const [pageVisible, setPageVisible] = useState(!document.hidden);
-  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
-
-  useEffect(() => {
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncPreference = () => setReduceMotion(preference.matches);
-    syncPreference();
-    preference.addEventListener("change", syncPreference);
-    return () => preference.removeEventListener("change", syncPreference);
-  }, []);
-
-  useEffect(() => {
-    const frame = frameRef.current;
-    if (!frame) return;
-    const loadObserver = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !saveData) setShouldLoad(true);
-    }, { rootMargin: "600px 0px", threshold: 0.01 });
-    const playbackObserver = new IntersectionObserver(([entry]) => {
-      setInView(entry.isIntersecting && entry.intersectionRatio >= 0.35);
-    }, { threshold: [0, 0.35, 0.75] });
-    loadObserver.observe(frame);
-    playbackObserver.observe(frame);
-    return () => { loadObserver.disconnect(); playbackObserver.disconnect(); };
-  }, [saveData]);
-
-  useEffect(() => {
-    const onVisibility = () => setPageVisible(!document.hidden);
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, []);
-
-  useEffect(() => {
-    const pauseForAnotherFilm = (event: Event) => {
-      if ((event as CustomEvent<string>).detail !== base) videoRef.current?.pause();
-    };
-    window.addEventListener("tela:film-play", pauseForAnotherFilm);
-    return () => window.removeEventListener("tela:film-play", pauseForAnotherFilm);
-  }, [base]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (!shouldLoad || !inView || !pageVisible || manuallyPaused.current || (reduceMotion && !userActivated.current)) {
-      video.pause();
-      return;
-    }
-    void video.play().catch(() => undefined);
-  }, [inView, pageVisible, playRequest, reduceMotion, shouldLoad]);
-
-  const togglePlayback = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (!video.paused) {
-      manuallyPaused.current = true;
-      userActivated.current = false;
-      video.pause();
-      return;
-    }
-    manuallyPaused.current = false;
-    userActivated.current = true;
-    setShouldLoad(true);
-    setPlayRequest((request) => request + 1);
-  };
-
-  return <figure ref={frameRef} className={`cinematic-video ${className}`.trim()}>
-    <div className="cinematic-video-frame">
-      <video
-        ref={videoRef}
-        width={720}
-        height={1280}
-        muted
-        loop={loop}
-        playsInline
-        preload="none"
-        poster={`/media/sections/${base}-poster.webp`}
-        aria-hidden="true"
-        onPlay={() => { setIsPlaying(true); window.dispatchEvent(new CustomEvent("tela:film-play", { detail: base })); }}
-        onPause={() => setIsPlaying(false)}
-      >
-        {shouldLoad && <><source src={`/media/sections/${base}.webm`} type="video/webm" /><source src={`/media/sections/${base}.mp4`} type="video/mp4" /></>}
-      </video>
-      <span className="cinematic-video-number" aria-hidden="true">{number}</span>
-      <button className="cinematic-video-control" type="button" onClick={togglePlayback} aria-label={isPlaying ? pauseLabel : playLabel}>
-        <span className={isPlaying ? "media-icon media-icon-pause" : "media-icon media-icon-play"} aria-hidden="true" />
-      </button>
-    </div>
-    <figcaption><span>{copy.caption}</span><small>{copy.note}</small></figcaption>
-  </figure>;
-}
-
 function ProgramList({ language, programs, action }: { language: Language; programs: Program[]; action: string }) {
   return <div className="program-list">{programs.map((program) => <a className="program-row" href={programHref(language, program)} key={program.number}>
     <span className="program-row-number">{program.number}</span><div><p>{program.tag}</p><h3>{program.title}</h3><span>{program.body}</span></div><small>{action}</small><i aria-hidden="true">→</i>
@@ -319,11 +219,32 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
   return <main className={"site-shell language-" + language.toLowerCase()}>
     <a className="skip-link" href="#programs">{ui.skip}</a>
     <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-video" aria-hidden="true">
-        <video ref={heroVideoRef} muted loop playsInline preload="metadata" poster="/media/hero-tela-poster.webp" onPlay={() => { setHeroPlaying(true); window.dispatchEvent(new CustomEvent("tela:film-play", { detail: "hero" })); }} onPause={() => setHeroPlaying(false)}>
+      <div className="hero-video">
+        <video
+          ref={heroVideoRef}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/media/hero-tela-poster.webp"
+          role="button"
+          tabIndex={0}
+          aria-label={heroPlaying ? ui.pauseFilm : ui.playFilm}
+          aria-pressed={heroPlaying}
+          onClick={toggleHeroPlayback}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              toggleHeroPlayback();
+            }
+          }}
+          onPlay={() => { setHeroPlaying(true); window.dispatchEvent(new CustomEvent("tela:film-play", { detail: "hero" })); }}
+          onPause={() => setHeroPlaying(false)}
+        >
           <source src="/media/hero-tela.webm" type="video/webm" />
           <source src="/media/hero-tela.mp4" type="video/mp4" />
         </video>
+        {!heroPlaying && <span className="hero-play-affordance media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
       </div>
       <div className="hero-video-shade" aria-hidden="true" />
       <Header language={language} copy={copy} onLanguage={onLanguage} />
@@ -340,7 +261,6 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
           <ul className="reassurance" aria-label="Beginner reassurance">{copy.hero.notes.map((note) => <li key={note}><span aria-hidden="true">✦</span>{note}</li>)}</ul>
         </div>
         <a className="hero-scroll" href="#orientation" aria-label={ui.nextSection}><span aria-hidden="true" /></a>
-        <button className="hero-media-control" type="button" onClick={toggleHeroPlayback} aria-label={heroPlaying ? ui.pauseFilm : ui.playFilm}><span className={heroPlaying ? "media-icon media-icon-pause" : "media-icon media-icon-play"} aria-hidden="true" /></button>
       </div>
     </section>
 
@@ -360,7 +280,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     </div></section>
 
     <section className="editorial-film proam-film section-dark" id="proam" aria-labelledby="proam-title"><div className="section-wrap editorial-split">
-      <CinematicVideo base="proam-story" number="01" copy={ui.films.proam} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-arch" />
+      <AutoPlayVideo base="proam-story" caption={{ title: ui.films.proam.caption, note: ui.films.proam.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-arch" />
       <div className="editorial-copy"><SectionLabel light>{ui.films.proam.kicker}</SectionLabel><h2 id="proam-title">{ui.films.proam.title}</h2><p>{ui.films.proam.body}</p>
         <div className="editorial-facts">{copy.proam.points.map((point) => <div key={point.number}><span>{point.number}</span><p><strong>{point.title}</strong>{point.body}</p></div>)}</div>
         <a className="text-link text-link-light" href={languagePath[language] + "adults/pro-am/"}>{ui.proamLink}<span aria-hidden="true">→</span></a>
@@ -371,21 +291,21 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
       <div className="editorial-copy"><SectionLabel>{ui.films.kids.kicker}</SectionLabel><h2 id="kids-title">{ui.films.kids.title}</h2><p>{ui.films.kids.body}</p>
         <div className="kids-program-links">{childrenPrograms.map((program) => <a href={programHref(language, program)} key={program.number}>{program.title}<span aria-hidden="true">→</span></a>)}</div>
       </div>
-      <CinematicVideo base="kids-coaching" number="02" copy={ui.films.kids} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-soft" />
+      <AutoPlayVideo base="kids-coaching" caption={{ title: ui.films.kids.caption, note: ui.films.kids.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-soft" />
     </div></section>
 
     <section className="tango-chapter section-plum" aria-labelledby="tango-title"><div className="section-wrap">
       <div className="tango-heading"><div><SectionLabel light>{ui.films.tango.kicker}</SectionLabel><h2 id="tango-title">{ui.films.tango.title}</h2></div><div><p>{ui.films.tango.body}</p><a className="text-link text-link-light" href={languagePath[language] + "adults/womens-tango/"}>{ui.viewProgram}<span aria-hidden="true">→</span></a></div></div>
       <div className="tango-films">
-        <CinematicVideo base="tango-on-bars" number="03" copy={ui.films.tango} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-main" />
+        <AutoPlayVideo base="tango-on-bars" caption={{ title: ui.films.tango.caption, note: ui.films.tango.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-main" />
         <div className="tango-film-note"><SectionLabel light>{ui.films.tangoGroup.kicker}</SectionLabel><h3>{ui.films.tangoGroup.title}</h3><p>{ui.films.tangoGroup.body}</p></div>
-        <CinematicVideo base="tango-group" number="04" copy={ui.films.tangoGroup} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-secondary" />
+        <AutoPlayVideo base="tango-group" caption={{ title: ui.films.tangoGroup.caption, note: ui.films.tangoGroup.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-secondary" />
       </div>
     </div></section>
 
     <section className="editorial-film georgian-film section-sand" aria-labelledby="georgian-title"><div className="section-wrap editorial-split">
       <div className="editorial-copy"><SectionLabel>{ui.films.georgian.kicker}</SectionLabel><h2 id="georgian-title">{ui.films.georgian.title}</h2><p>{ui.films.georgian.body}</p><a className="text-link" href={languagePath[language] + "adults/georgian-dance/"}>{ui.viewProgram}<span aria-hidden="true">→</span></a></div>
-      <CinematicVideo base="georgian-dance" number="05" copy={ui.films.georgian} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-offset" />
+      <AutoPlayVideo base="georgian-dance" caption={{ title: ui.films.georgian.caption, note: ui.films.georgian.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-offset" />
     </div></section>
 
     <section className="journey section-dark" aria-labelledby="journey-title"><div className="section-wrap"><div className="section-heading-row"><div><SectionLabel light>{copy.journey.kicker}</SectionLabel><h2 id="journey-title">{copy.journey.title}</h2></div><p>{copy.journey.body}</p></div><div className="journey-grid">{copy.journey.steps.slice(0, 3).map((step) => <article className="journey-card" key={step.number}><span>{step.number}</span><i aria-hidden="true" /><h3>{step.title}</h3><p>{step.body}</p></article>)}</div></div></section>
@@ -402,7 +322,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     <section className="faq section-ivory" aria-labelledby="faq-title"><div className="section-wrap faq-grid"><div className="faq-heading"><SectionLabel>{copy.faq.kicker}</SectionLabel><h2 id="faq-title">{copy.faq.title}</h2></div><div className="faq-list">{[0, 1, 3, 5, 6].map((sourceIndex, index) => { const item = copy.faq.items[sourceIndex]; return <details key={item.question} open={index === 0}><summary><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.question}</strong><i aria-hidden="true">+</i></summary><p>{item.answer}</p></details>; })}</div></div></section>
 
     <section className="closing-reel section-dark" aria-labelledby="closing-title"><div className="section-wrap closing-reel-stage">
-      <CinematicVideo base="closing-emotional" number="06" copy={ui.films.closing} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="closing-reel-video" loop={false} />
+      <AutoPlayVideo base="closing-emotional" caption={{ title: ui.films.closing.caption, note: ui.films.closing.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="closing-reel-video" loop={false} />
       <div className="closing-reel-copy"><SectionLabel light>{ui.films.closing.kicker}</SectionLabel><h2 id="closing-title">{ui.films.closing.title}</h2><p>{ui.films.closing.body}</p><a className="button button-light" href="#contact">{copy.hero.secondary}</a></div>
     </div></section>
 
