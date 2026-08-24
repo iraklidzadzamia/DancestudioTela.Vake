@@ -85,7 +85,7 @@ const en: SiteCopy = {
     primary: "Book your first free lesson",
     secondary: "Ask us anything",
     notes: ["No partner needed", "No experience needed", "Competition is optional"],
-    media: "Hero film is being selected",
+    media: "Private Pro-Am Ballroom & Latin lesson",
   },
   intro: {
     kicker: "A different kind of dance experience",
@@ -95,11 +95,11 @@ const en: SiteCopy = {
   proam: {
     kicker: "What is Pro-Am?",
     title: "You are the amateur. Your instructor is the professional — and your dance partner.",
-    body: "You learn together at your pace, with private coaching built around you. Dance for yourself, perform when you feel ready, or take the journey to competition. The choice is always yours.",
+    body: "You learn together at your pace, with private coaching built around you — including music, style and, when needed, your performance look. Dance for yourself, share a closed studio evening with friends, perform, or take the journey to competition. The choice is always yours.",
     points: [
       { number: "01", title: "A professional partner", body: "Arrive on your own. Your instructor teaches and dances with you." },
       { number: "02", title: "Personal coaching", body: "Every lesson adapts to your experience, confidence and goals." },
-      { number: "03", title: "Your own destination", body: "Social dancing, performance and competition are possibilities — never obligations." },
+      { number: "03", title: "Your own destination", body: "Dance for yourself, share a private studio evening, perform or compete — every destination is optional." },
     ],
     aside: "Personal attention changes everything.",
   },
@@ -109,10 +109,10 @@ const en: SiteCopy = {
     title: "Start exactly where you are. Decide how far you want to go.",
     body: "There is no performance standard to meet before you begin. We teach the first step — and every step after it.",
     steps: [
-      { number: "01", title: "First free lesson", body: "Meet your instructor, try the movement and talk about what you would love to achieve." },
-      { number: "02", title: "Personal program", body: "Build technique, musicality and confidence through coaching designed around you." },
-      { number: "03", title: "Studio experiences", body: "Join a beautiful social world of practice, events and shared milestones." },
-      { number: "04", title: "Your dance floor", body: "Perform or compete if you choose — or simply keep dancing for yourself." },
+      { number: "01", title: "First free lesson", body: "Meet your instructor, try the movement and talk about your goals, preferred style and what feels comfortable." },
+      { number: "02", title: "Personal program", body: "Build technique and confidence around your chosen music and style. Video recaps help you see your progress." },
+      { number: "03", title: "Your spotlight moment", body: "Choose a warm closed evening with friends or an official Pro-Am tournament, with professional filming." },
+      { number: "04", title: "A result that stays", body: "Keep the photographs, film, emotion and confidence — then shape the next goal when you are ready." },
     ],
   },
   programs: {
@@ -135,7 +135,7 @@ const en: SiteCopy = {
   heritage: {
     kicker: "Tela · Since 1970",
     title: "A new chapter of a dance story that began more than half a century ago.",
-    body: "DanceStudio Tela Vake carries the Tela tradition forward through a contemporary, personal studio experience in Vake.",
+    body: "Founded in 1970 as Georgia’s first Latin ballroom studio, Tela now carries that legacy forward through the country’s first Pro-Am community — where amateurs dance with professionals, build confidence and share the stage.",
     year: "1970",
     note: "Archive photography and the verified studio chronology will be added here.",
   },
@@ -145,7 +145,9 @@ const en: SiteCopy = {
     items: [
       { question: "Do I need a dance partner?", answer: "No. In Pro-Am, your professional instructor is your dance partner." },
       { question: "What if I have never danced?", answer: "That is completely fine. Your first lesson begins at your current level and moves at your pace." },
-      { question: "Do I have to compete?", answer: "No. Competition and performance are optional. You can dance entirely for yourself." },
+      { question: "Do I have to compete?", answer: "No. You can dance entirely for yourself, join a closed studio evening with friends, perform, or enter a tournament. Every stage is optional." },
+      { question: "Can I choose the music and style?", answer: "Yes. Your program, pace, music and style are shaped around you. We can also help with your performance look and costume when needed." },
+      { question: "Will I receive photos or video?", answer: "Yes. Performances and closed studio events include professional filming, so the experience stays with you in photographs and video." },
       { question: "What should I wear?", answer: "Choose comfortable clothing that lets you move. Special ballroom clothing is not required for your first lesson." },
       { question: "Is the first lesson really free?", answer: "Yes. Your first lesson at DanceStudio Tela Vake is free." },
     ],
@@ -180,7 +182,7 @@ const ka: SiteCopy = {
     primary: "დაჯავშნე პირველი უფასო გაკვეთილი",
     secondary: "მოგვწერე",
     notes: ["პარტნიორი არ გჭირდება", "გამოცდილება არ გჭირდება", "შეჯიბრება სურვილისამებრ"],
-    media: "მთავარი ვიდეო შერჩევის პროცესშია",
+    media: "ინდივიდუალური Pro-Am Ballroom & Latin გაკვეთილი",
   },
   intro: {
     kicker: "განსხვავებული საცეკვაო გამოცდილება",
@@ -190,11 +192,11 @@ const ka: SiteCopy = {
   proam: {
     kicker: "რა არის Pro-Am?",
     title: "შენ ხარ მოყვარული, შენი ინსტრუქტორი კი პროფესიონალი — და შენი საცეკვაო პარტნიორი.",
-    body: "სწავლობთ ერთად, შენს ტემპში და შენზე მორგებული ინდივიდუალური პროგრამით. შეგიძლია იცეკვო საკუთარი სიამოვნებისთვის, გამოხვიდე სცენაზე ან მიხვიდე შეჯიბრებამდე — არჩევანი შენია.",
+    body: "სწავლობთ ერთად, შენს ტემპში და შენზე მორგებული ინდივიდუალური პროგრამით — მუსიკის, სტილისა და საჭიროების შემთხვევაში სასცენო იმიჯის შერჩევით. შეგიძლია იცეკვო საკუთარი სიამოვნებისთვის, მეგობრებისთვის გამართულ დახურულ საღამოზე გამოხვიდე ან შეჯიბრებამდე მიხვიდე — არჩევანი შენია.",
     points: [
       { number: "01", title: "პროფესიონალი პარტნიორი", body: "მოდი დამოუკიდებლად — ინსტრუქტორი გასწავლის და შენთან ერთად იცეკვებს." },
       { number: "02", title: "პერსონალური სწავლება", body: "ყოველი გაკვეთილი ერგება შენს გამოცდილებას, თავდაჯერებასა და მიზნებს." },
-      { number: "03", title: "შენი დანიშნულება", body: "სოციალური ცეკვა, გამოსვლა და შეჯიბრება შესაძლებლობაა — არა ვალდებულება." },
+      { number: "03", title: "შენი დანიშნულება", body: "იცეკვე საკუთარი თავისთვის, მიიღე მონაწილეობა დახურულ საღამოში, გამოდი სცენაზე ან იასპარეზე — ყველა გზა სურვილისამებრ არის." },
     ],
     aside: "პერსონალური ყურადღება ყველაფერს ცვლის.",
   },
@@ -204,10 +206,10 @@ const ka: SiteCopy = {
     title: "დაიწყე იქიდან, სადაც ხარ. თავად გადაწყვიტე, რამდენად შორს წახვალ.",
     body: "დაწყებამდე არანაირი სტანდარტის დაკმაყოფილება არ გჭირდება. ჩვენ გასწავლით პირველ ნაბიჯსაც და ყველა შემდეგ ნაბიჯსაც.",
     steps: [
-      { number: "01", title: "პირველი უფასო გაკვეთილი", body: "გაიცანი ინსტრუქტორი, მოსინჯე მოძრაობა და მოგვიყევი შენი მიზნის შესახებ." },
-      { number: "02", title: "პერსონალური პროგრამა", body: "განავითარე ტექნიკა, მუსიკალურობა და თავდაჯერება შენზე მორგებული სწავლებით." },
-      { number: "03", title: "სტუდიის გამოცდილება", body: "შეუერთდი ვარჯიშის, ღონისძიებებისა და საერთო წარმატებების ლამაზ სოციალურ სამყაროს." },
-      { number: "04", title: "შენი საცეკვაო მოედანი", body: "თუ მოისურვებ — გამოხვალ ან იასპარეზებ; ან უბრალოდ იცეკვებ საკუთარი თავისთვის." },
+      { number: "01", title: "პირველი უფასო გაკვეთილი", body: "გაიცანი ინსტრუქტორი, მოსინჯე მოძრაობა და ისაუბრე მიზნებზე, სასურველ სტილსა და კომფორტზე." },
+      { number: "02", title: "პერსონალური პროგრამა", body: "განავითარე ტექნიკა და თავდაჯერება შენს მუსიკასა და სტილზე მორგებული სწავლებით. ვიდეო-შეჯამებები პროგრესის დანახვაში დაგეხმარება." },
+      { number: "03", title: "შენი განსაკუთრებული მომენტი", body: "აირჩიე მეგობრებისთვის გამართული თბილი დახურული საღამო ან ოფიციალური Pro-Am ტურნირი — პროფესიონალური გადაღებით." },
+      { number: "04", title: "შედეგი, რომელიც რჩება", body: "შეინახე ფოტოები, ვიდეო, ემოციები და თავდაჯერება — შემდეგ კი, როცა მზად იქნები, დაგეგმე ახალი მიზანი." },
     ],
   },
   programs: {
@@ -230,7 +232,7 @@ const ka: SiteCopy = {
   heritage: {
     kicker: "Tela · 1970 წლიდან",
     title: "ნახევარ საუკუნეზე მეტი ხნის წინ დაწყებული საცეკვაო ისტორიის ახალი თავი.",
-    body: "სტუდია „თელა“, ვაკე Tela-ს ტრადიციას თანამედროვე და პერსონალური გამოცდილებით აგრძელებს.",
+    body: "1970 წელს დაარსებული, როგორც საქართველოში პირველი ლათინური სამეჯლისო სტუდია, Tela დღეს ამ მემკვიდრეობას ქვეყნის პირველი Pro-Am საზოგადოების მეშვეობით აგრძელებს — აქ მოყვარულები პროფესიონალებთან ცეკვავენ, თავდაჯერებას იძენენ და სცენას იზიარებენ.",
     year: "1970",
     note: "აქ დაემატება საარქივო ფოტოები და სტუდიის დაზუსტებული ქრონოლოგია.",
   },
@@ -240,7 +242,9 @@ const ka: SiteCopy = {
     items: [
       { question: "მჭირდება საცეკვაო პარტნიორი?", answer: "არა. Pro-Am-ში შენი პროფესიონალი ინსტრუქტორი შენი საცეკვაო პარტნიორია." },
       { question: "თუ არასოდეს მიცეკვია?", answer: "სრულიად ნორმალურია. პირველი გაკვეთილი იწყება შენი დონიდან და მიდის შენს ტემპში." },
-      { question: "აუცილებელია შეჯიბრებაში მონაწილეობა?", answer: "არა. შეჯიბრება და გამოსვლა სურვილისამებრ არის. შეგიძლია მხოლოდ საკუთარი თავისთვის იცეკვო." },
+      { question: "აუცილებელია შეჯიბრებაში მონაწილეობა?", answer: "არა. შეგიძლია მხოლოდ საკუთარი თავისთვის იცეკვო, მეგობრებთან ერთად დახურულ საღამოში მიიღო მონაწილეობა, სცენაზე გამოხვიდე ან ტურნირზე იასპარეზო. ყველა ეტაპი სურვილისამებრ არის." },
+      { question: "შემიძლია მუსიკისა და სტილის არჩევა?", answer: "დიახ. პროგრამა, ტემპი, მუსიკა და სტილი შენზე მორგდება. საჭიროების შემთხვევაში სასცენო იმიჯისა და კოსტიუმის შერჩევაშიც დაგეხმარებით." },
+      { question: "მივიღებ ფოტოებს ან ვიდეოს?", answer: "დიახ. გამოსვლებსა და დახურულ ღონისძიებებს პროფესიონალურად ვიღებთ, რათა გამოცდილება ფოტოებსა და ვიდეოში შენთან დარჩეს." },
       { question: "რა ჩავიცვა?", answer: "აირჩიე კომფორტული სამოსი, რომელიც თავისუფლად მოძრაობის საშუალებას გაძლევს. პირველ გაკვეთილზე სპეციალური საცეკვაო ტანსაცმელი საჭირო არ არის." },
       { question: "პირველი გაკვეთილი ნამდვილად უფასოა?", answer: "დიახ. DanceStudio Tela Vake-ში პირველი გაკვეთილი უფასოა." },
     ],
@@ -275,7 +279,7 @@ const ru: SiteCopy = {
     primary: "Записаться на первый бесплатный урок",
     secondary: "Задать вопрос",
     notes: ["Партнёр не нужен", "Опыт не нужен", "Соревнования необязательны"],
-    media: "Главное видео находится в процессе отбора",
+    media: "Персональный урок Pro-Am Ballroom & Latin",
   },
   intro: {
     kicker: "Другой танцевальный опыт",
@@ -285,11 +289,11 @@ const ru: SiteCopy = {
   proam: {
     kicker: "Что такое Pro-Am?",
     title: "Вы — любитель. Ваш преподаватель — профессионал и ваш танцевальный партнёр.",
-    body: "Вы учитесь вместе в удобном темпе по персональной программе. Танцуйте для себя, выступайте, когда будете готовы, или двигайтесь к соревнованиям. Выбор всегда остаётся за вами.",
+    body: "Вы учитесь вместе в удобном темпе по персональной программе — с выбором музыки, стиля и, при необходимости, сценического образа. Танцуйте для себя, выступайте на закрытом вечере для друзей или двигайтесь к соревнованиям. Выбор всегда остаётся за вами.",
     points: [
       { number: "01", title: "Профессиональный партнёр", body: "Приходите самостоятельно — преподаватель обучает вас и танцует вместе с вами." },
       { number: "02", title: "Персональная программа", body: "Каждый урок адаптируется к вашему опыту, уверенности и целям." },
-      { number: "03", title: "Ваша цель", body: "Социальные танцы, выступления и соревнования — возможности, а не обязательства." },
+      { number: "03", title: "Ваша цель", body: "Танцуйте для себя, участвуйте в закрытом вечере, выступайте или соревнуйтесь — каждый вариант остаётся добровольным." },
     ],
     aside: "Персональное внимание меняет всё.",
   },
@@ -299,10 +303,10 @@ const ru: SiteCopy = {
     title: "Начните там, где находитесь сейчас. Сами решите, как далеко хотите пройти.",
     body: "Перед началом не требуется соответствовать какому-либо уровню. Мы научим первому шагу — и каждому следующему.",
     steps: [
-      { number: "01", title: "Первый бесплатный урок", body: "Познакомьтесь с преподавателем, попробуйте движение и расскажите, чего хотите достичь." },
-      { number: "02", title: "Персональная программа", body: "Развивайте технику, музыкальность и уверенность с программой, созданной для вас." },
-      { number: "03", title: "Жизнь студии", body: "Присоединяйтесь к красивому миру тренировок, мероприятий и общих достижений." },
-      { number: "04", title: "Ваш танцпол", body: "Выступайте или соревнуйтесь, если захотите, либо продолжайте танцевать только для себя." },
+      { number: "01", title: "Первый бесплатный урок", body: "Познакомьтесь с преподавателем, попробуйте движение и обсудите цели, желаемый стиль и комфортный формат." },
+      { number: "02", title: "Персональная программа", body: "Развивайте технику и уверенность под выбранную музыку и стиль. Видео-рекапы помогают видеть прогресс." },
+      { number: "03", title: "Ваш звёздный момент", body: "Выберите камерный закрытый вечер для друзей или официальный Pro-Am турнир — с профессиональной съёмкой." },
+      { number: "04", title: "Результат, который остаётся", body: "Сохраните фотографии, видео, эмоции и уверенность — а когда будете готовы, выберите следующую цель." },
     ],
   },
   programs: {
@@ -325,7 +329,7 @@ const ru: SiteCopy = {
   heritage: {
     kicker: "Tela · С 1970 года",
     title: "Новая глава танцевальной истории, начавшейся более полувека назад.",
-    body: "Танцевальная студия «Тела», Ваке продолжает традицию Tela в современном персональном формате.",
+    body: "Основанная в 1970 году как первая в Грузии латинская бальная студия, Tela продолжает эту историю через первое в стране Pro-Am-сообщество — здесь любители танцуют с профессионалами, обретают уверенность и делят с ними сцену.",
     year: "1970",
     note: "Здесь появятся архивные фотографии и проверенная хронология студии.",
   },
@@ -335,7 +339,9 @@ const ru: SiteCopy = {
     items: [
       { question: "Мне нужен танцевальный партнёр?", answer: "Нет. В Pro-Am профессиональный преподаватель становится вашим танцевальным партнёром." },
       { question: "Что, если я никогда не танцевал(а)?", answer: "Это совершенно нормально. Первый урок начинается с вашего текущего уровня и проходит в комфортном темпе." },
-      { question: "Я должен(на) участвовать в соревнованиях?", answer: "Нет. Соревнования и выступления необязательны. Можно танцевать исключительно для себя." },
+      { question: "Я должен(на) участвовать в соревнованиях?", answer: "Нет. Можно танцевать исключительно для себя, принять участие в закрытом вечере для друзей, выступить на сцене или выйти на турнир. Каждый этап добровольный." },
+      { question: "Можно выбрать музыку и стиль?", answer: "Да. Программа, темп, музыка и стиль создаются вокруг вас. При необходимости мы также поможем подобрать сценический образ и костюм." },
+      { question: "Останутся ли у меня фотографии или видео?", answer: "Да. Выступления и закрытые мероприятия сопровождаются профессиональной съёмкой, поэтому этот опыт останется с вами в фотографиях и видео." },
       { question: "Что надеть?", answer: "Выберите удобную одежду, которая не мешает двигаться. Специальный танцевальный костюм на первом уроке не нужен." },
       { question: "Первый урок действительно бесплатный?", answer: "Да. Первый урок в DanceStudio Tela Vake бесплатный." },
     ],
