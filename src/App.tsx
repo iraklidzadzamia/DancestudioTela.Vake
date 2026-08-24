@@ -98,7 +98,7 @@ function Logo({ full = false, header = false }: { full?: boolean; header?: boole
       <filter id="logo-luminance" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
         <feColorMatrix type="luminanceToAlpha" result="luma" />
         <feComponentTransfer in="luma">
-          <feFuncA type="linear" slope="3.5" intercept="-0.35" />
+          <feFuncA type="linear" slope="4" intercept="-0.8" />
         </feComponentTransfer>
       </filter>
       <mask id="logo-dancer-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="4000" height="2828" style={{ maskType: "alpha" }}>
