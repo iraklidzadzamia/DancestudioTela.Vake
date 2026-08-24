@@ -103,6 +103,14 @@ describe("AutoPlayVideo", () => {
     expect(sources.map((source) => source.getAttribute("type"))).toEqual(["video/webm", "video/mp4"]);
   });
 
+  it("places the film caption immediately above the video frame", () => {
+    const { container } = renderFilm();
+    const figure = container.querySelector("figure") as HTMLElement;
+
+    expect(figure.firstElementChild?.tagName).toBe("FIGCAPTION");
+    expect(figure.children[1]).toHaveClass("cinematic-video-frame");
+  });
+
   it("waits 300 milliseconds of stable visibility before autoplaying", () => {
     renderFilm();
     act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));

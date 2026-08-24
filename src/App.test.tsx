@@ -66,6 +66,36 @@ describe("program hero media", () => {
     expect(container.querySelector(".programs-count")).not.toBeInTheDocument();
     expect(container.querySelector(".audience-switch button > span")).not.toBeInTheDocument();
     expect(container.querySelector(".schedule-panel-title i")).not.toBeInTheDocument();
+    expect(container.querySelector(".orientation-facts dt")).not.toBeInTheDocument();
+    expect(container.querySelector(".editorial-facts > div > span")).not.toBeInTheDocument();
+  });
+
+  it("keeps children and Georgian actions after their films in reading order", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    const kidsItems = Array.from(container.querySelector(".kids-film .editorial-split")!.children);
+    const georgianItems = Array.from(container.querySelector(".georgian-film .editorial-split")!.children);
+    const closingItems = Array.from(container.querySelector(".closing-reel-stage")!.children);
+
+    expect(kidsItems[0]).toHaveClass("editorial-copy");
+    expect(kidsItems[1]).toHaveClass("cinematic-video");
+    expect(kidsItems[2]).toHaveClass("kids-program-links");
+    expect(georgianItems[0]).toHaveClass("editorial-copy");
+    expect(georgianItems[1]).toHaveClass("cinematic-video");
+    expect(georgianItems[2]).toHaveClass("editorial-cta");
+    expect(closingItems[0]).toHaveClass("closing-reel-copy");
+    expect(closingItems[1]).toHaveClass("cinematic-video");
+    expect(closingItems[2]).toHaveClass("closing-reel-cta");
+  });
+
+  it("keeps non-sequential detail facts free of decorative numbers", () => {
+    window.history.replaceState({}, "", "/en/adults/pro-am/");
+
+    const { container } = render(<App />);
+
+    expect(container.querySelector(".detail-proof i")).not.toBeInTheDocument();
+    expect(container.querySelector(".detail-proam .proam-point > span")).not.toBeInTheDocument();
   });
 
   it("shows the hero play affordance only after a manual pause", () => {

@@ -107,6 +107,7 @@ export function AutoPlayVideo({
   };
 
   return <figure ref={figureRef} className={`cinematic-video ${className}`.trim()}>
+    {caption && <figcaption><span>{caption.title}</span><small>{caption.note}</small></figcaption>}
     <button
       className="cinematic-video-frame"
       type="button"
@@ -138,6 +139,5 @@ export function AutoPlayVideo({
       </video>
       {isManuallyPaused && <span className="media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
     </button>
-    {caption && <figcaption><span>{caption.title}</span><small>{caption.note}</small></figcaption>}
   </figure>;
 }

@@ -15,6 +15,7 @@ Remove unexplained visual noise, make video states feel deliberate, and simplify
 - Remove public program IDs from the main program list and related-program cards.
 - Remove decorative `01` / `02` labels and the large program count from the audience selector area.
 - Remove the unexplained class-count number from the schedule panel.
+- Remove decorative numbers from overview facts, Pro-Am benefits, and detail-page proof points because they are not steps.
 - Keep numbering where it communicates a real sequence or structure, such as journey steps and FAQ items.
 - Move editorial video captions above their video frames.
 - On narrow screens, keep “Small corrections. Lasting confidence.” on two lines by using a dedicated children-section type scale rather than changing the copy.
