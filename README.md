@@ -47,19 +47,21 @@ Production: https://dancestudio-tela-vake.vercel.app
 Copy `.env.example` to `.env.local` for local testing, or add the same public values to the Vercel project environment:
 
 - `VITE_GA_MEASUREMENT_ID`: GA4 web stream ID (`G-...`).
-- `VITE_GOOGLE_ADS_ID` and `VITE_GOOGLE_ADS_LEAD_LABEL`: optional direct Google Ads website conversion destination (`AW-.../label`). Leave these blank when importing the same GA4 `generate_lead` event as the Primary Google Ads conversion.
-- `VITE_WHATSAPP_URL`, `VITE_INSTAGRAM_URL`, `VITE_FACEBOOK_URL`, `VITE_PHONE_NUMBER`: final public contact destinations.
+- `VITE_GOOGLE_ADS_ID`: optional Google Ads tag destination (`AW-...`). Import the GA4 key events rather than sending duplicate direct conversion labels.
+- `VITE_INSTAGRAM_DM_URL`, `VITE_FACEBOOK_MESSENGER_URL`, `VITE_GOOGLE_MAPS_URL`, `VITE_WHATSAPP_NUMBER`, `VITE_PHONE_NUMBER`: optional public contact overrides. The approved Instagram Direct, Maps, WhatsApp, and phone defaults live in `src/contacts.ts`; Facebook stays hidden until its Messenger URL is configured.
 
 The site loads the Google tag only when at least one Google ID is configured. Consent Mode defaults advertising and analytics storage to denied, shows a localized consent banner, and stores the visitor's choice locally.
 
 Measurement events:
 
 - `page_view`: manual page views for language and program routes.
-- `begin_lead`: a visitor opens the contact journey from a CTA; diagnostic only.
-- `contact_channel_click`: any connected social/contact destination; diagnostic only.
-- `generate_lead`: WhatsApp, phone, or a future successfully submitted website form; use as the Primary GA4 key event.
+- `booking_modal_open`: a visitor opens the free-lesson contact chooser; diagnostic only.
+- `contact_whatsapp`, `contact_instagram`, `contact_facebook`, `contact_phone`, `get_directions`: high-intent outbound actions. Each includes `placement`, `page_path`, and `language` so hero, booking-dialog, and contact-section clicks can be separated.
+- `scroll_depth`: emitted once per route at 25%, 50%, 75%, and 90%.
+- `section_view`: emitted when a visitor reaches the main homepage sections.
+- `generate_lead`: reserved for a future successfully submitted website form or confirmed lead.
 
-Recommended Google Ads setup: link GA4 to Google Ads, enable auto-tagging, mark `generate_lead` as a GA4 key event, then import it into Google Ads as a Primary conversion. Keep calls from ads as a separate Primary conversion. Do not make `page_view`, `begin_lead`, or social profile visits Primary conversions.
+Recommended Google Ads setup: link GA4 to Google Ads, enable auto-tagging, and import the five high-intent contact events as separate Primary conversion actions. Keep `booking_modal_open`, `page_view`, `scroll_depth`, and `section_view` Secondary. Create event-scoped GA4 custom dimensions for `placement`, `contact_channel`, `section_name`, and `language`; page path remains available as a standard dimension. Because page views and scroll depth are sent manually, disable browser-history page views and Scrolls in GA4 Enhanced Measurement to avoid duplicate events.
 
 ## Content
 

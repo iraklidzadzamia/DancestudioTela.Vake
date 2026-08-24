@@ -169,8 +169,8 @@ const en: SiteCopy = {
     kicker: "Your first lesson is free",
     title: "We’ll help you choose your first step.",
     body: "Choose your direction, start from your current level and contact us in the way that feels easiest for you.",
-    channels: "Instagram · Facebook · WhatsApp",
-    pending: "Direct contact links are being connected",
+    channels: "Google Maps · Instagram Direct · WhatsApp · Phone",
+    pending: "",
   },
   footer: { studio: "DanceStudio Tela, Vake", location: "Vake · Tbilisi · Georgia", rights: "All rights reserved" },
 };
@@ -276,8 +276,8 @@ const ka: SiteCopy = {
     kicker: "პირველი გაკვეთილი უფასოა",
     title: "პირველი ნაბიჯის არჩევაში დაგეხმარებით.",
     body: "აირჩიე მიმართულება, დაიწყე შენი დღევანდელი დონიდან და დაგვიკავშირდი შენთვის მოსახერხებელი გზით.",
-    channels: "Instagram · Facebook · WhatsApp",
-    pending: "პირდაპირი საკონტაქტო ბმულები მალე დაემატება",
+    channels: "Google Maps · Instagram Direct · WhatsApp · ტელეფონი",
+    pending: "",
   },
   footer: { studio: "სტუდია „თელა“, ვაკე", location: "ვაკე · თბილისი · საქართველო", rights: "ყველა უფლება დაცულია" },
 };
@@ -383,8 +383,8 @@ const ru: SiteCopy = {
     kicker: "Первый урок бесплатный",
     title: "Поможем выбрать ваш первый шаг.",
     body: "Выберите направление, начните с вашего уровня и свяжитесь с нами удобным способом.",
-    channels: "Instagram · Facebook · WhatsApp",
-    pending: "Прямые контактные ссылки скоро будут добавлены",
+    channels: "Google Maps · Instagram Direct · WhatsApp · Телефон",
+    pending: "",
   },
   footer: { studio: "Танцевальная студия «Тела», Ваке", location: "Ваке · Тбилиси · Грузия", rights: "Все права защищены" },
 };

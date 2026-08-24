@@ -1,42 +1,20 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { AutoPlayVideo } from "./AutoPlayVideo";
 import ConsentBanner, { ConsentSettingsButton } from "./ConsentBanner";
-import { trackBeginLead, trackContactChannel, trackPageView } from "./analytics";
+import { trackBookingModalOpen, trackContactIntent, trackPageView, trackScrollDepth, trackSectionView } from "./analytics";
 import { scheduleGroups, siteCopy, type Language, type SiteCopy } from "./content";
+import { bookingContactChannels, contactHref, formattedPhoneNumber, heroContactChannels, opensOutsidePage, sectionContactChannels, type ContactChannel } from "./contacts";
 import { getProgramMedia } from "./programMedia";
 import { useFirstVideoFrame, VideoPoster } from "./VideoPoster";
 import { attemptVideoPlayback } from "./videoPlayback";
 
 const languagePath: Record<Language, string> = { EN: "/en/", KA: "/ka/", RU: "/ru/" };
 const siteOrigin = "https://dancestudio-tela-vake.vercel.app";
-const contactUrls: Record<string, string | undefined> = {
-  WhatsApp: optionalPublicUrl(import.meta.env.VITE_WHATSAPP_URL),
-  Instagram: optionalPublicUrl(import.meta.env.VITE_INSTAGRAM_URL),
-  Facebook: optionalPublicUrl(import.meta.env.VITE_FACEBOOK_URL),
-  Phone: optionalPhoneUrl(import.meta.env.VITE_PHONE_NUMBER),
-};
-const phoneLabels: Record<Language, string> = { EN: "Phone", KA: "ტელეფონი", RU: "Телефон" };
 const programSlugs: Record<string, string> = {
   "01": "ballroom-latin", "02": "womens-tango", "03": "ballet", "04": "georgian-dance",
   "05": "ballroom-latin", "06": "ballet", "07": "georgian-dance",
 };
 type Program = SiteCopy["programs"]["items"][number];
-
-function optionalPublicUrl(value: string | undefined) {
-  if (!value) return undefined;
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:" ? url.href : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-function optionalPhoneUrl(value: string | undefined) {
-  if (!value) return undefined;
-  const normalized = value.replace(/[^+\d]/g, "");
-  return /^\+?\d{7,15}$/.test(normalized) ? `tel:${normalized}` : undefined;
-}
 
 type FilmCopy = { kicker: string; title: string; body: string; caption: string; note: string };
 type InterfaceCopy = {
@@ -182,6 +160,133 @@ function SocialIcon({ channel }: { channel: string }) {
   return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.15 11.75a8.12 8.12 0 0 1-11.97 7.14L4 20l1.13-4.08a8.12 8.12 0 1 1 15.02-4.17Z" /><path d="M8.72 8.06c.2-.47.42-.48.72-.49h.61c.2 0 .39.07.49.34l.78 1.88c.09.22.05.41-.08.59l-.58.74c-.14.17-.19.33-.07.55.5.9 1.27 1.65 2.2 2.12.2.1.37.08.51-.09l.83-.96c.17-.2.37-.25.6-.16l1.78.83c.27.12.4.22.41.39.03.38-.17 1.16-.48 1.58-.44.59-1.23.94-1.96.93-1.22-.02-2.87-.65-4.5-2.1-1.33-1.19-2.24-2.65-2.42-3.84-.13-.88.21-1.74.46-2.18l.2-.17Z" /></svg>;
 }
 
+const bookingDialogEvent = "tela:open-booking";
+const contactLabels: Record<Language, Record<ContactChannel, string>> = {
+  EN: { "Google Maps": "Directions", Instagram: "Instagram Direct", Facebook: "Messenger", WhatsApp: "WhatsApp", Phone: "Call the studio" },
+  KA: { "Google Maps": "მარშრუტი", Instagram: "Instagram Direct", Facebook: "Messenger", WhatsApp: "WhatsApp", Phone: "სტუდიაში დარეკვა" },
+  RU: { "Google Maps": "Как добраться", Instagram: "Instagram Direct", Facebook: "Messenger", WhatsApp: "WhatsApp", Phone: "Позвонить в студию" },
+};
+const bookingCopy: Record<Language, { kicker: string; title: string; body: string; close: string; notes: Record<ContactChannel, string> }> = {
+  EN: {
+    kicker: "Your first lesson is free",
+    title: "Choose how you’d like to book.",
+    body: "Open a private conversation in the channel you already use. We’ll help you choose the right direction and group.",
+    close: "Close booking options",
+    notes: { "Google Maps": "Open directions", Instagram: "Open a private chat", Facebook: "Open Messenger", WhatsApp: "Fastest way to message us", Phone: formattedPhoneNumber() },
+  },
+  KA: {
+    kicker: "პირველი გაკვეთილი უფასოა",
+    title: "აირჩიეთ, როგორ გსურთ ჩაწერა.",
+    body: "გახსენით პირადი ჩატი თქვენთვის მოსახერხებელ არხში. სწორი მიმართულებისა და ჯგუფის არჩევაში დაგეხმარებით.",
+    close: "ჩაწერის ფანჯრის დახურვა",
+    notes: { "Google Maps": "მარშრუტის გახსნა", Instagram: "პირადი ჩატის გახსნა", Facebook: "Messenger-ის გახსნა", WhatsApp: "ჩვენთან მოწერის ყველაზე სწრაფი გზა", Phone: formattedPhoneNumber() },
+  },
+  RU: {
+    kicker: "Первый урок бесплатный",
+    title: "Выберите, как вам удобнее записаться.",
+    body: "Откройте личный чат в привычном мессенджере. Мы поможем выбрать подходящее направление и группу.",
+    close: "Закрыть варианты записи",
+    notes: { "Google Maps": "Открыть маршрут", Instagram: "Открыть личный чат", Facebook: "Открыть Messenger", WhatsApp: "Самый быстрый способ написать нам", Phone: formattedPhoneNumber() },
+  },
+};
+
+function openBookingDialog(placement: string) {
+  window.dispatchEvent(new CustomEvent<string>(bookingDialogEvent, { detail: placement }));
+}
+
+function BookingDialog({ language }: { language: Language }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [placement, setPlacement] = useState<string | null>(null);
+  const copy = bookingCopy[language];
+
+  useEffect(() => {
+    const open = (event: Event) => setPlacement((event as CustomEvent<string>).detail);
+    window.addEventListener(bookingDialogEvent, open);
+    return () => window.removeEventListener(bookingDialogEvent, open);
+  }, []);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog || !placement) return;
+    trackBookingModalOpen(placement, language);
+    document.body.classList.add("booking-open");
+    if (!dialog.open) {
+      try { dialog.showModal(); } catch { dialog.setAttribute("open", ""); }
+    }
+    return () => document.body.classList.remove("booking-open");
+  }, [language, placement]);
+
+  const close = () => {
+    const dialog = dialogRef.current;
+    if (dialog?.open) {
+      try { dialog.close(); } catch { dialog.removeAttribute("open"); setPlacement(null); }
+    } else {
+      setPlacement(null);
+    }
+  };
+
+  return <dialog className={"booking-dialog language-" + language.toLowerCase()} ref={dialogRef} aria-labelledby="booking-title" onClose={() => setPlacement(null)} onClick={(event) => { if (event.target === event.currentTarget) close(); }}>
+    <div className="booking-dialog-panel">
+      <button className="booking-close" type="button" onClick={close} aria-label={copy.close}><span aria-hidden="true">×</span></button>
+      <div className="booking-heading"><p>{copy.kicker}</p><h2 id="booking-title">{copy.title}</h2><span>{copy.body}</span></div>
+      <div className="booking-options">
+        {bookingContactChannels.map((channel) => {
+          const href = contactHref(channel, language);
+          if (!href) return null;
+          const external = opensOutsidePage(channel);
+          return <a className={"booking-option" + (channel === "WhatsApp" ? " booking-option-primary" : "")} href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} key={channel} onClick={() => { trackContactIntent(channel, "booking_modal", language); close(); }}>
+            <i><SocialIcon channel={channel} /></i><span><strong>{contactLabels[language][channel]}</strong><small>{copy.notes[channel]}</small></span><b aria-hidden="true">↗</b>
+          </a>;
+        })}
+      </div>
+    </div>
+  </dialog>;
+}
+
+function EngagementTracker({ language, path }: { language: Language; path: string }) {
+  useEffect(() => {
+    const seen = new Set<number>();
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const height = document.documentElement.scrollHeight;
+      if (height <= window.innerHeight) return;
+      const depth = ((window.scrollY + window.innerHeight) / height) * 100;
+      [25, 50, 75, 90].forEach((threshold) => {
+        if (depth >= threshold && !seen.has(threshold)) {
+          seen.add(threshold);
+          trackScrollDepth(threshold, language);
+        }
+      });
+    };
+    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(measure); };
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [language, path]);
+
+  useEffect(() => {
+    const seen = new Set<string>();
+    const sections = ["orientation", "programs", "schedule", "story", "contact"].map((id) => document.getElementById(id)).filter((element): element is HTMLElement => Boolean(element));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || seen.has(entry.target.id)) return;
+        seen.add(entry.target.id);
+        trackSectionView(entry.target.id, language);
+      });
+    }, { threshold: 0.45 });
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [language, path]);
+
+  return null;
+}
+
 function LanguageSwitcher({ language, onChange }: { language: Language; onChange: (language: Language) => void }) {
   return <div className="language-switcher" aria-label={interfaceCopy[language].languageLabel}>{(["EN", "KA", "RU"] as Language[]).map((item) => <button className={language === item ? "is-active" : ""} key={item} onClick={() => onChange(item)} type="button" aria-pressed={language === item}>{item}</button>)}</div>;
 }
@@ -190,7 +295,7 @@ function Header({ language, copy, onLanguage, internal = false }: { language: La
   return <header className={"header" + (internal ? " header-internal" : "")}>
     <a className="brand" href={home} aria-label={copy.footer.studio}><Logo header /><span className="brand-type">Dance Studio Tela</span></a>
     <nav className="desktop-nav" aria-label={interfaceCopy[language].navigationLabel}>{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
-    <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"} onClick={() => trackBeginLead("header", language)}>{copy.bookShort}</a></div>
+    <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><button className="header-cta" type="button" onClick={() => openBookingDialog("header")}>{copy.bookShort}</button></div>
   </header>;
 }
 
@@ -215,7 +320,6 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
   const childrenPrograms = copy.programs.items.filter((program) => program.audience === "children");
   const visiblePrograms = audience === "adults" ? adultPrograms : childrenPrograms;
   const selectedSchedule = scheduleGroups.find((group) => group.id === activeSchedule) ?? scheduleGroups[0];
-  const contactChannels = [...copy.contact.channels.split(" · "), ...(contactUrls.Phone ? ["Phone"] : [])];
 
   const requestHeroPlayback = () => {
     const video = heroVideoRef.current;
@@ -317,11 +421,15 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
           <div className="hero-meta">
             <p className="eyebrow">{copy.hero.eyebrow}</p>
             <div className="hero-meta-icons" aria-label={ui.socialLabel}>
-              {["Google Maps", "Instagram", "Facebook"].map((channel) => <span className="hero-meta-icon" role="img" aria-label={channel} key={channel}><SocialIcon channel={channel} /></span>)}
+              {heroContactChannels.map((channel) => {
+                const href = contactHref(channel, language);
+                if (!href) return null;
+                return <a className="hero-meta-icon" href={href} target="_blank" rel="noreferrer" aria-label={contactLabels[language][channel]} title={contactLabels[language][channel]} key={channel} onClick={() => trackContactIntent(channel, "hero", language)}><SocialIcon channel={channel} /></a>;
+              })}
             </div>
           </div>
           <h1 id="hero-title">{copy.hero.title}<em>{copy.hero.accent}</em></h1><p className="hero-body">{copy.hero.body}</p>
-          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}</a><a className="button button-secondary" href="#contact" onClick={() => trackBeginLead("hero", language)}>{copy.hero.secondary}</a></div>
+          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}</a><button className="button button-secondary" type="button" onClick={() => openBookingDialog("hero")}>{copy.hero.secondary}</button></div>
           <ul className="reassurance" aria-label="Beginner reassurance">{copy.hero.notes.map((note) => <li key={note}><span aria-hidden="true">✦</span>{note}</li>)}</ul>
         </div>
         <a className="hero-scroll" href="#orientation" aria-label={ui.nextSection}><span aria-hidden="true" /></a>
@@ -388,17 +496,15 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     <section className="closing-reel section-dark" aria-labelledby="closing-title"><div className="section-wrap closing-reel-stage">
       <div className="closing-reel-copy"><SectionLabel light>{ui.films.closing.kicker}</SectionLabel><h2 id="closing-title">{ui.films.closing.title}</h2><p>{ui.films.closing.body}</p></div>
       <AutoPlayVideo base="closing-emotional" caption={{ title: ui.films.closing.caption, note: ui.films.closing.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="closing-reel-video" loop={false} />
-      <div className="closing-reel-cta"><a className="button button-light" href="#contact" onClick={() => trackBeginLead("closing_film", language)}>{copy.hero.secondary}</a></div>
+      <div className="closing-reel-cta"><button className="button button-light" type="button" onClick={() => openBookingDialog("closing_film")}>{copy.hero.secondary}</button></div>
     </div></section>
 
-    <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2 id="contact-title">{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><div className="contact-channels" aria-label={copy.contact.channels}>{contactChannels.map((channel) => {
-      const destination = contactUrls[channel];
-      const label = channel === "Phone" ? phoneLabels[language] : channel;
-      const content = <span><i className="social-icon"><SocialIcon channel={channel} /></i>{label}</span>;
-      return destination
-        ? <a className="contact-channel is-connected" href={destination} target={channel === "Phone" ? undefined : "_blank"} rel={channel === "Phone" ? undefined : "noreferrer"} key={channel} onClick={() => trackContactChannel(channel, language)}>{content}</a>
-        : <span className="contact-channel" key={channel}>{content}</span>;
-    })}</div>{!Object.values(contactUrls).some(Boolean) && <p className="contact-pending">{copy.contact.pending}</p>}</div></div></section>
+    <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2 id="contact-title">{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><div className="contact-channels" aria-label={ui.socialLabel}>{sectionContactChannels.map((channel) => {
+      const destination = contactHref(channel, language);
+      if (!destination) return null;
+      const external = opensOutsidePage(channel);
+      return <a className="contact-channel is-connected" href={destination} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} key={channel} onClick={() => trackContactIntent(channel, "contact_section", language)}><span><i className="social-icon"><SocialIcon channel={channel} /></i>{contactLabels[language][channel]}</span></a>;
+    })}</div></div></div></section>
     <Footer copy={copy} language={language} />
   </main>;
 }
@@ -421,12 +527,12 @@ function ProgramPage({ language, copy, onLanguage, audience, slug }: { language:
   if (!title || !body || !programMedia) return <HomePage language={language} copy={copy} onLanguage={onLanguage} />;
 
   return <main className={"site-shell detail-shell language-" + language.toLowerCase()}>
-    <section className="detail-hero"><Header language={language} copy={copy} onLanguage={onLanguage} internal /><div className="section-wrap detail-hero-grid"><div className="detail-hero-copy"><a className="detail-back" href={languagePath[language] + "#programs"}>← {ui.back}</a><p className="eyebrow">{ui.programFor} · {tag}</p><h1>{title}</h1><p>{body}</p><a className="button button-primary" href={languagePath[language] + "#contact"} onClick={() => trackBeginLead("program_hero", language)}>{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div>{programMedia.kind === "video" ? <AutoPlayVideo base={programMedia.base} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="program-hero-film" /> : <figure className="program-hero-image"><img src={programMedia.src} alt={title} /></figure>}</div></section>
+    <section className="detail-hero"><Header language={language} copy={copy} onLanguage={onLanguage} internal /><div className="section-wrap detail-hero-grid"><div className="detail-hero-copy"><a className="detail-back" href={languagePath[language] + "#programs"}>← {ui.back}</a><p className="eyebrow">{ui.programFor} · {tag}</p><h1>{title}</h1><p>{body}</p><button className="button button-primary" type="button" onClick={() => openBookingDialog("program_hero")}>{copy.hero.secondary}<span aria-hidden="true">↗</span></button></div>{programMedia.kind === "video" ? <AutoPlayVideo base={programMedia.base} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="program-hero-film" /> : <figure className="program-hero-image"><img src={programMedia.src} alt={title} /></figure>}</div></section>
     <section className="detail-proof section-sand"><div className="section-wrap">{copy.hero.notes.map((note) => <span key={note}>{note}</span>)}</div></section>
     <section className="detail-content section-ivory"><div className="section-wrap detail-content-grid"><article><SectionLabel>{ui.whoTitle}</SectionLabel><h2>{ui.whoTitle}</h2><p>{audience === "adults" ? ui.whoBodyAdult : ui.whoBodyChild}</p></article><article><SectionLabel>{ui.lessonTitle}</SectionLabel><h2>{ui.lessonTitle}</h2><p>{ui.lessonBody}</p></article><article><SectionLabel>{ui.practicalTitle}</SectionLabel><h2>{ui.practicalTitle}</h2><p>{ui.practicalBody}</p><a className="text-link" href={languagePath[language] + "#schedule"}>{ui.scheduleLink}<span aria-hidden="true">↗</span></a></article></div></section>
     {isProAm && <section className="detail-proam section-plum"><div className="section-wrap proam-points">{copy.proam.points.map((point) => <article className="proam-point" key={point.number}><div><h3>{point.title}</h3><p>{point.body}</p></div></article>)}</div></section>}
     <section className="related section-dark"><div className="section-wrap"><SectionLabel light>{ui.related}</SectionLabel><div className="related-grid">{related.map((program) => <a href={programHref(language, program)} key={program.number}><h2>{program.title}</h2><p>{program.body}</p><i aria-hidden="true">↗</i></a>)}</div></div></section>
-    <section className="contact-section detail-contact" id="contact"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2>{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><a className="button button-light" href={languagePath[language] + "#contact"} onClick={() => trackBeginLead("program_contact", language)}>{copy.bookShort}<span aria-hidden="true">↗</span></a></div></div></section>
+    <section className="contact-section detail-contact" id="contact"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2>{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><button className="button button-light" type="button" onClick={() => openBookingDialog("program_contact")}>{copy.bookShort}<span aria-hidden="true">↗</span></button></div></div></section>
     <Footer copy={copy} language={language} />
   </main>;
 }
@@ -462,5 +568,5 @@ export default function App() {
   const page = audience && slug
     ? <ProgramPage language={language} copy={copy} onLanguage={changeLanguage} audience={audience} slug={slug} />
     : <HomePage language={language} copy={copy} onLanguage={changeLanguage} />;
-  return <>{page}<ConsentBanner language={language} /></>;
+  return <>{page}<EngagementTracker language={language} path={path} /><BookingDialog language={language} /><ConsentBanner language={language} /></>;
 }

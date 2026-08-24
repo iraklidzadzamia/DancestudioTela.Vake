@@ -1,4 +1,5 @@
 import type { Language } from "./content";
+import type { ContactChannel } from "./contacts";
 
 export type ConsentChoice = "granted" | "denied";
 type EventParameters = Record<string, string | number | boolean | undefined>;
@@ -14,8 +15,14 @@ declare global {
 const consentStorageKey = "tela_google_consent_v1";
 const gaMeasurementId = (import.meta.env.VITE_GA_MEASUREMENT_ID ?? "").trim();
 const googleAdsId = (import.meta.env.VITE_GOOGLE_ADS_ID ?? "").trim();
-const googleAdsLeadLabel = (import.meta.env.VITE_GOOGLE_ADS_LEAD_LABEL ?? "").trim();
 const configuredTagIds = [...new Set([gaMeasurementId, googleAdsId].filter(Boolean))];
+const contactEventNames: Record<ContactChannel, string> = {
+  "Google Maps": "get_directions",
+  Instagram: "contact_instagram",
+  Facebook: "contact_facebook",
+  WhatsApp: "contact_whatsapp",
+  Phone: "contact_phone",
+};
 
 function ensureGtag() {
   window.dataLayer = window.dataLayer || [];
@@ -92,25 +99,40 @@ export function trackPageView(path: string, title: string, language: Language) {
   });
 }
 
-export function trackBeginLead(location: string, language: Language) {
-  trackEvent("begin_lead", { location, language: language.toLowerCase() });
+export function trackBookingModalOpen(location: string, language: Language) {
+  trackEvent("booking_modal_open", {
+    placement: location,
+    page_path: window.location.pathname,
+    language: language.toLowerCase(),
+  });
 }
 
-export function trackContactChannel(channel: string, language: Language) {
-  const method = channel.toLowerCase();
-  trackEvent("contact_channel_click", { method, language: language.toLowerCase() });
-
-  if (channel !== "WhatsApp" && channel !== "Phone") return;
-  trackEvent("generate_lead", { method, language: language.toLowerCase() });
-
-  if (googleAdsId && googleAdsLeadLabel) {
-    ensureGtag()("event", "conversion", {
-      send_to: `${googleAdsId}/${googleAdsLeadLabel}`,
-      transport_type: "beacon",
-    });
-  }
+export function trackContactIntent(channel: ContactChannel, placement: string, language: Language) {
+  trackEvent(contactEventNames[channel], {
+    contact_channel: channel.toLowerCase().replace(" ", "_"),
+    placement,
+    page_path: window.location.pathname,
+    language: language.toLowerCase(),
+    transport_type: "beacon",
+  });
 }
 
 export function trackLeadForm(language: Language) {
   trackEvent("generate_lead", { method: "website_form", language: language.toLowerCase() });
+}
+
+export function trackScrollDepth(percent: number, language: Language) {
+  trackEvent("scroll_depth", {
+    percent_scrolled: percent,
+    page_path: window.location.pathname,
+    language: language.toLowerCase(),
+  });
+}
+
+export function trackSectionView(section: string, language: Language) {
+  trackEvent("section_view", {
+    section_name: section,
+    page_path: window.location.pathname,
+    language: language.toLowerCase(),
+  });
 }
