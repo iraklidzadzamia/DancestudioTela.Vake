@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { AutoPlayVideo } from "./AutoPlayVideo";
 import { scheduleGroups, siteCopy, type Language, type SiteCopy } from "./content";
 import { getProgramMedia } from "./programMedia";
@@ -120,24 +120,29 @@ function programHref(language: Language, program: Program) {
   return languagePath[language] + audience + "/" + programSlugs[program.number] + "/";
 }
 
-function Logo({ full = false, header = false }: { full?: boolean; header?: boolean }) {
-  if (header) return <svg className="logo-header" viewBox="1120 220 1830 1500" aria-hidden="true">
+function DancerMark({ className }: { className: string }) {
+  const instanceId = useId().replace(/:/g, "");
+  const filterId = `logo-luminance-${instanceId}`;
+  const maskId = `logo-dancer-mask-${instanceId}`;
+  return <svg className={className} viewBox="1120 220 1830 1500" aria-hidden="true">
     <defs>
-      <filter id="logo-luminance" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+      <filter id={filterId} x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
         <feColorMatrix type="luminanceToAlpha" result="luma" />
         <feComponentTransfer in="luma">
           <feFuncA type="linear" slope="4" intercept="-0.8" />
         </feComponentTransfer>
       </filter>
-      <mask id="logo-dancer-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="4000" height="2828" style={{ maskType: "alpha" }}>
-        <image href="/tela-logo-header.jpg" x="0" y="0" width="4000" height="2828" filter="url(#logo-luminance)" />
+      <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="4000" height="2828" style={{ maskType: "alpha" }}>
+        <image href="/tela-logo-header.jpg" x="0" y="0" width="4000" height="2828" filter={`url(#${filterId})`} />
       </mask>
     </defs>
-    <rect x="0" y="0" width="4000" height="2828" fill="#d2a6e5" mask="url(#logo-dancer-mask)" />
+    <rect x="0" y="0" width="4000" height="2828" fill="#d2a6e5" mask={`url(#${maskId})`} />
   </svg>;
+}
 
-  const className = full ? "logo-full" : "logo-crop";
-  return <span className={className} aria-hidden="true"><img src="/tela-logo.png" alt="" loading="eager" fetchPriority="high" decoding="async" /></span>;
+function Logo({ header = false }: { header?: boolean }) {
+  if (header) return <DancerMark className="logo-header" />;
+  return <span className="logo-crop" aria-hidden="true"><img src="/tela-logo.png" alt="" loading="eager" fetchPriority="high" decoding="async" /></span>;
 }
 function SectionLabel({ children, light = false }: { children: string; light?: boolean }) {
   return <p className={"section-label" + (light ? " section-label-light" : "")}>{children}</p>;
@@ -163,7 +168,7 @@ function Header({ language, copy, onLanguage, internal = false }: { language: La
 
 function ProgramList({ language, programs, action }: { language: Language; programs: Program[]; action: string }) {
   return <div className="program-list">{programs.map((program) => <a className="program-row" href={programHref(language, program)} key={program.number}>
-    <span className="program-row-number">{program.number}</span><div><p>{program.tag}</p><h3>{program.title}</h3><span>{program.body}</span></div><small>{action}</small><i aria-hidden="true">→</i>
+    <div><p>{program.tag}</p><h3>{program.title}</h3><span>{program.body}</span></div><small>{action}</small><i aria-hidden="true">→</i>
   </a>)}</div>;
 }
 
@@ -271,10 +276,10 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     <section className="programs section-sand" id="programs" aria-labelledby="programs-title"><div className="section-wrap">
       <div className="programs-heading"><div><SectionLabel>{ui.audienceKicker}</SectionLabel><h2 id="programs-title">{ui.audienceTitle}</h2></div><p>{ui.audienceBody}</p></div>
       <div className="audience-switch" role="group" aria-label={copy.programs.title}>
-        <button className={audience === "adults" ? "is-active" : ""} type="button" aria-pressed={audience === "adults"} onClick={() => setAudience("adults")}><span>01</span><strong>{copy.programs.adultLabel}</strong><small>{ui.adultsNote}</small></button>
-        <button className={audience === "children" ? "is-active" : ""} type="button" aria-pressed={audience === "children"} onClick={() => setAudience("children")}><span>02</span><strong>{copy.programs.childrenLabel}</strong><small>{ui.childrenNote}</small></button>
+        <button className={audience === "adults" ? "is-active" : ""} type="button" aria-pressed={audience === "adults"} onClick={() => setAudience("adults")}><strong>{copy.programs.adultLabel}</strong><small>{ui.adultsNote}</small></button>
+        <button className={audience === "children" ? "is-active" : ""} type="button" aria-pressed={audience === "children"} onClick={() => setAudience("children")}><strong>{copy.programs.childrenLabel}</strong><small>{ui.childrenNote}</small></button>
       </div>
-      <div className="programs-layout"><div className="programs-intro"><p>{copy.programs.body}</p><div className="programs-count"><span>0{visiblePrograms.length}</span><small>{copy.programs.kicker}</small></div></div><ProgramList language={language} programs={visiblePrograms} action={ui.viewProgram} /></div>
+      <div className="programs-layout"><div className="programs-intro"><p>{copy.programs.body}</p></div><ProgramList language={language} programs={visiblePrograms} action={ui.viewProgram} /></div>
     </div></section>
 
     <section className="editorial-film proam-film section-dark" id="proam" aria-labelledby="proam-title"><div className="section-wrap editorial-split">
@@ -311,11 +316,11 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     <section className="schedule-section section-sand" id="schedule" aria-labelledby="schedule-title"><div className="section-wrap">
       <div className="schedule-header"><div><SectionLabel>{copy.schedule.kicker}</SectionLabel><h2 id="schedule-title">{copy.schedule.title}</h2></div><div><p>{copy.schedule.body}</p><span>{copy.schedule.draft}</span></div></div>
       <div className="schedule-layout"><div className="schedule-tabs" role="group" aria-label={copy.schedule.title}>{scheduleGroups.map((group) => <button key={group.id} type="button" aria-pressed={activeSchedule === group.id} className={activeSchedule === group.id ? "is-active" : ""} onClick={() => setActiveSchedule(group.id)}><span>{group.label[language]}</span><i aria-hidden="true">{activeSchedule === group.id ? "●" : "○"}</i></button>)}</div>
-        <div className="schedule-panel"><div className="schedule-panel-title"><span>{selectedSchedule.label[language]}</span><i>{String(selectedSchedule.classes.length).padStart(2, "0")}</i></div><div className="class-list">{selectedSchedule.classes.map((item, index) => <article className="class-row" key={item.time + item.title + index}><time>{item.time}</time><div><h3>{item.title}</h3>{item.teachers && <p>{copy.schedule.teachers} {item.teachers}</p>}</div></article>)}</div></div>
+        <div className="schedule-panel"><div className="schedule-panel-title"><span>{selectedSchedule.label[language]}</span></div><div className="class-list">{selectedSchedule.classes.map((item, index) => <article className="class-row" key={item.time + item.title + index}><time>{item.time}</time><div><h3>{item.title}</h3>{item.teachers && <p>{copy.schedule.teachers} {item.teachers}</p>}</div></article>)}</div></div>
       </div>
     </div></section>
 
-    <section className="heritage section-dark" id="story" aria-labelledby="heritage-title"><div className="section-wrap heritage-grid"><div className="heritage-emblem"><Logo full /></div><div className="heritage-copy"><SectionLabel light>{copy.heritage.kicker}</SectionLabel><h2 id="heritage-title">{copy.heritage.title}</h2><p>{copy.heritage.body}</p></div><div className="heritage-year"><span>{ui.sinceLabel}</span><strong>{copy.heritage.year}</strong></div></div></section>
+    <section className="heritage section-dark" id="story" aria-labelledby="heritage-title"><div className="section-wrap heritage-grid"><div className="heritage-emblem"><DancerMark className="heritage-mark" /></div><div className="heritage-copy"><SectionLabel light>{copy.heritage.kicker}</SectionLabel><h2 id="heritage-title">{copy.heritage.title}</h2><p>{copy.heritage.body}</p></div><div className="heritage-year"><span>{ui.sinceLabel}</span><strong>{copy.heritage.year}</strong></div></div></section>
 
     <section className="faq section-ivory" aria-labelledby="faq-title"><div className="section-wrap faq-grid"><div className="faq-heading"><SectionLabel>{copy.faq.kicker}</SectionLabel><h2 id="faq-title">{copy.faq.title}</h2></div><div className="faq-list">{[0, 1, 3, 5, 6].map((sourceIndex, index) => { const item = copy.faq.items[sourceIndex]; return <details key={item.question} open={index === 0}><summary><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.question}</strong><i aria-hidden="true">+</i></summary><p>{item.answer}</p></details>; })}</div></div></section>
 
@@ -351,7 +356,7 @@ function ProgramPage({ language, copy, onLanguage, audience, slug }: { language:
     <section className="detail-proof section-sand"><div className="section-wrap">{copy.hero.notes.map((note, index) => <span key={note}><i>{String(index + 1).padStart(2, "0")}</i>{note}</span>)}</div></section>
     <section className="detail-content section-ivory"><div className="section-wrap detail-content-grid"><article><SectionLabel>{ui.whoTitle}</SectionLabel><h2>{ui.whoTitle}</h2><p>{audience === "adults" ? ui.whoBodyAdult : ui.whoBodyChild}</p></article><article><SectionLabel>{ui.lessonTitle}</SectionLabel><h2>{ui.lessonTitle}</h2><p>{ui.lessonBody}</p></article><article><SectionLabel>{ui.practicalTitle}</SectionLabel><h2>{ui.practicalTitle}</h2><p>{ui.practicalBody}</p><a className="text-link" href={languagePath[language] + "#schedule"}>{ui.scheduleLink}<span aria-hidden="true">↗</span></a></article></div></section>
     {isProAm && <section className="detail-proam section-plum"><div className="section-wrap proam-points">{copy.proam.points.map((point) => <article className="proam-point" key={point.number}><span>{point.number}</span><div><h3>{point.title}</h3><p>{point.body}</p></div></article>)}</div></section>}
-    <section className="related section-dark"><div className="section-wrap"><SectionLabel light>{ui.related}</SectionLabel><div className="related-grid">{related.map((program) => <a href={programHref(language, program)} key={program.number}><span>{program.number}</span><h2>{program.title}</h2><p>{program.body}</p><i aria-hidden="true">↗</i></a>)}</div></div></section>
+    <section className="related section-dark"><div className="section-wrap"><SectionLabel light>{ui.related}</SectionLabel><div className="related-grid">{related.map((program) => <a href={programHref(language, program)} key={program.number}><h2>{program.title}</h2><p>{program.body}</p><i aria-hidden="true">↗</i></a>)}</div></div></section>
     <section className="contact-section detail-contact" id="contact"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2>{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><a className="button button-light" href={languagePath[language] + "#contact"}>{copy.bookShort}<span aria-hidden="true">↗</span></a></div></div></section>
     <Footer copy={copy} />
   </main>;

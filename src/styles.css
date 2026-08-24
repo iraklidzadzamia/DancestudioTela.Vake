@@ -120,10 +120,8 @@ h1,
   background: rgba(18, 16, 17, 0.54);
   box-shadow: 0 0 0 1px rgba(208, 174, 222, 0.35), 0 0.8rem 2rem rgba(0, 0, 0, 0.16);
 }
-.logo-crop img, .logo-full img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.logo-crop img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .logo-crop img { transform: none; border-radius: 50%; filter: none; }
-.logo-full { width: min(100%, 26rem); aspect-ratio: 1.43; display: block; overflow: hidden; }
-.logo-full img { object-fit: contain; }
 .brand-type { color: rgba(255, 255, 255, 0.92); font-family: Georgia, "Times New Roman", serif; font-size: 1.34rem; font-weight: 400; letter-spacing: 0.018em; line-height: 1; white-space: nowrap; text-shadow: 0 0.35rem 1.2rem rgba(0, 0, 0, 0.72); }
 .desktop-nav { display: flex; gap: clamp(1.3rem, 2.5vw, 2.8rem); color: rgba(255, 255, 255, 0.68); font-size: 0.7rem; letter-spacing: 0.09em; text-transform: uppercase; }
 .desktop-nav a, .language-switcher button { transition: color 180ms ease; }
@@ -286,22 +284,17 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
 .programs-heading h2, .section-heading-row h2, .schedule-header h2 { max-width: 12ch; margin: 2rem 0 0; font-size: clamp(3rem, 5.1vw, 5.7rem); line-height: 0.97; }
 .programs-heading > p, .section-heading-row > p, .schedule-header > div:last-child p { margin: 0; color: rgba(42, 28, 32, 0.62); line-height: 1.75; }
 .audience-switch { display: grid; grid-template-columns: repeat(2, 1fr); margin-top: clamp(3.5rem, 6vw, 6rem); border-top: 1px solid var(--line-dark); border-bottom: 1px solid var(--line-dark); }
-.audience-switch button { min-height: 9.5rem; display: grid; grid-template-columns: 2rem 1fr; gap: 0.7rem 1.1rem; align-content: center; padding: 1.4rem 1.6rem; border: 0; background: transparent; color: rgba(42, 28, 32, 0.5); text-align: left; cursor: pointer; transition: background 180ms ease, color 180ms ease; }
+.audience-switch button { min-height: 9.5rem; display: grid; gap: 0.7rem; align-content: center; padding: 1.4rem 1.6rem; border: 0; background: transparent; color: rgba(42, 28, 32, 0.5); text-align: left; cursor: pointer; transition: background 180ms ease, color 180ms ease; }
 .audience-switch button + button { border-left: 1px solid var(--line-dark); }
 .audience-switch button.is-active { background: var(--ink); color: var(--ivory); }
-.audience-switch button > span { grid-row: 1 / span 2; color: var(--plum); font-size: 0.63rem; }
-.audience-switch button.is-active > span { color: var(--gold); }
 .audience-switch strong { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.55rem, 2.4vw, 2.45rem); font-weight: 400; letter-spacing: -0.035em; }
 .audience-switch small { max-width: 34rem; font-size: 0.8rem; line-height: 1.5; }
 .programs-layout { display: grid; grid-template-columns: minmax(15rem, 0.36fr) minmax(0, 1fr); gap: clamp(3rem, 8vw, 8rem); margin-top: clamp(3rem, 5vw, 5rem); }
-.programs-intro { display: flex; flex-direction: column; justify-content: space-between; gap: 4rem; }
+.programs-intro { align-self: start; }
 .programs-intro > p { color: rgba(42, 28, 32, 0.62); line-height: 1.75; }
-.programs-count span { display: block; color: var(--plum); font-family: Georgia, "Times New Roman", serif; font-size: clamp(4rem, 7vw, 7rem); line-height: 0.8; }
-.programs-count small { display: block; margin-top: 0.8rem; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; }
 .program-list { border-top: 1px solid var(--line-dark); }
-.program-row { min-height: 9rem; display: grid; grid-template-columns: 3rem 1fr auto 2.7rem; gap: 1.4rem; align-items: center; border-bottom: 1px solid var(--line-dark); transition: padding 180ms ease, background 180ms ease; }
+.program-row { min-height: 9rem; display: grid; grid-template-columns: 1fr auto 2.7rem; gap: 1.4rem; align-items: center; border-bottom: 1px solid var(--line-dark); transition: padding 180ms ease, background 180ms ease; }
 .program-row:hover { padding-inline: 1rem; background: rgba(245, 239, 231, 0.38); }
-.program-row-number { color: var(--plum); font-size: 0.62rem; }
 .program-row p { margin: 0 0 0.35rem; color: var(--plum); font-size: 0.59rem; letter-spacing: 0.14em; text-transform: uppercase; }
 .program-row h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.4rem, 2.3vw, 2.15rem); font-weight: 400; letter-spacing: -0.03em; }
 .program-row div > span { display: block; max-width: 41rem; margin-top: 0.45rem; color: rgba(42, 28, 32, 0.66); font-size: 0.88rem; line-height: 1.55; }
@@ -411,8 +404,7 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
 .schedule-tabs span { max-width: 14rem; font-family: Georgia, "Times New Roman", serif; font-size: 1.15rem; }
 .schedule-tabs i { color: var(--plum); font-size: 0.58rem; font-style: normal; }
 .schedule-panel { padding: clamp(1.5rem, 3vw, 3rem); background: var(--ivory); }
-.schedule-panel-title { display: flex; align-items: start; justify-content: space-between; gap: 2rem; padding-bottom: 1.8rem; border-bottom: 1px solid var(--line-dark); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.6rem, 3vw, 2.8rem); }
-.schedule-panel-title i { color: var(--lilac); font-size: clamp(2.5rem, 5vw, 5rem); font-style: normal; line-height: 0.8; }
+.schedule-panel-title { padding-bottom: 1.8rem; border-bottom: 1px solid var(--line-dark); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.6rem, 3vw, 2.8rem); }
 .class-row { min-height: 6.4rem; display: grid; grid-template-columns: 8rem 1fr auto; gap: 1.4rem; align-items: center; border-bottom: 1px solid var(--line-dark); }
 .class-row time { color: var(--plum); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; }
 .class-row h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.2rem, 2vw, 1.65rem); font-weight: 400; }
@@ -422,7 +414,8 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
 .heritage { position: relative; overflow: hidden; padding-block: clamp(4.5rem, 7vw, 7rem); }
 .heritage::before { content: ""; width: 55rem; height: 55rem; position: absolute; left: -34rem; top: -5rem; border: 1px solid rgba(208, 173, 107, 0.2); border-radius: 50%; }
 .heritage-grid { position: relative; display: grid; grid-template-columns: minmax(12rem, 0.32fr) minmax(0, 1fr) minmax(8rem, 0.24fr); gap: clamp(3rem, 6vw, 6rem); align-items: center; }
-.heritage-emblem { display: grid; place-items: center; border: 1px solid var(--line-light); border-radius: 50%; background: rgba(0, 0, 0, 0.18); }
+.heritage-emblem { display: grid; place-items: center; }
+.heritage-mark { width: min(100%, 18rem); display: block; opacity: 0.82; filter: drop-shadow(0 1rem 3rem rgba(184, 144, 204, 0.16)); }
 .heritage-copy h2 { max-width: 14ch; margin: 1.6rem 0 0; font-size: clamp(2.6rem, 4vw, 4.7rem); line-height: 1; }
 .heritage-copy > p { max-width: 42rem; margin: 2rem 0 0; color: rgba(255, 255, 255, 0.58); line-height: 1.78; }
 .heritage-year { text-align: right; }
@@ -497,8 +490,7 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
 .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 3rem; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
 .related-grid a { min-height: 23rem; position: relative; padding: 2rem 1.5rem; border-left: 1px solid var(--line-light); }
 .related-grid a:last-child { border-right: 1px solid var(--line-light); }
-.related-grid a > span { color: var(--gold); font-size: 0.62rem; }
-.related-grid h2 { margin: 4rem 0 0; font-size: clamp(2rem, 3vw, 3.3rem); line-height: 1; }
+.related-grid h2 { margin: 0; font-size: clamp(2rem, 3vw, 3.3rem); line-height: 1; }
 .related-grid p { color: rgba(255, 255, 255, 0.5); font-size: 0.72rem; line-height: 1.6; }
 .related-grid i { position: absolute; right: 1.5rem; bottom: 1.5rem; color: var(--lilac); font-style: normal; }
 .detail-contact { min-height: auto; }
@@ -563,12 +555,11 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
   .orientation-facts dd { font-size: 0.72rem; line-height: 1.4; }
   .programs-heading, .section-heading-row, .schedule-header { gap: 1.5rem; align-items: start; }
   .audience-switch { grid-template-columns: repeat(2, 1fr); }
-  .audience-switch button { min-height: 8.2rem; grid-template-columns: 1.45rem 1fr; gap: 0.55rem; padding: 1rem 0.75rem; }
+  .audience-switch button { min-height: 8.2rem; gap: 0.55rem; padding: 1rem 0.75rem; }
   .audience-switch button + button { border-left: 1px solid var(--line-dark); border-top: 0; }
   .audience-switch strong { font-size: clamp(1.35rem, 5vw, 1.8rem); }
   .programs-intro { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 2rem; }
-  .programs-count { display: none; }
-  .program-row { grid-template-columns: 2.3rem 1fr 2.5rem; gap: 1rem; padding-block: 1.5rem; }
+  .program-row { grid-template-columns: 1fr 2.5rem; gap: 1rem; padding-block: 1.5rem; }
   .program-row > small { display: none; }
   .proam-monogram { display: none; }
   .proam-grid { gap: 3rem; padding-left: 0; }
@@ -630,7 +621,6 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
   .hero-actions { margin-top: 1.4rem; }
   .hero-actions .button { min-height: 52px; }
   .programs-intro { grid-template-columns: 1fr; }
-  .programs-count { text-align: left; }
   .program-row { min-height: 8.5rem; }
   .program-row div > span { font-size: 0.86rem; }
   .inside-values { grid-template-columns: 1fr; }

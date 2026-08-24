@@ -52,6 +52,20 @@ describe("program hero media", () => {
 
     expect(container.querySelector(".program-hero-film video")).toHaveAttribute("poster", "/media/sections/tango-on-bars-poster.webp");
     expect(container.querySelector(".portrait-media-poster")).not.toBeInTheDocument();
+    expect(container.querySelector(".related-grid a > span")).not.toBeInTheDocument();
+  });
+
+  it("uses the dancer mark and removes unexplained public numbers", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+
+    expect(container.querySelector(".heritage-mark")).toBeInTheDocument();
+    expect(container.querySelector(".heritage-emblem img")).not.toBeInTheDocument();
+    expect(container.querySelector(".program-row-number")).not.toBeInTheDocument();
+    expect(container.querySelector(".programs-count")).not.toBeInTheDocument();
+    expect(container.querySelector(".audience-switch button > span")).not.toBeInTheDocument();
+    expect(container.querySelector(".schedule-panel-title i")).not.toBeInTheDocument();
   });
 
   it("shows the hero play affordance only after a manual pause", () => {
