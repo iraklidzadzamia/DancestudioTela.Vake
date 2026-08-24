@@ -14,7 +14,7 @@ type Program = SiteCopy["programs"]["items"][number];
 type FilmCopy = { kicker: string; title: string; body: string; caption: string; note: string };
 type InterfaceCopy = {
   skip: string; audienceKicker: string; audienceTitle: string; audienceBody: string; viewProgram: string;
-  adultsNote: string; childrenNote: string; adultFilm: string; childFilm: string; filmReserved: string;
+  adultsNote: string; childrenNote: string;
   insideKicker: string; insideTitle: string; insideBody: string; kidsKicker: string; kidsTitle: string;
   kidsBody: string; proamLink: string; storyLink: string; closingKicker: string; closingTitle: string;
   closingBody: string; back: string; programFor: string; whoTitle: string; whoBodyAdult: string;
@@ -29,8 +29,7 @@ const interfaceCopy: Record<Language, InterfaceCopy> = {
     skip: "Skip to programs", audienceKicker: "Find your way in", audienceTitle: "Who are you choosing for?",
     audienceBody: "Start with the person, then discover the direction. No dance vocabulary required.",
     viewProgram: "Discover this program", adultsNote: "Movement, confidence and a new part of your life.",
-    childrenNote: "Technique, imagination and the joy of growing through movement.", adultFilm: "Real movement at Tela",
-    childFilm: "Careful teaching for young dancers", filmReserved: "Reserved for your portrait studio film",
+    childrenNote: "Technique, imagination and the joy of growing through movement.",
     insideKicker: "Inside Tela", insideTitle: "Learning that feels personal. Progress you can feel.",
     insideBody: "The right class is more than a list of steps. It is attention, music, a welcoming room and the moment your body begins to understand.",
     kidsKicker: "For young dancers", kidsTitle: "Confidence begins with being seen.",
@@ -57,8 +56,7 @@ const interfaceCopy: Record<Language, InterfaceCopy> = {
     skip: "პროგრამებზე გადასვლა", audienceKicker: "იპოვე შენი გზა", audienceTitle: "ვისთვის ირჩევ?",
     audienceBody: "დაიწყე ადამიანით და შემდეგ აღმოაჩინე მიმართულება — საცეკვაო ტერმინების ცოდნა არ არის საჭირო.",
     viewProgram: "გაიგე მეტი პროგრამის შესახებ", adultsNote: "მოძრაობა, თავდაჯერება და ცხოვრების ახალი ნაწილი.",
-    childrenNote: "ტექნიკა, წარმოსახვა და მოძრაობით ზრდის სიხარული.", adultFilm: "ნამდვილი მოძრაობა Tela-ში",
-    childFilm: "ყურადღებიანი სწავლება პატარა მოცეკვავეებისთვის", filmReserved: "ადგილი თქვენი ვერტიკალური ვიდეოსთვის",
+    childrenNote: "ტექნიკა, წარმოსახვა და მოძრაობით ზრდის სიხარული.",
     insideKicker: "Tela-ს შიგნით", insideTitle: "პერსონალური სწავლება. პროგრესი, რომელსაც გრძნობ.",
     insideBody: "სწორი გაკვეთილი ნაბიჯების სია არ არის. ეს არის ყურადღება, მუსიკა, მეგობრული გარემო და მომენტი, როცა სხეული მოძრაობას იგებს.",
     kidsKicker: "პატარა მოცეკვავეებისთვის", kidsTitle: "თავდაჯერება იწყება ყურადღებით.",
@@ -85,8 +83,7 @@ const interfaceCopy: Record<Language, InterfaceCopy> = {
     skip: "Перейти к направлениям", audienceKicker: "Найдите свой путь", audienceTitle: "Для кого вы выбираете?",
     audienceBody: "Начните с человека, а затем найдите направление. Разбираться в танцевальных терминах не нужно.",
     viewProgram: "Подробнее о направлении", adultsNote: "Движение, уверенность и новая часть вашей жизни.",
-    childrenNote: "Техника, воображение и радость взросления через движение.", adultFilm: "Настоящее движение в Tela",
-    childFilm: "Внимательное обучение маленьких танцоров", filmReserved: "Место для вашего вертикального видео",
+    childrenNote: "Техника, воображение и радость взросления через движение.",
     insideKicker: "Внутри Tela", insideTitle: "Обучение с личным вниманием. Прогресс, который ощущается.",
     insideBody: "Правильное занятие — больше, чем набор шагов. Это внимание, музыка, тёплая атмосфера и момент, когда тело начинает понимать движение.",
     kidsKicker: "Для юных танцоров", kidsTitle: "Уверенность начинается с внимания.",
@@ -162,13 +159,6 @@ function Header({ language, copy, onLanguage, internal = false }: { language: La
     <nav className="desktop-nav" aria-label={interfaceCopy[language].navigationLabel}>{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
     <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"}>{copy.bookShort}</a></div>
   </header>;
-}
-
-function PortraitMedia({ label, reserved, number, image = false, warm = false }: { label: string; reserved: string; number: string; image?: boolean; warm?: boolean }) {
-  return <figure className={"portrait-media" + (image ? " portrait-media-image" : "") + (warm ? " portrait-media-warm" : "")}>
-    {image ? <picture><source srcSet="/hero-tela-v1.avif" type="image/avif" /><source srcSet="/hero-tela-v1.webp" type="image/webp" /><img src="/hero-tela-v1.png" alt={label} /></picture> : <div className="portrait-media-poster" aria-hidden="true"><i /><span>Tela</span></div>}
-    <figcaption><span>{label}</span><small>{reserved}</small><strong aria-hidden="true">{number}</strong></figcaption>
-  </figure>;
 }
 
 function ProgramList({ language, programs, action }: { language: Language; programs: Program[]; action: string }) {
@@ -345,10 +335,11 @@ function ProgramPage({ language, copy, onLanguage, audience, slug }: { language:
   const body = isProAm ? copy.proam.body : selected?.body;
   const tag = isProAm ? copy.programs.adultLabel : selected?.tag;
   const related = programs.filter((program) => program.number !== selected?.number).slice(0, 3);
-  if (!title || !body) return <HomePage language={language} copy={copy} onLanguage={onLanguage} />;
+  const programMedia = getProgramMedia(audience, slug);
+  if (!title || !body || !programMedia) return <HomePage language={language} copy={copy} onLanguage={onLanguage} />;
 
   return <main className={"site-shell detail-shell language-" + language.toLowerCase()}>
-    <section className="detail-hero"><Header language={language} copy={copy} onLanguage={onLanguage} internal /><div className="section-wrap detail-hero-grid"><div className="detail-hero-copy"><a className="detail-back" href={languagePath[language] + "#programs"}>← {ui.back}</a><p className="eyebrow">{ui.programFor} · {tag}</p><h1>{title}</h1><p>{body}</p><a className="button button-primary" href={languagePath[language] + "#contact"}>{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div><PortraitMedia label={title} reserved={ui.filmReserved} number={isProAm ? "P/A" : selected?.number ?? "01"} image={isProAm || selected?.number === "01"} /></div></section>
+    <section className="detail-hero"><Header language={language} copy={copy} onLanguage={onLanguage} internal /><div className="section-wrap detail-hero-grid"><div className="detail-hero-copy"><a className="detail-back" href={languagePath[language] + "#programs"}>← {ui.back}</a><p className="eyebrow">{ui.programFor} · {tag}</p><h1>{title}</h1><p>{body}</p><a className="button button-primary" href={languagePath[language] + "#contact"}>{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div>{programMedia.kind === "video" ? <AutoPlayVideo base={programMedia.base} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="program-hero-film" /> : <figure className="program-hero-image"><img src={programMedia.src} alt={title} /></figure>}</div></section>
     <section className="detail-proof section-sand"><div className="section-wrap">{copy.hero.notes.map((note, index) => <span key={note}><i>{String(index + 1).padStart(2, "0")}</i>{note}</span>)}</div></section>
     <section className="detail-content section-ivory"><div className="section-wrap detail-content-grid"><article><SectionLabel>{ui.whoTitle}</SectionLabel><h2>{ui.whoTitle}</h2><p>{audience === "adults" ? ui.whoBodyAdult : ui.whoBodyChild}</p></article><article><SectionLabel>{ui.lessonTitle}</SectionLabel><h2>{ui.lessonTitle}</h2><p>{ui.lessonBody}</p></article><article><SectionLabel>{ui.practicalTitle}</SectionLabel><h2>{ui.practicalTitle}</h2><p>{ui.practicalBody}</p><a className="text-link" href={languagePath[language] + "#schedule"}>{ui.scheduleLink}<span aria-hidden="true">↗</span></a></article></div></section>
     {isProAm && <section className="detail-proam section-plum"><div className="section-wrap proam-points">{copy.proam.points.map((point) => <article className="proam-point" key={point.number}><span>{point.number}</span><div><h3>{point.title}</h3><p>{point.body}</p></div></article>)}</div></section>}

@@ -6,7 +6,7 @@ describe("getProgramMedia", () => {
     expect(getProgramMedia("adults", "ballroom-latin")).toEqual({ kind: "video", base: "proam-story" });
     expect(getProgramMedia("adults", "womens-tango")).toEqual({ kind: "video", base: "tango-on-bars" });
     expect(getProgramMedia("adults", "georgian-dance")).toEqual({ kind: "video", base: "georgian-dance" });
-    expect(getProgramMedia("adults", "ballet")).toEqual({ kind: "image", src: "/media/adult-ballet-hero-v1.png" });
+    expect(getProgramMedia("adults", "ballet")).toEqual({ kind: "image", src: "/media/adult-ballet-hero-v1.webp" });
     expect(getProgramMedia("adults", "pro-am")).toEqual({ kind: "video", base: "proam-story" });
   });
 

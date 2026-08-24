@@ -18,7 +18,7 @@
 - No persistent square play/pause controls and no `01`–`06` labels on films.
 - The entire film frame is the pointer and keyboard playback control; show a centered play affordance only while paused.
 - Preserve Reduced Motion, Save Data, hidden-tab, WebM-first, MP4 fallback, and non-looping closing-film behavior.
-- Adult ballet uses `public/media/adult-ballet-hero-v1.png` and must not be described as documentary footage.
+- Adult ballet uses optimized `public/media/adult-ballet-hero-v1.webp`, with the PNG retained as its source, and must not be described as documentary footage.
 - Mobile schedule day pairs use one full-width row per option.
 
 ---
@@ -66,7 +66,7 @@ describe("getProgramMedia", () => {
     expect(getProgramMedia("adults", "ballroom-latin")).toEqual({ kind: "video", base: "proam-story" });
     expect(getProgramMedia("adults", "womens-tango")).toEqual({ kind: "video", base: "tango-on-bars" });
     expect(getProgramMedia("adults", "georgian-dance")).toEqual({ kind: "video", base: "georgian-dance" });
-    expect(getProgramMedia("adults", "ballet")).toEqual({ kind: "image", src: "/media/adult-ballet-hero-v1.png" });
+    expect(getProgramMedia("adults", "ballet")).toEqual({ kind: "image", src: "/media/adult-ballet-hero-v1.webp" });
     expect(getProgramMedia("adults", "pro-am")).toEqual({ kind: "video", base: "proam-story" });
   });
 
@@ -109,7 +109,7 @@ Expected: all three tests PASS.
 - [ ] **Step 6: Commit the mapping and test foundation**
 
 ```bash
-git add package.json pnpm-lock.yaml vitest.config.ts src/test/setup.ts src/programMedia.ts src/programMedia.test.ts public/media/adult-ballet-hero-v1.png
+git add package.json pnpm-lock.yaml vitest.config.ts src/test/setup.ts src/programMedia.ts src/programMedia.test.ts public/media/adult-ballet-hero-v1.png public/media/adult-ballet-hero-v1.webp
 git commit -m "Add program media mapping and test foundation"
 ```
 
@@ -261,7 +261,7 @@ Use a 373 px mobile viewport and verify:
 - initial homepage requests include the hero film and posters but no editorial `.webm`/`.mp4`;
 - Pro-Am video starts only after its stable visibility threshold;
 - scrolling away pauses and returning resumes unless manually paused;
-- program routes show mapped media and `/ru/adults/ballet/` shows `adult-ballet-hero-v1.png`;
+- program routes show mapped media and `/ru/adults/ballet/` shows `adult-ballet-hero-v1.webp`;
 - no film sequence numbers or square corner controls are visible;
 - schedule day pairs are four full-width readable rows.
 
@@ -271,4 +271,3 @@ Use a 373 px mobile viewport and verify:
 git add src/App.tsx src/styles.css src/programMedia.test.ts
 git commit -m "Use real media on program pages"
 ```
-

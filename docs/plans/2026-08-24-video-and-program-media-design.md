@@ -23,7 +23,7 @@ Make the site's films feel intentional and unobtrusive, preserve fast poster-fir
 - Adult Ballroom & Latin: `proam-story`
 - Adult Women’s Tango: `tango-on-bars`
 - Adult Georgian Dance: `georgian-dance`
-- Adult Ballet: `adult-ballet-hero-v1.png`
+- Adult Ballet: optimized `adult-ballet-hero-v1.webp` derived from the retained PNG source
 - Pro-Am: `proam-story`
 - Kids Ballroom & Latin: `kids-coaching`
 - Kids Ballet: `kids-coaching`
@@ -72,4 +72,3 @@ At phone widths, day-pair tabs become one column. Each row receives horizontal p
 - Program pages display the mapped film or ballet still with no placeholder card.
 - Video frames contain no visible sequence labels or persistent square pause buttons.
 - Mobile schedule tabs are readable at 373 px width.
-

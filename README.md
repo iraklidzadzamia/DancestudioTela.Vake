@@ -11,6 +11,7 @@ Premium mobile-first website for DanceStudio Tela in Vake, Tbilisi.
 - Instagram, Facebook, and WhatsApp will receive booking enquiries once final links are supplied.
 - The real vertical studio film is used in the hero.
 - Six additional approved content videos are prepared for Pro-Am, kids, Women's Tango, Georgian dance, and the emotional closing section.
+- Program pages reuse the matching approved films; adult ballet temporarily uses an AI-generated photograph based on the real Tela interior and should be replaced when authentic ballet media is supplied.
 - Teacher profiles, exact public class names, age groups, address, and direct contact links remain pending owner confirmation.
 
 ## Continue on another computer
@@ -47,6 +48,8 @@ Production: https://dancestudio-tela-vake.vercel.app
 - Working timetable and confirmation notes: `content/schedule.md`
 - Video mapping, source checksums, placement decisions, and generated assets: `content/media-library.md`
 - Main layout and interactions: `src/App.tsx`
+- Program-page media mapping: `src/programMedia.ts`
+- Shared poster-first video behavior: `src/AutoPlayVideo.tsx`
 - Visual system and responsive behavior: `src/styles.css`
 
 Keep camera originals outside the regular Git history. Approved web derivatives live in `public/media` so a normal clone contains everything required to run the site.
