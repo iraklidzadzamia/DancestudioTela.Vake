@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useFirstVideoFrame, VideoPoster } from "./VideoPoster";
+import { attemptVideoPlayback } from "./videoPlayback";
 
 export type AutoPlayVideoProps = {
   base: string;
@@ -7,7 +9,6 @@ export type AutoPlayVideoProps = {
   className?: string;
   loop?: boolean;
   caption?: { title: string; note: string };
-  autoplayDelayMs?: number;
 };
 
 export function AutoPlayVideo({
@@ -17,34 +18,25 @@ export function AutoPlayVideo({
   className = "",
   loop = true,
   caption,
-  autoplayDelayMs = 300,
 }: AutoPlayVideoProps) {
   const figureRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const manuallyPaused = useRef(false);
-  const userActivated = useRef(false);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [inView, setInView] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const [playRequest, setPlayRequest] = useState(0);
   const [pageVisible, setPageVisible] = useState(!document.hidden);
-  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
-
-  useEffect(() => {
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncPreference = () => setReduceMotion(preference.matches);
-    syncPreference();
-    preference.addEventListener("change", syncPreference);
-    return () => preference.removeEventListener("change", syncPreference);
-  }, []);
+  const { hasPresentedFrame, revealAfterFirstFrame } = useFirstVideoFrame();
+  const posterSrc = `/media/sections/${base}-poster.webp`;
 
   useEffect(() => {
     const figure = figureRef.current;
     if (!figure) return;
     const loadObserver = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !saveData) setShouldLoad(true);
+      if (entry.isIntersecting) setShouldLoad(true);
     }, { rootMargin: "600px 0px", threshold: 0.01 });
     const playbackObserver = new IntersectionObserver(([entry]) => {
       setInView(entry.isIntersecting && entry.intersectionRatio >= 0.35);
@@ -55,7 +47,7 @@ export function AutoPlayVideo({
       loadObserver.disconnect();
       playbackObserver.disconnect();
     };
-  }, [saveData]);
+  }, []);
 
   useEffect(() => {
     const onVisibility = () => setPageVisible(!document.hidden);
@@ -74,34 +66,51 @@ export function AutoPlayVideo({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (!shouldLoad || !inView || !pageVisible || manuallyPaused.current || (reduceMotion && !userActivated.current)) {
+    if (!shouldLoad || !inView || !pageVisible || manuallyPaused.current) {
       video.pause();
       return;
     }
+    attemptVideoPlayback(video, setAutoplayBlocked);
+  }, [inView, pageVisible, playRequest, shouldLoad]);
 
-    const play = () => void video.play().catch(() => undefined);
-    if (userActivated.current) {
-      play();
-      return;
+  useEffect(() => {
+    const retry = () => {
+      const video = videoRef.current;
+      if (video && shouldLoad && inView && pageVisible && !manuallyPaused.current) {
+        attemptVideoPlayback(video, setAutoplayBlocked);
+      }
+    };
+    window.addEventListener("pointerdown", retry, { capture: true, passive: true });
+    window.addEventListener("touchstart", retry, { capture: true, passive: true });
+    window.addEventListener("online", retry);
+    window.addEventListener("pageshow", retry);
+    return () => {
+      window.removeEventListener("pointerdown", retry, true);
+      window.removeEventListener("touchstart", retry, true);
+      window.removeEventListener("online", retry);
+      window.removeEventListener("pageshow", retry);
+    };
+  }, [inView, pageVisible, shouldLoad]);
+
+  const retryPlayback = () => {
+    const video = videoRef.current;
+    if (video && shouldLoad && inView && pageVisible && !manuallyPaused.current) {
+      attemptVideoPlayback(video, setAutoplayBlocked);
     }
-
-    const autoplayTimer = window.setTimeout(play, autoplayDelayMs);
-    return () => window.clearTimeout(autoplayTimer);
-  }, [autoplayDelayMs, inView, pageVisible, playRequest, reduceMotion, shouldLoad]);
+  };
 
   const togglePlayback = () => {
     const video = videoRef.current;
     if (!video) return;
     if (isPlaying) {
       manuallyPaused.current = true;
-      userActivated.current = false;
       setIsManuallyPaused(true);
       video.pause();
       return;
     }
     manuallyPaused.current = false;
-    userActivated.current = true;
     setIsManuallyPaused(false);
+    setAutoplayBlocked(false);
     setShouldLoad(true);
     setPlayRequest((request) => request + 1);
   };
@@ -122,22 +131,28 @@ export function AutoPlayVideo({
         muted
         loop={loop}
         playsInline
+        autoPlay={shouldLoad && inView && !isManuallyPaused}
         preload="none"
-        poster={`/media/sections/${base}-poster.webp`}
+        poster={posterSrc}
         aria-hidden="true"
         onPlay={() => {
           setIsPlaying(true);
+          setAutoplayBlocked(false);
           window.dispatchEvent(new CustomEvent("tela:film-play", { detail: base }));
         }}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
+        onPlaying={revealAfterFirstFrame}
+        onLoadedData={retryPlayback}
+        onCanPlay={retryPlayback}
       >
         {shouldLoad && <>
           <source src={`/media/sections/${base}.webm`} type="video/webm" />
           <source src={`/media/sections/${base}.mp4`} type="video/mp4" />
         </>}
       </video>
-      {isManuallyPaused && <span className="media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
+      <VideoPoster src={posterSrc} hidden={hasPresentedFrame} />
+      {(isManuallyPaused || autoplayBlocked) && <span className="media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
     </button>
   </figure>;
 }

@@ -46,13 +46,15 @@ function renderFilm() {
 describe("AutoPlayVideo", () => {
   let play: ReturnType<typeof vi.spyOn>;
   let pause: ReturnType<typeof vi.spyOn>;
+  let matchMediaMatches = false;
 
   beforeEach(() => {
     vi.useFakeTimers();
+    matchMediaMatches = false;
     TestIntersectionObserver.instances = [];
     vi.stubGlobal("IntersectionObserver", TestIntersectionObserver);
     vi.stubGlobal("matchMedia", vi.fn(() => ({
-      matches: false,
+      matches: matchMediaMatches,
       media: "(prefers-reduced-motion: reduce)",
       onchange: null,
       addEventListener: vi.fn(),
@@ -86,8 +88,29 @@ describe("AutoPlayVideo", () => {
 
     expect(screen.getByRole("button", { name: "Play film" })).toBeInTheDocument();
     expect(container.querySelector("video")).toHaveAttribute("poster", "/media/sections/proam-story-poster.webp");
+    expect(container.querySelector(".video-poster-frame")).toHaveAttribute("src", "/media/sections/proam-story-poster.webp");
+    expect(container.querySelector(".video-poster-frame")).not.toHaveClass("is-hidden");
     expect(container.querySelectorAll("source")).toHaveLength(0);
     expect(container.querySelector(".media-play-affordance")).not.toBeInTheDocument();
+  });
+
+  it("keeps the poster over the film until the browser presents its first video frame", () => {
+    const { container } = renderFilm();
+    const video = container.querySelector("video") as HTMLVideoElement;
+    let presentFrame: (() => void) | undefined;
+    Object.defineProperty(video, "requestVideoFrameCallback", {
+      configurable: true,
+      value: vi.fn((callback: VideoFrameRequestCallback) => {
+        presentFrame = () => callback(0, {} as VideoFrameCallbackMetadata);
+        return 1;
+      }),
+    });
+
+    fireEvent.playing(video);
+    expect(container.querySelector(".video-poster-frame")).not.toHaveClass("is-hidden");
+
+    act(() => presentFrame?.());
+    expect(container.querySelector(".video-poster-frame")).toHaveClass("is-hidden");
   });
 
   it("adds WebM and MP4 sources only when the frame approaches the viewport", () => {
@@ -111,23 +134,69 @@ describe("AutoPlayVideo", () => {
     expect(figure.children[1]).toHaveClass("cinematic-video-frame");
   });
 
-  it("waits 300 milliseconds of stable visibility before autoplaying", () => {
-    renderFilm();
+  it("autoplays immediately when the film becomes visible", () => {
+    const { container } = renderFilm();
     act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
     act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
 
-    act(() => vi.advanceTimersByTime(299));
-    expect(play).not.toHaveBeenCalled();
-
-    act(() => vi.advanceTimersByTime(1));
     expect(play).toHaveBeenCalledTimes(1);
+    expect(container.querySelector("video")).toHaveAttribute("autoplay");
+  });
+
+  it("loads and autoplays near-view video even when Save Data is enabled", () => {
+    Object.defineProperty(navigator, "connection", {
+      configurable: true,
+      value: { saveData: true },
+    });
+    const { container } = renderFilm();
+
+    act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+
+    expect(container.querySelectorAll("source")).toHaveLength(2);
+    expect(play).toHaveBeenCalledTimes(1);
+  });
+
+  it("autoplays even when reduced motion is requested", () => {
+    matchMediaMatches = true;
+    renderFilm();
+
+    act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+
+    expect(play).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows play only after a real autoplay rejection", async () => {
+    play.mockRejectedValueOnce(new DOMException("blocked", "NotAllowedError"));
+    renderFilm();
+
+    act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+    await act(async () => Promise.resolve());
+
+    expect(document.querySelector(".media-play-affordance")).toBeInTheDocument();
+  });
+
+  it("retries a blocked visible film on the first page gesture", async () => {
+    play
+      .mockRejectedValueOnce(new DOMException("blocked", "NotAllowedError"))
+      .mockResolvedValue(undefined);
+    renderFilm();
+
+    act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+    await act(async () => Promise.resolve());
+
+    fireEvent.pointerDown(document.body);
+
+    expect(play).toHaveBeenCalledTimes(2);
   });
 
   it("keeps a manual pause when the film leaves and re-enters the viewport", () => {
     renderFilm();
     act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
     act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
-    act(() => vi.advanceTimersByTime(300));
 
     fireEvent.click(screen.getByRole("button", { name: "Pause film" }));
     expect(pause).toHaveBeenCalled();
@@ -135,7 +204,6 @@ describe("AutoPlayVideo", () => {
 
     act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: false, intersectionRatio: 0 }));
     act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
-    act(() => vi.advanceTimersByTime(300));
 
     expect(play).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("button", { name: "Play film" })).toBeInTheDocument();
