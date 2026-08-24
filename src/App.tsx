@@ -65,6 +65,8 @@ export default function App() {
   const [showMobileBook, setShowMobileBook] = useState(false);
   const copy = siteCopy[language];
   const selectedSchedule = scheduleGroups.find((group) => group.id === activeSchedule) ?? scheduleGroups[0];
+  const adultPrograms = copy.programs.items.filter((program) => program.audience === "adults");
+  const childrenPrograms = copy.programs.items.filter((program) => program.audience === "children");
 
   useEffect(() => {
     document.documentElement.lang = copy.languageCode;
@@ -159,13 +161,22 @@ export default function App() {
             </h1>
             <p className="hero-body">{copy.hero.body}</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#contact">
+              <a className="button button-primary" href="#programs">
                 {copy.hero.primary}
                 <span aria-hidden="true">↗</span>
               </a>
               <a className="button button-secondary" href="#contact">
                 {copy.hero.secondary}
               </a>
+            </div>
+            <div className="hero-directions" aria-label={copy.programs.title}>
+              {copy.hero.directions.map((direction) => (
+                <a href="#programs" key={direction.label}>
+                  <strong>{direction.label}</strong>
+                  <span>{direction.summary}</span>
+                  <i aria-hidden="true">↘</i>
+                </a>
+              ))}
             </div>
             <div className="hero-socials" aria-label={copy.contact.channels}>
               {["Instagram", "Facebook", "WhatsApp"].map((channel) => (
@@ -197,8 +208,46 @@ export default function App() {
             <p>{copy.intro.body}</p>
           </div>
           <div className="intro-mark" aria-hidden="true">
-            <span>TV</span>
+            <span>{copy.heritage.year}</span>
             <i />
+          </div>
+        </div>
+      </section>
+
+      <section className="programs section-light" id="programs" aria-labelledby="programs-title">
+        <div className="section-wrap">
+          <div className="section-heading-row section-heading-dark">
+            <div>
+              <SectionLabel>{copy.programs.kicker}</SectionLabel>
+              <h2 id="programs-title">{copy.programs.title}</h2>
+            </div>
+            <p>{copy.programs.body}</p>
+          </div>
+          <div className="program-audiences">
+            {[
+              { label: copy.programs.adultLabel, programs: adultPrograms },
+              { label: copy.programs.childrenLabel, programs: childrenPrograms },
+            ].map((group) => (
+              <section className="program-audience" key={group.label} aria-label={group.label}>
+                <h3>{group.label}</h3>
+                <div className="program-grid">
+                  {group.programs.map((program) => (
+                    <article className="program-entry" key={program.number}>
+                      <span className="program-number">{program.number}</span>
+                      <div className="program-copy">
+                        <p>{program.tag}</p>
+                        <h4>{program.title}</h4>
+                        <span>{program.body}</span>
+                      </div>
+                      <div className="program-gesture" aria-hidden="true">
+                        <i />
+                        <span>↗</span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
         </div>
       </section>
@@ -258,34 +307,6 @@ export default function App() {
                 <h3>{step.title}</h3>
                 <p>{step.body}</p>
                 <span className="journey-arrow" aria-hidden="true">{index < copy.journey.steps.length - 1 ? "↘" : "✦"}</span>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="programs section-light" id="programs" aria-labelledby="programs-title">
-        <div className="section-wrap">
-          <div className="section-heading-row section-heading-dark">
-            <div>
-              <SectionLabel>{copy.programs.kicker}</SectionLabel>
-              <h2 id="programs-title">{copy.programs.title}</h2>
-            </div>
-            <p>{copy.programs.body}</p>
-          </div>
-          <div className="program-grid">
-            {copy.programs.items.map((program) => (
-              <article className="program-entry" key={program.number}>
-                <span className="program-number">{program.number}</span>
-                <div className="program-copy">
-                  <p>{program.tag}</p>
-                  <h3>{program.title}</h3>
-                  <span>{program.body}</span>
-                </div>
-                <div className="program-gesture" aria-hidden="true">
-                  <i />
-                  <span>↗</span>
-                </div>
               </article>
             ))}
           </div>
@@ -416,7 +437,7 @@ export default function App() {
       </footer>
 
       {showMobileBook && (
-        <a className="mobile-book" href="#contact">{copy.hero.primary}<span aria-hidden="true">↗</span></a>
+        <a className="mobile-book" href="#contact">{copy.hero.secondary}<span aria-hidden="true">↗</span></a>
       )}
     </main>
   );

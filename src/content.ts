@@ -14,6 +14,7 @@ export interface SiteCopy {
     primary: string;
     secondary: string;
     notes: string[];
+    directions: { label: string; summary: string }[];
     media: string;
   };
   intro: { kicker: string; title: string; body: string };
@@ -35,7 +36,9 @@ export interface SiteCopy {
     kicker: string;
     title: string;
     body: string;
-    items: { number: string; title: string; body: string; tag: string }[];
+    adultLabel: string;
+    childrenLabel: string;
+    items: { number: string; title: string; body: string; tag: string; audience: "adults" | "children" }[];
   };
   schedule: {
     kicker: string;
@@ -68,29 +71,33 @@ export interface SiteCopy {
 
 const en: SiteCopy = {
   languageCode: "en",
-  pageTitle: "DanceStudio Tela, Vake — Ballroom & Latin in Tbilisi",
-  pageDescription: "Private Pro-Am Ballroom & Latin lessons for adults in Vake, Tbilisi. No partner or experience needed. Your first lesson is free.",
+  pageTitle: "DanceStudio Tela, Vake — Dance classes for adults & children",
+  pageDescription: "Dance classes for adults and children in Vake: Ballroom & Latin, ballet, Georgian dance, Women’s Tango and Pro-Am. First lesson free in every program.",
   nav: [
-    { label: "Pro-Am", href: "#proam" },
     { label: "Programs", href: "#programs" },
+    { label: "Pro-Am", href: "#proam" },
     { label: "Schedule", href: "#schedule" },
     { label: "Our story", href: "#story" },
   ],
   bookShort: "Book",
   hero: {
     eyebrow: "TELA · SINCE 1970 · VAKE, TBILISI",
-    title: "Dance with a professional.",
-    accent: "Discover Ballroom & Latin in Vake.",
-    body: "Private Pro-Am coaching for adults — from your very first step to performances and competitions.",
-    primary: "Book your first free lesson",
-    secondary: "Ask us anything",
-    notes: ["No partner needed", "No experience needed", "Competition is optional"],
-    media: "Private Pro-Am Ballroom & Latin lesson",
+    title: "Dance starts here.",
+    accent: "A direction for every age.",
+    body: "Ballroom & Latin, ballet, Georgian dance and Women’s Tango for adults and children — in Vake, at Tela since 1970.",
+    primary: "Explore programs",
+    secondary: "Book a free first lesson",
+    notes: ["For adults and children", "Start at any level", "First lesson free in every program"],
+    directions: [
+      { label: "For adults", summary: "Ballroom & Latin · Ballet · Georgian Dance · Women’s Tango" },
+      { label: "For children", summary: "Ballroom & Latin · Ballet · Georgian Dance" },
+    ],
+    media: "DanceStudio Tela classes for adults and children",
   },
   intro: {
-    kicker: "A different kind of dance experience",
-    title: "Not simply a class. A beautiful part of your week that belongs entirely to you.",
-    body: "Move, learn and connect in a warm studio environment, with personal attention and a path shaped around your goals.",
+    kicker: "Tela · Since 1970",
+    title: "A dance studio where every generation can find its rhythm.",
+    body: "Founded in 1970 as Georgia’s first Latin ballroom studio, Tela brings adults and children together through beautiful movement, thoughtful teaching and a first lesson that is free in every direction.",
   },
   proam: {
     kicker: "What is Pro-Am?",
@@ -116,13 +123,19 @@ const en: SiteCopy = {
     ],
   },
   programs: {
-    kicker: "More ways to dance",
-    title: "A studio for different ages, rhythms and ambitions.",
-    body: "Pro-Am is the heart of the adult experience. Other Tela programs remain easy to discover for families and dancers with different interests.",
+    kicker: "Choose your direction",
+    title: "One studio. Different ways to dance.",
+    body: "Start with the path that feels right for you or your child. Pro-Am is a separate personal Ballroom & Latin experience for adults who want to dance with a professional partner.",
+    adultLabel: "For adults",
+    childrenLabel: "For children",
     items: [
-      { number: "01", title: "Georgian Dance", body: "Tradition, movement and Georgian culture for children and adults.", tag: "Children · Adults" },
-      { number: "02", title: "Ballet", body: "Technique, posture and expression through age-appropriate training.", tag: "Children · Adults" },
-      { number: "03", title: "Ballroom & Latin for Kids", body: "A structured introduction to movement, musicality and partner dance.", tag: "Children" },
+      { number: "01", title: "Ballroom & Latin", body: "Learn the elegance, rhythm and confidence of partner dance in a welcoming adult class.", tag: "Adults", audience: "adults" },
+      { number: "02", title: "Women’s Tango", body: "A focused class for musicality, posture and expressive tango movement.", tag: "Adults", audience: "adults" },
+      { number: "03", title: "Ballet", body: "Build technique, alignment and expressive movement at your own level.", tag: "Adults", audience: "adults" },
+      { number: "04", title: "Georgian Dance", body: "Connect with Georgian rhythm, tradition and powerful ensemble movement.", tag: "Adults", audience: "adults" },
+      { number: "05", title: "Ballroom & Latin", body: "A joyful foundation in musicality, movement and partner dance for young dancers.", tag: "Children", audience: "children" },
+      { number: "06", title: "Ballet", body: "Age-appropriate training in posture, coordination, imagination and technique.", tag: "Children", audience: "children" },
+      { number: "07", title: "Georgian Dance", body: "Movement, culture and teamwork through Georgia’s dance traditions.", tag: "Children", audience: "children" },
     ],
   },
   schedule: {
@@ -149,13 +162,13 @@ const en: SiteCopy = {
       { question: "Can I choose the music and style?", answer: "Yes. Your program, pace, music and style are shaped around you. We can also help with your performance look and costume when needed." },
       { question: "Will I receive photos or video?", answer: "Yes. Performances and closed studio events include professional filming, so the experience stays with you in photographs and video." },
       { question: "What should I wear?", answer: "Choose comfortable clothing that lets you move. Special ballroom clothing is not required for your first lesson." },
-      { question: "Is the first lesson really free?", answer: "Yes. Your first lesson at DanceStudio Tela Vake is free." },
+      { question: "Is the first lesson really free?", answer: "Yes. Your first lesson is free in every DanceStudio Tela Vake program." },
     ],
   },
   contact: {
     kicker: "Your first lesson is free",
     title: "The first step can be beautifully simple.",
-    body: "You do not need experience. You do not need a partner. Choose the way you would like to contact us.",
+    body: "Choose your direction, start from your current level and contact us in the way that feels easiest for you.",
     channels: "Instagram · Facebook · WhatsApp",
     pending: "Direct contact links are being connected",
   },
@@ -165,29 +178,33 @@ const en: SiteCopy = {
 const ka: SiteCopy = {
   ...en,
   languageCode: "ka",
-  pageTitle: "სტუდია „თელა“, ვაკე — Ballroom & Latin თბილისში",
-  pageDescription: "ინდივიდუალური Pro-Am Ballroom & Latin გაკვეთილები ზრდასრულებისთვის ვაკეში. პარტნიორი და გამოცდილება არ არის საჭირო. პირველი გაკვეთილი უფასოა.",
+  pageTitle: "სტუდია „თელა“, ვაკე — ცეკვა ზრდასრულებისა და ბავშვებისთვის",
+  pageDescription: "ცეკვის გაკვეთილები ზრდასრულებისა და ბავშვებისთვის ვაკეში: Ballroom & Latin, ბალეტი, ქართული ცეკვა, ქალების ტანგო და Pro-Am. პირველი გაკვეთილი ყველა პროგრამაში უფასოა.",
   nav: [
-    { label: "Pro-Am", href: "#proam" },
     { label: "პროგრამები", href: "#programs" },
+    { label: "Pro-Am", href: "#proam" },
     { label: "განრიგი", href: "#schedule" },
     { label: "ჩვენი ისტორია", href: "#story" },
   ],
   bookShort: "დაჯავშნა",
   hero: {
     eyebrow: "TELA · 1970 წლიდან · ვაკე, თბილისი",
-    title: "იცეკვე პროფესიონალთან ერთად.",
-    accent: "აღმოაჩინე Ballroom & Latin ვაკეში.",
-    body: "ინდივიდუალური Pro-Am გაკვეთილები ზრდასრულებისთვის — პირველი ნაბიჯიდან გამოსვლებსა და შეჯიბრებებამდე.",
-    primary: "დაჯავშნე პირველი უფასო გაკვეთილი",
-    secondary: "მოგვწერე",
-    notes: ["პარტნიორი არ გჭირდება", "გამოცდილება არ გჭირდება", "შეჯიბრება სურვილისამებრ"],
-    media: "ინდივიდუალური Pro-Am Ballroom & Latin გაკვეთილი",
+    title: "ცეკვა აქ იწყება.",
+    accent: "მიმართულება ყველა ასაკისთვის.",
+    body: "Ballroom & Latin, ბალეტი, ქართული ცეკვა და ქალების ტანგო ბავშვებისა და ზრდასრულებისთვის — ვაკეში, Tela-სთან 1970 წლიდან.",
+    primary: "გაეცანი პროგრამებს",
+    secondary: "დაჯავშნე პირველი უფასო გაკვეთილი",
+    notes: ["ზრდასრულებისა და ბავშვებისთვის", "დაიწყე ნებისმიერი დონიდან", "პირველი გაკვეთილი ყველა პროგრამაში უფასოა"],
+    directions: [
+      { label: "ზრდასრულებისთვის", summary: "Ballroom & Latin · ბალეტი · ქართული ცეკვა · ქალების ტანგო" },
+      { label: "ბავშვებისთვის", summary: "Ballroom & Latin · ბალეტი · ქართული ცეკვა" },
+    ],
+    media: "სტუდია Tela-ს ცეკვის გაკვეთილები ზრდასრულებისა და ბავშვებისთვის",
   },
   intro: {
-    kicker: "განსხვავებული საცეკვაო გამოცდილება",
-    title: "არა უბრალოდ გაკვეთილი — კვირის განსაკუთრებული დრო, რომელიც მხოლოდ შენ გეკუთვნის.",
-    body: "იმოძრავე, ისწავლე და იპოვე ახალი კავშირები თბილ გარემოში, პერსონალური ყურადღებითა და შენს მიზნებზე მორგებული გზით.",
+    kicker: "Tela · 1970 წლიდან",
+    title: "საცეკვაო სტუდია, სადაც ყველა თაობა საკუთარ რიტმს პოულობს.",
+    body: "1970 წელს დაარსებული, როგორც საქართველოში პირველი ლათინური სამეჯლისო სტუდია, Tela აერთიანებს ზრდასრულებსა და ბავშვებს ლამაზ მოძრაობაში, გააზრებულ სწავლებასა და ყველა მიმართულებაში უფასო პირველ გაკვეთილში.",
   },
   proam: {
     kicker: "რა არის Pro-Am?",
@@ -213,13 +230,19 @@ const ka: SiteCopy = {
     ],
   },
   programs: {
-    kicker: "ცეკვის სხვა გზები",
-    title: "სტუდია სხვადასხვა ასაკის, რიტმისა და მიზნისთვის.",
-    body: "Pro-Am ზრდასრულთა გამოცდილების ცენტრია. Tela-ს სხვა პროგრამები ხელმისაწვდომია ოჯახებისა და განსხვავებული ინტერესების მქონე მოცეკვავეებისთვის.",
+    kicker: "აირჩიე მიმართულება",
+    title: "ერთი სტუდია. ცეკვის სხვადასხვა გზა.",
+    body: "დაიწყე იმ გზით, რომელიც შენ ან შენს ბავშვს შეეფერება. Pro-Am ზრდასრულებისთვის Ballroom & Latin-ის ცალკე პერსონალური გამოცდილებაა — პროფესიონალ პარტნიორთან ერთად.",
+    adultLabel: "ზრდასრულებისთვის",
+    childrenLabel: "ბავშვებისთვის",
     items: [
-      { number: "01", title: "ქართული ცეკვა", body: "ტრადიცია, მოძრაობა და ქართული კულტურა ბავშვებისა და ზრდასრულებისთვის.", tag: "ბავშვები · ზრდასრულები" },
-      { number: "02", title: "ბალეტი", body: "ტექნიკა, ტანდეგობა და გამომსახველობა ასაკზე მორგებული სწავლებით.", tag: "ბავშვები · ზრდასრულები" },
-      { number: "03", title: "Ballroom & Latin ბავშვებისთვის", body: "მოძრაობის, მუსიკალურობისა და წყვილში ცეკვის სტრუქტურირებული დასაწყისი.", tag: "ბავშვები" },
+      { number: "01", title: "Ballroom & Latin", body: "შეისწავლე წყვილში ცეკვის ელეგანტურობა, რიტმი და თავდაჯერება ზრდასრულთა მეგობრულ ჯგუფში.", tag: "ზრდასრულები", audience: "adults" },
+      { number: "02", title: "ქალების ტანგო", body: "მუსიკალურობის, პოზისა და გამომსახველი ტანგოს მოძრაობისთვის შექმნილი სპეციალური გაკვეთილი.", tag: "ზრდასრულები", audience: "adults" },
+      { number: "03", title: "ბალეტი", body: "განავითარე ტექნიკა, სხეულის სწორად დაჭერა და გამომსახველი მოძრაობა შენს დონეზე.", tag: "ზრდასრულები", audience: "adults" },
+      { number: "04", title: "ქართული ცეკვა", body: "შეიგრძენი ქართული რიტმი, ტრადიცია და ძლიერი ჯგუფური მოძრაობა.", tag: "ზრდასრულები", audience: "adults" },
+      { number: "05", title: "Ballroom & Latin", body: "მუსიკალურობის, მოძრაობისა და წყვილში ცეკვის მხიარული დასაწყისი პატარა მოცეკვავეებისთვის.", tag: "ბავშვები", audience: "children" },
+      { number: "06", title: "ბალეტი", body: "ასაკზე მორგებული სწავლება პოზისთვის, კოორდინაციისთვის, წარმოსახვისა და ტექნიკისთვის.", tag: "ბავშვები", audience: "children" },
+      { number: "07", title: "ქართული ცეკვა", body: "მოძრაობა, კულტურა და გუნდურობა ქართული ცეკვის ტრადიციებით.", tag: "ბავშვები", audience: "children" },
     ],
   },
   schedule: {
@@ -246,13 +269,13 @@ const ka: SiteCopy = {
       { question: "შემიძლია მუსიკისა და სტილის არჩევა?", answer: "დიახ. პროგრამა, ტემპი, მუსიკა და სტილი შენზე მორგდება. საჭიროების შემთხვევაში სასცენო იმიჯისა და კოსტიუმის შერჩევაშიც დაგეხმარებით." },
       { question: "მივიღებ ფოტოებს ან ვიდეოს?", answer: "დიახ. გამოსვლებსა და დახურულ ღონისძიებებს პროფესიონალურად ვიღებთ, რათა გამოცდილება ფოტოებსა და ვიდეოში შენთან დარჩეს." },
       { question: "რა ჩავიცვა?", answer: "აირჩიე კომფორტული სამოსი, რომელიც თავისუფლად მოძრაობის საშუალებას გაძლევს. პირველ გაკვეთილზე სპეციალური საცეკვაო ტანსაცმელი საჭირო არ არის." },
-      { question: "პირველი გაკვეთილი ნამდვილად უფასოა?", answer: "დიახ. DanceStudio Tela Vake-ში პირველი გაკვეთილი უფასოა." },
+      { question: "პირველი გაკვეთილი ნამდვილად უფასოა?", answer: "დიახ. პირველი გაკვეთილი DanceStudio Tela Vake-ის ყველა პროგრამაში უფასოა." },
     ],
   },
   contact: {
     kicker: "პირველი გაკვეთილი უფასოა",
     title: "პირველი ნაბიჯი შეიძლება ძალიან მარტივი იყოს.",
-    body: "გამოცდილება და პარტნიორი არ გჭირდება. აირჩიე ჩვენთან დაკავშირების სასურველი გზა.",
+    body: "აირჩიე მიმართულება, დაიწყე შენი დღევანდელი დონიდან და დაგვიკავშირდი შენთვის მოსახერხებელი გზით.",
     channels: "Instagram · Facebook · WhatsApp",
     pending: "პირდაპირი საკონტაქტო ბმულები მალე დაემატება",
   },
@@ -262,29 +285,33 @@ const ka: SiteCopy = {
 const ru: SiteCopy = {
   ...en,
   languageCode: "ru",
-  pageTitle: "Танцевальная студия «Тела», Ваке — Ballroom & Latin в Тбилиси",
-  pageDescription: "Персональные занятия Pro-Am Ballroom & Latin для взрослых в Ваке. Партнёр и опыт не нужны. Первый урок бесплатный.",
+  pageTitle: "Танцевальная студия «Тела», Ваке — занятия для взрослых и детей",
+  pageDescription: "Танцевальные занятия для взрослых и детей в Ваке: Ballroom & Latin, балет, грузинские танцы, женское танго и Pro-Am. Первый урок бесплатный в каждом направлении.",
   nav: [
-    { label: "Pro-Am", href: "#proam" },
     { label: "Программы", href: "#programs" },
+    { label: "Pro-Am", href: "#proam" },
     { label: "Расписание", href: "#schedule" },
     { label: "Наша история", href: "#story" },
   ],
   bookShort: "Запись",
   hero: {
     eyebrow: "TELA · С 1970 ГОДА · ВАКЕ, ТБИЛИСИ",
-    title: "Танцуйте с профессионалом.",
-    accent: "Откройте Ballroom & Latin в Ваке.",
-    body: "Персональные занятия Pro-Am для взрослых — от первого шага до выступлений и соревнований.",
-    primary: "Записаться на первый бесплатный урок",
-    secondary: "Задать вопрос",
-    notes: ["Партнёр не нужен", "Опыт не нужен", "Соревнования необязательны"],
-    media: "Персональный урок Pro-Am Ballroom & Latin",
+    title: "Танец начинается здесь.",
+    accent: "Своё направление — для каждого возраста.",
+    body: "Ballroom & Latin, балет, грузинские танцы и женское танго для взрослых и детей — в Ваке, в студии Tela с 1970 года.",
+    primary: "Смотреть программы",
+    secondary: "Записаться на бесплатный урок",
+    notes: ["Для взрослых и детей", "Можно начать с нуля", "Первый урок бесплатный в каждом направлении"],
+    directions: [
+      { label: "Для взрослых", summary: "Ballroom & Latin · Балет · Грузинские танцы · Женское танго" },
+      { label: "Для детей", summary: "Ballroom & Latin · Балет · Грузинские танцы" },
+    ],
+    media: "Занятия в танцевальной студии Tela для взрослых и детей",
   },
   intro: {
-    kicker: "Другой танцевальный опыт",
-    title: "Не просто занятие. Красивое время недели, которое принадлежит только вам.",
-    body: "Двигайтесь, учитесь и общайтесь в тёплой атмосфере, получая персональное внимание и программу, созданную вокруг ваших целей.",
+    kicker: "Tela · С 1970 года",
+    title: "Танцевальная студия, где каждое поколение находит свой ритм.",
+    body: "Основанная в 1970 году как первая в Грузии латинская бальная студия, Tela объединяет взрослых и детей через красивое движение, внимательное обучение и бесплатный первый урок в каждом направлении.",
   },
   proam: {
     kicker: "Что такое Pro-Am?",
@@ -310,13 +337,19 @@ const ru: SiteCopy = {
     ],
   },
   programs: {
-    kicker: "Другие направления",
-    title: "Студия для разных возрастов, ритмов и целей.",
-    body: "Pro-Am находится в центре взрослой программы. Другие направления Tela легко найти семьям и танцорам с иными интересами.",
+    kicker: "Выберите направление",
+    title: "Одна студия. Разные пути в танце.",
+    body: "Начните с направления, которое подходит вам или вашему ребёнку. Pro-Am — отдельный персональный формат Ballroom & Latin для взрослых, которые хотят танцевать с профессиональным партнёром.",
+    adultLabel: "Для взрослых",
+    childrenLabel: "Для детей",
     items: [
-      { number: "01", title: "Грузинские танцы", body: "Традиция, движение и грузинская культура для детей и взрослых.", tag: "Дети · Взрослые" },
-      { number: "02", title: "Балет", body: "Техника, осанка и выразительность в программах, соответствующих возрасту.", tag: "Дети · Взрослые" },
-      { number: "03", title: "Ballroom & Latin для детей", body: "Структурированное знакомство с движением, музыкальностью и парным танцем.", tag: "Дети" },
+      { number: "01", title: "Ballroom & Latin", body: "Осваивайте элегантность, ритм и уверенность парного танца в дружелюбной взрослой группе.", tag: "Взрослые", audience: "adults" },
+      { number: "02", title: "Женское танго", body: "Направление для музыкальности, осанки и выразительного движения в танго.", tag: "Взрослые", audience: "adults" },
+      { number: "03", title: "Балет", body: "Развивайте технику, осанку и выразительность в комфортном для вас темпе.", tag: "Взрослые", audience: "adults" },
+      { number: "04", title: "Грузинские танцы", body: "Откройте грузинский ритм, традицию и силу совместного движения.", tag: "Взрослые", audience: "adults" },
+      { number: "05", title: "Ballroom & Latin", body: "Радостное знакомство с музыкальностью, движением и парным танцем для детей.", tag: "Дети", audience: "children" },
+      { number: "06", title: "Балет", body: "Занятия по возрасту для осанки, координации, воображения и техники.", tag: "Дети", audience: "children" },
+      { number: "07", title: "Грузинские танцы", body: "Движение, культура и командность через традиции грузинского танца.", tag: "Дети", audience: "children" },
     ],
   },
   schedule: {
@@ -343,13 +376,13 @@ const ru: SiteCopy = {
       { question: "Можно выбрать музыку и стиль?", answer: "Да. Программа, темп, музыка и стиль создаются вокруг вас. При необходимости мы также поможем подобрать сценический образ и костюм." },
       { question: "Останутся ли у меня фотографии или видео?", answer: "Да. Выступления и закрытые мероприятия сопровождаются профессиональной съёмкой, поэтому этот опыт останется с вами в фотографиях и видео." },
       { question: "Что надеть?", answer: "Выберите удобную одежду, которая не мешает двигаться. Специальный танцевальный костюм на первом уроке не нужен." },
-      { question: "Первый урок действительно бесплатный?", answer: "Да. Первый урок в DanceStudio Tela Vake бесплатный." },
+      { question: "Первый урок действительно бесплатный?", answer: "Да. Первый урок бесплатный в каждом направлении DanceStudio Tela Vake." },
     ],
   },
   contact: {
     kicker: "Первый урок бесплатный",
     title: "Первый шаг может быть удивительно простым.",
-    body: "Опыт и партнёр не нужны. Выберите удобный способ связаться с нами.",
+    body: "Выберите направление, начните с вашего уровня и свяжитесь с нами удобным способом.",
     channels: "Instagram · Facebook · WhatsApp",
     pending: "Прямые контактные ссылки скоро будут добавлены",
   },
