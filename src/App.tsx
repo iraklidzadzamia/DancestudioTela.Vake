@@ -92,8 +92,24 @@ function programHref(language: Language, program: Program) {
   return languagePath[language] + audience + "/" + programSlugs[program.number] + "/";
 }
 
-function Logo({ full = false }: { full?: boolean }) {
-  return <span className={full ? "logo-full" : "logo-crop"} aria-hidden="true"><img src="/tela-logo.png" alt="" loading="eager" fetchPriority="high" decoding="async" /></span>;
+function Logo({ full = false, header = false }: { full?: boolean; header?: boolean }) {
+  if (header) return <svg className="logo-header" viewBox="1120 220 1830 1500" aria-hidden="true">
+    <defs>
+      <filter id="logo-luminance" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+        <feColorMatrix type="luminanceToAlpha" result="luma" />
+        <feComponentTransfer in="luma">
+          <feFuncA type="linear" slope="3.5" intercept="-0.35" />
+        </feComponentTransfer>
+      </filter>
+      <mask id="logo-dancer-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="4000" height="2828" style={{ maskType: "alpha" }}>
+        <image href="/tela-logo-header.jpg" x="0" y="0" width="4000" height="2828" filter="url(#logo-luminance)" />
+      </mask>
+    </defs>
+    <rect x="0" y="0" width="4000" height="2828" fill="#d2a6e5" mask="url(#logo-dancer-mask)" />
+  </svg>;
+
+  const className = full ? "logo-full" : "logo-crop";
+  return <span className={className} aria-hidden="true"><img src="/tela-logo.png" alt="" loading="eager" fetchPriority="high" decoding="async" /></span>;
 }
 function SectionLabel({ children, light = false }: { children: string; light?: boolean }) {
   return <p className={"section-label" + (light ? " section-label-light" : "")}>{children}</p>;
@@ -111,7 +127,7 @@ function LanguageSwitcher({ language, onChange }: { language: Language; onChange
 function Header({ language, copy, onLanguage, internal = false }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void; internal?: boolean }) {
   const home = languagePath[language];
   return <header className={"header" + (internal ? " header-internal" : "")}>
-    <a className="brand" href={home} aria-label={copy.footer.studio}><Logo /><span className="brand-type">Dance Studio Tela</span></a>
+    <a className="brand" href={home} aria-label={copy.footer.studio}><Logo header /><span className="brand-type">Dance Studio Tela</span></a>
     <nav className="desktop-nav" aria-label="Primary navigation">{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
     <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"}>{copy.bookShort}</a></div>
   </header>;
