@@ -107,10 +107,11 @@ export function trackBookingModalOpen(location: string, language: Language) {
   });
 }
 
-export function trackContactIntent(channel: ContactChannel, placement: string, language: Language) {
+export function trackContactIntent(channel: ContactChannel, placement: string, language: Language, bookingSource?: string) {
   trackEvent(contactEventNames[channel], {
     contact_channel: channel.toLowerCase().replace(" ", "_"),
     placement,
+    booking_source: bookingSource,
     page_path: window.location.pathname,
     language: language.toLowerCase(),
     transport_type: "beacon",

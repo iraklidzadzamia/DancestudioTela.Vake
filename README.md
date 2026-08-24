@@ -56,12 +56,12 @@ Measurement events:
 
 - `page_view`: manual page views for language and program routes.
 - `booking_modal_open`: a visitor opens the free-lesson contact chooser; diagnostic only.
-- `contact_whatsapp`, `contact_instagram`, `contact_facebook`, `contact_phone`, `get_directions`: high-intent outbound actions. Each includes `placement`, `page_path`, and `language` so hero, booking-dialog, and contact-section clicks can be separated.
+- `contact_whatsapp`, `contact_instagram`, `contact_facebook`, `contact_phone`, `get_directions`: high-intent outbound actions. Each includes `placement`, `page_path`, and `language`; booking-dialog choices also include `booking_source`, so the CTA that opened the dialog remains attributable.
 - `scroll_depth`: emitted once per route at 25%, 50%, 75%, and 90%.
 - `section_view`: emitted when a visitor reaches the main homepage sections.
 - `generate_lead`: reserved for a future successfully submitted website form or confirmed lead.
 
-Recommended Google Ads setup: link GA4 to Google Ads, enable auto-tagging, and import the five high-intent contact events as separate Primary conversion actions. Keep `booking_modal_open`, `page_view`, `scroll_depth`, and `section_view` Secondary. Create event-scoped GA4 custom dimensions for `placement`, `contact_channel`, `section_name`, and `language`; page path remains available as a standard dimension. Because page views and scroll depth are sent manually, disable browser-history page views and Scrolls in GA4 Enhanced Measurement to avoid duplicate events.
+Recommended Google Ads setup: link GA4 to Google Ads, enable auto-tagging, and import the five high-intent contact events as separate Primary conversion actions. Keep `booking_modal_open`, `page_view`, `scroll_depth`, and `section_view` Secondary. Create event-scoped GA4 custom dimensions for `placement`, `booking_source`, `contact_channel`, `section_name`, and `language`; page path remains available as a standard dimension. Because page views and scroll depth are sent manually, disable browser-history page views and Scrolls in GA4 Enhanced Measurement to avoid duplicate events.
 
 ## Content
 

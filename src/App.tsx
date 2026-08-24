@@ -234,7 +234,7 @@ function BookingDialog({ language }: { language: Language }) {
           const href = contactHref(channel, language);
           if (!href) return null;
           const external = opensOutsidePage(channel);
-          return <a className={"booking-option" + (channel === "WhatsApp" ? " booking-option-primary" : "")} href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} key={channel} onClick={() => { trackContactIntent(channel, "booking_modal", language); close(); }}>
+          return <a className={"booking-option" + (channel === "WhatsApp" ? " booking-option-primary" : "")} href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} key={channel} onClick={() => { trackContactIntent(channel, "booking_modal", language, placement ?? undefined); close(); }}>
             <i><SocialIcon channel={channel} /></i><span><strong>{contactLabels[language][channel]}</strong><small>{copy.notes[channel]}</small></span><b aria-hidden="true">↗</b>
           </a>;
         })}
