@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
@@ -14,10 +14,14 @@ class PassiveIntersectionObserver {
 }
 
 describe("program hero media", () => {
+  let play: ReturnType<typeof vi.spyOn>;
+  let matchMediaMatches = false;
+
   beforeEach(() => {
+    matchMediaMatches = false;
     vi.stubGlobal("IntersectionObserver", PassiveIntersectionObserver);
     vi.stubGlobal("matchMedia", vi.fn(() => ({
-      matches: false,
+      matches: matchMediaMatches,
       media: "(prefers-reduced-motion: reduce)",
       onchange: null,
       addEventListener: vi.fn(),
@@ -26,7 +30,7 @@ describe("program hero media", () => {
       removeListener: vi.fn(),
       dispatchEvent: vi.fn(),
     })));
-    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+    play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
   });
 
@@ -114,5 +118,65 @@ describe("program hero media", () => {
     Object.defineProperty(heroVideo, "paused", { configurable: true, value: true });
     fireEvent.click(heroVideo);
     expect(container.querySelector(".hero-play-affordance")).not.toBeInTheDocument();
+  });
+
+  it("keeps the hero poster visible until the first video frame is presented", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    const heroVideo = container.querySelector(".hero-video video") as HTMLVideoElement;
+    let presentFrame: (() => void) | undefined;
+    Object.defineProperty(heroVideo, "requestVideoFrameCallback", {
+      configurable: true,
+      value: vi.fn((callback: VideoFrameRequestCallback) => {
+        presentFrame = () => callback(0, {} as VideoFrameCallbackMetadata);
+        return 1;
+      }),
+    });
+
+    expect(container.querySelector(".hero-video .video-poster-frame")).toHaveAttribute("src", "/media/hero-tela-poster.webp");
+    expect(container.querySelector(".hero-video .video-poster-frame")).not.toHaveClass("is-hidden");
+
+    fireEvent.playing(heroVideo);
+    expect(container.querySelector(".hero-video .video-poster-frame")).not.toHaveClass("is-hidden");
+
+    act(() => presentFrame?.());
+    expect(container.querySelector(".hero-video .video-poster-frame")).toHaveClass("is-hidden");
+  });
+
+  it("uses native muted inline autoplay for the hero", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    const hero = container.querySelector(".hero-video video") as HTMLVideoElement;
+
+    expect(hero).toHaveAttribute("autoplay");
+    expect(hero).toHaveAttribute("playsinline");
+    expect(hero.muted).toBe(true);
+  });
+
+  it("autoplays the hero even when reduced motion is requested", () => {
+    matchMediaMatches = true;
+    window.history.replaceState({}, "", "/en/");
+
+    render(<App />);
+
+    expect(play).toHaveBeenCalled();
+  });
+
+  it("retries a blocked hero on the first page gesture", async () => {
+    play
+      .mockRejectedValueOnce(new DOMException("blocked", "NotAllowedError"))
+      .mockResolvedValue(undefined);
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    await act(async () => Promise.resolve());
+
+    expect(container.querySelector(".hero-play-affordance")).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+
+    expect(play).toHaveBeenCalledTimes(2);
   });
 });

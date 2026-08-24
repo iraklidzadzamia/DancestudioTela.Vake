@@ -27,7 +27,6 @@ export function AutoPlayVideo({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
-  const [playRequest, setPlayRequest] = useState(0);
   const [pageVisible, setPageVisible] = useState(!document.hidden);
   const { hasPresentedFrame, revealAfterFirstFrame } = useFirstVideoFrame();
   const posterSrc = `/media/sections/${base}-poster.webp`;
@@ -71,10 +70,11 @@ export function AutoPlayVideo({
       return;
     }
     attemptVideoPlayback(video, setAutoplayBlocked);
-  }, [inView, pageVisible, playRequest, shouldLoad]);
+  }, [inView, pageVisible, shouldLoad]);
 
   useEffect(() => {
-    const retry = () => {
+    const retry = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest(".cinematic-video-frame")) return;
       const video = videoRef.current;
       if (video && shouldLoad && inView && pageVisible && !manuallyPaused.current) {
         attemptVideoPlayback(video, setAutoplayBlocked);
@@ -112,7 +112,7 @@ export function AutoPlayVideo({
     setIsManuallyPaused(false);
     setAutoplayBlocked(false);
     setShouldLoad(true);
-    setPlayRequest((request) => request + 1);
+    attemptVideoPlayback(video, setAutoplayBlocked);
   };
 
   return <figure ref={figureRef} className={`cinematic-video ${className}`.trim()}>

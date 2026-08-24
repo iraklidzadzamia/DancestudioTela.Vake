@@ -193,6 +193,43 @@ describe("AutoPlayVideo", () => {
     expect(play).toHaveBeenCalledTimes(2);
   });
 
+  it("does not duplicate the unlock retry when the gesture targets the film itself", () => {
+    renderFilm();
+    act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+    const frame = screen.getByRole("button", { name: "Pause film" });
+
+    fireEvent.pointerDown(frame);
+
+    expect(play).toHaveBeenCalledTimes(1);
+  });
+
+  it("starts a stopped film directly inside its click gesture", () => {
+    renderFilm();
+    act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+    const frame = screen.getByRole("button", { name: "Pause film" });
+
+    fireEvent.click(frame);
+    play.mockClear();
+
+    let clickIsActive = false;
+    let playedInsideClick = false;
+    const beginClick = () => { clickIsActive = true; };
+    const endClick = () => { clickIsActive = false; };
+    frame.addEventListener("click", beginClick, { capture: true });
+    document.addEventListener("click", endClick, { once: true });
+    play.mockImplementation(() => {
+      playedInsideClick = clickIsActive;
+      return Promise.resolve();
+    });
+
+    fireEvent.click(frame);
+
+    expect(playedInsideClick).toBe(true);
+    expect(play).toHaveBeenCalledTimes(1);
+  });
+
   it("keeps a manual pause when the film leaves and re-enters the viewport", () => {
     renderFilm();
     act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));

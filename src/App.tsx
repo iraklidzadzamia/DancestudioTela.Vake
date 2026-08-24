@@ -2,6 +2,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import { AutoPlayVideo } from "./AutoPlayVideo";
 import { scheduleGroups, siteCopy, type Language, type SiteCopy } from "./content";
 import { getProgramMedia } from "./programMedia";
+import { useFirstVideoFrame, VideoPoster } from "./VideoPoster";
+import { attemptVideoPlayback } from "./videoPlayback";
 
 const languagePath: Record<Language, string> = { EN: "/en/", KA: "/ka/", RU: "/ru/" };
 const siteOrigin = "https://dancestudio-tela-vake.vercel.app";
@@ -177,32 +179,58 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
   const [activeSchedule, setActiveSchedule] = useState(scheduleGroups[0].id);
   const [heroPlaying, setHeroPlaying] = useState(false);
   const [heroManuallyPausedVisible, setHeroManuallyPausedVisible] = useState(false);
+  const [heroAutoplayBlocked, setHeroAutoplayBlocked] = useState(false);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const heroManuallyPaused = useRef(false);
+  const heroInView = useRef(true);
+  const { hasPresentedFrame: heroHasPresentedFrame, revealAfterFirstFrame: revealHeroAfterFirstFrame } = useFirstVideoFrame();
   const ui = interfaceCopy[language];
   const adultPrograms = copy.programs.items.filter((program) => program.audience === "adults");
   const childrenPrograms = copy.programs.items.filter((program) => program.audience === "children");
   const visiblePrograms = audience === "adults" ? adultPrograms : childrenPrograms;
   const selectedSchedule = scheduleGroups.find((group) => group.id === activeSchedule) ?? scheduleGroups[0];
 
+  const requestHeroPlayback = () => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+    if (!heroInView.current || document.hidden || heroManuallyPaused.current) {
+      video.pause();
+      return;
+    }
+    attemptVideoPlayback(video, setHeroAutoplayBlocked);
+  };
+
   useEffect(() => {
     const video = heroVideoRef.current;
     const hero = document.querySelector(".hero");
-    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (!video || !hero) return;
-    let heroInView = true;
-    const syncMotion = () => {
-      if (motionPreference.matches || !heroInView || document.hidden || heroManuallyPaused.current) video.pause();
-      else void video.play().catch(() => undefined);
+    const syncPlayback = () => requestHeroPlayback();
+    const retryAfterGesture = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest(".hero-video video")) return;
+      requestHeroPlayback();
     };
-    const observer = new IntersectionObserver(([entry]) => { heroInView = entry.isIntersecting; syncMotion(); }, { threshold: 0.12 });
-    syncMotion();
+    const observer = new IntersectionObserver(([entry]) => {
+      heroInView.current = entry.isIntersecting;
+      syncPlayback();
+    }, { threshold: 0.12 });
+    syncPlayback();
     observer.observe(hero);
-    motionPreference.addEventListener("change", syncMotion);
-    document.addEventListener("visibilitychange", syncMotion);
+    document.addEventListener("visibilitychange", syncPlayback);
+    window.addEventListener("pointerdown", retryAfterGesture, { capture: true, passive: true });
+    window.addEventListener("touchstart", retryAfterGesture, { capture: true, passive: true });
+    window.addEventListener("online", syncPlayback);
+    window.addEventListener("pageshow", syncPlayback);
     const pauseForSectionFilm = (event: Event) => { if ((event as CustomEvent<string>).detail !== "hero") video.pause(); };
     window.addEventListener("tela:film-play", pauseForSectionFilm);
-    return () => { observer.disconnect(); motionPreference.removeEventListener("change", syncMotion); document.removeEventListener("visibilitychange", syncMotion); window.removeEventListener("tela:film-play", pauseForSectionFilm); };
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", syncPlayback);
+      window.removeEventListener("pointerdown", retryAfterGesture, true);
+      window.removeEventListener("touchstart", retryAfterGesture, true);
+      window.removeEventListener("online", syncPlayback);
+      window.removeEventListener("pageshow", syncPlayback);
+      window.removeEventListener("tela:film-play", pauseForSectionFilm);
+    };
   }, []);
 
   const toggleHeroPlayback = () => {
@@ -211,7 +239,8 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     if (video.paused) {
       heroManuallyPaused.current = false;
       setHeroManuallyPausedVisible(false);
-      void video.play().catch(() => undefined);
+      setHeroAutoplayBlocked(false);
+      attemptVideoPlayback(video, setHeroAutoplayBlocked);
     } else {
       heroManuallyPaused.current = true;
       setHeroManuallyPausedVisible(true);
@@ -228,6 +257,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
           muted
           loop
           playsInline
+          autoPlay
           preload="metadata"
           poster="/media/hero-tela-poster.webp"
           role="button"
@@ -241,13 +271,17 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
               toggleHeroPlayback();
             }
           }}
-          onPlay={() => { setHeroPlaying(true); window.dispatchEvent(new CustomEvent("tela:film-play", { detail: "hero" })); }}
+          onPlay={() => { setHeroPlaying(true); setHeroAutoplayBlocked(false); window.dispatchEvent(new CustomEvent("tela:film-play", { detail: "hero" })); }}
           onPause={() => setHeroPlaying(false)}
+          onPlaying={revealHeroAfterFirstFrame}
+          onLoadedData={requestHeroPlayback}
+          onCanPlay={requestHeroPlayback}
         >
           <source src="/media/hero-tela.webm" type="video/webm" />
           <source src="/media/hero-tela.mp4" type="video/mp4" />
         </video>
-        {heroManuallyPausedVisible && <span className="hero-play-affordance media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
+        <VideoPoster src="/media/hero-tela-poster.webp" hidden={heroHasPresentedFrame} />
+        {(heroManuallyPausedVisible || heroAutoplayBlocked) && <span className="hero-play-affordance media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
       </div>
       <div className="hero-video-shade" aria-hidden="true" />
       <Header language={language} copy={copy} onLanguage={onLanguage} />

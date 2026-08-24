@@ -49,7 +49,7 @@ Production: https://dancestudio-tela-vake.vercel.app
 - Video mapping, source checksums, placement decisions, and generated assets: `content/media-library.md`
 - Main layout and interactions: `src/App.tsx`
 - Program-page media mapping: `src/programMedia.ts`
-- Shared poster-first video behavior: `src/AutoPlayVideo.tsx`
+- Shared poster-first and resilient mobile-autoplay behavior: `src/AutoPlayVideo.tsx`, `src/videoPlayback.ts`
 - Visual system and responsive behavior: `src/styles.css`
 
 Keep camera originals outside the regular Git history. Approved web derivatives live in `public/media` so a normal clone contains everything required to run the site.
