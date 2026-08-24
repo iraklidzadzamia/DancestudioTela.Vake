@@ -32,6 +32,33 @@ function SectionLabel({ children, light = false }: { children: string; light?: b
   return <p className={`section-label${light ? " section-label-light" : ""}`}>{children}</p>;
 }
 
+function SocialIcon({ channel }: { channel: string }) {
+  if (channel === "Instagram") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24">
+        <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5.25" />
+        <circle cx="12" cy="12" r="4.1" />
+        <circle className="social-icon-fill" cx="17.45" cy="6.65" r="1.05" />
+      </svg>
+    );
+  }
+
+  if (channel === "Facebook") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24">
+        <path className="social-icon-fill" d="M13.65 21v-8h2.75l.42-3.1h-3.17V7.92c0-.9.25-1.5 1.58-1.5H17V3.65c-.31-.04-1.35-.13-2.56-.13-2.53 0-4.26 1.55-4.26 4.39V9.9H7.32V13h2.86v8h3.47Z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M20.15 11.75a8.12 8.12 0 0 1-11.97 7.14L4 20l1.13-4.08a8.12 8.12 0 1 1 15.02-4.17Z" />
+      <path d="M8.72 8.06c.2-.47.42-.48.72-.49h.61c.2 0 .39.07.49.34l.78 1.88c.09.22.05.41-.08.59l-.58.74c-.14.17-.19.33-.07.55.5.9 1.27 1.65 2.2 2.12.2.1.37.08.51-.09l.83-.96c.17-.2.37-.25.6-.16l1.78.83c.27.12.4.22.41.39.03.38-.17 1.16-.48 1.58-.44.59-1.23.94-1.96.93-1.22-.02-2.87-.65-4.5-2.1-1.33-1.19-2.24-2.65-2.42-3.84-.13-.88.21-1.74.46-2.18l.2-.17Z" />
+    </svg>
+  );
+}
+
 export default function App() {
   const [language, setLanguage] = useState<Language>(languageFromPath);
   const [activeSchedule, setActiveSchedule] = useState(scheduleGroups[0].id);
@@ -359,7 +386,13 @@ export default function App() {
             <p>{copy.contact.body}</p>
             <div className="contact-channels" aria-label={copy.contact.channels}>
               {copy.contact.channels.split(" · ").map((channel) => (
-                <span key={channel}>{channel}<i aria-hidden="true">↗</i></span>
+                <span className="contact-channel" key={channel}>
+                  <span className="contact-channel-name">
+                    <span className="social-icon"><SocialIcon channel={channel} /></span>
+                    {channel}
+                  </span>
+                  <i className="contact-channel-pending" aria-hidden="true" />
+                </span>
               ))}
             </div>
             <small>{copy.contact.pending}</small>

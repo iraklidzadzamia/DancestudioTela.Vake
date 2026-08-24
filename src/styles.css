@@ -1287,7 +1287,7 @@ h1 em {
   border-top: 1px solid rgba(255,255,255,0.2);
 }
 
-.contact-channels span {
+.contact-channel {
   min-height: 4.5rem;
   display: flex;
   align-items: center;
@@ -1297,11 +1297,44 @@ h1 em {
   font-size: 1.4rem;
 }
 
-.contact-channels i {
+.contact-channel-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.social-icon {
+  width: 2.7rem;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 50%;
   color: var(--champagne);
-  font-family: system-ui, sans-serif;
-  font-size: 1rem;
-  font-style: normal;
+}
+
+.social-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.55;
+}
+
+.social-icon .social-icon-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.contact-channel-pending {
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: var(--champagne);
+  box-shadow: 0 0 0 0.3rem rgba(201,168,106,0.1);
 }
 
 .contact-action > small {
