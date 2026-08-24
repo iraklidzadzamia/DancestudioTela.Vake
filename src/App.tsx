@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { scheduleGroups, siteCopy, type Language, type SiteCopy } from "./content";
 
 const languagePath: Record<Language, string> = { EN: "/en/", KA: "/ka/", RU: "/ru/" };
@@ -9,15 +9,20 @@ const programSlugs: Record<string, string> = {
 };
 type Program = SiteCopy["programs"]["items"][number];
 
-const interfaceCopy: Record<Language, {
+type FilmCopy = { kicker: string; title: string; body: string; caption: string; note: string };
+type InterfaceCopy = {
   skip: string; audienceKicker: string; audienceTitle: string; audienceBody: string; viewProgram: string;
   adultsNote: string; childrenNote: string; adultFilm: string; childFilm: string; filmReserved: string;
   insideKicker: string; insideTitle: string; insideBody: string; kidsKicker: string; kidsTitle: string;
   kidsBody: string; proamLink: string; storyLink: string; closingKicker: string; closingTitle: string;
   closingBody: string; back: string; programFor: string; whoTitle: string; whoBodyAdult: string;
   whoBodyChild: string; lessonTitle: string; lessonBody: string; practicalTitle: string; practicalBody: string;
-  related: string; scheduleLink: string;
-}> = {
+  related: string; scheduleLink: string; playFilm: string; pauseFilm: string; watchFilm: string;
+  languageLabel: string; navigationLabel: string; socialLabel: string; nextSection: string; sinceLabel: string;
+  films: { proam: FilmCopy; kids: FilmCopy; tango: FilmCopy; tangoGroup: FilmCopy; georgian: FilmCopy; closing: FilmCopy };
+};
+
+const interfaceCopy: Record<Language, InterfaceCopy> = {
   EN: {
     skip: "Skip to programs", audienceKicker: "Find your way in", audienceTitle: "Who are you choosing for?",
     audienceBody: "Start with the person, then discover the direction. No dance vocabulary required.",
@@ -36,7 +41,15 @@ const interfaceCopy: Record<Language, {
     whoBodyChild: "For children who are ready to discover rhythm, coordination and confidence with thoughtful guidance.",
     lessonTitle: "What the first lesson gives you", lessonBody: "You meet the teaching style, try the movement and understand whether this direction feels right. The first lesson is free.",
     practicalTitle: "Practical details", practicalBody: "Exact group level, teacher and age information is being confirmed. We will help you choose the right group before your visit.",
-    related: "You may also like", scheduleLink: "See the studio timetable",
+    related: "You may also like", scheduleLink: "See the studio timetable", playFilm: "Play film", pauseFilm: "Pause film", watchFilm: "Real moments from Tela", languageLabel: "Language", navigationLabel: "Main navigation", socialLabel: "Location and social channels", nextSection: "Continue to the next section", sinceLabel: "Story since",
+    films: {
+      proam: { kicker: "Ballroom & Latin · Pro-Am", title: "Learn with a professional beside you.", body: "In Pro-Am, your instructor is both teacher and dance partner. Every detail is shaped around your pace — whether you want a beautiful weekly ritual, a performance or a path toward competition.", caption: "Pro-Am in motion", note: "Professional partner · personal pace" },
+      kids: { kicker: "For children", title: "Small corrections. Lasting confidence.", body: "Young dancers learn best when they feel seen. Clear, age-appropriate guidance helps technique, coordination and confidence grow together — in Ballroom & Latin, ballet and Georgian dance.", caption: "Teaching with attention", note: "Ballroom & Latin · Ballet · Georgian Dance" },
+      tango: { kicker: "Women’s Tango", title: "Strength, musicality and your own expression.", body: "Women’s Tango develops posture, balance and expressive movement. The class is a place to understand the music, refine the body and dance with greater freedom.", caption: "Tango On Bars", note: "Technique, balance and expression" },
+      tangoGroup: { kicker: "Inside the group", title: "Technique becomes a shared energy.", body: "Focused practice meets the atmosphere of dancing together — two sides of the same direction.", caption: "Women’s Tango group", note: "A real class moment at Tela" },
+      georgian: { kicker: "Georgian Dance", title: "Tradition that lives in movement.", body: "Rhythm, precision and ensemble energy connect dancers with Georgia’s movement culture. Georgian dance is available for adults and children.", caption: "Georgian dance at Tela", note: "For adults and children" },
+      closing: { kicker: "The feeling after class", title: "Come for the dance. Stay for the joy.", body: "Technique matters. So does the human part — the laughter, energy and moments that make you want to return.", caption: "Life at Tela", note: "The spontaneous side of the studio" },
+    },
   },
   KA: {
     skip: "პროგრამებზე გადასვლა", audienceKicker: "იპოვე შენი გზა", audienceTitle: "ვისთვის ირჩევ?",
@@ -56,7 +69,15 @@ const interfaceCopy: Record<Language, {
     whoBodyChild: "ბავშვებისთვის, რომლებიც მზად არიან გააცნობიერონ რიტმი, კოორდინაცია და თავდაჯერება ყურადღებიანი სწავლებით.",
     lessonTitle: "რას გაძლევს პირველი გაკვეთილი", lessonBody: "გაიცნობ სწავლების სტილს, მოსინჯავ მოძრაობას და გაიგებ, შეგეფერება თუ არა ეს მიმართულება. პირველი გაკვეთილი უფასოა.",
     practicalTitle: "პრაქტიკული ინფორმაცია", practicalBody: "ჯგუფის დონე, პედაგოგი და ასაკი ზუსტდება. ვიზიტამდე სწორი ჯგუფის შერჩევაში დაგეხმარებით.",
-    related: "შეიძლება ასევე მოგეწონოს", scheduleLink: "სტუდიის განრიგის ნახვა",
+    related: "შეიძლება ასევე მოგეწონოს", scheduleLink: "სტუდიის განრიგის ნახვა", playFilm: "ვიდეოს ჩართვა", pauseFilm: "ვიდეოს დაპაუზება", watchFilm: "რეალური მომენტები Tela-დან", languageLabel: "ენა", navigationLabel: "მთავარი ნავიგაცია", socialLabel: "მდებარეობა და სოციალური არხები", nextSection: "შემდეგ სექციაზე გადასვლა", sinceLabel: "ისტორია დაიწყო",
+    films: {
+      proam: { kicker: "Ballroom & Latin · Pro-Am", title: "ისწავლე პროფესიონალთან ერთად.", body: "Pro-Am-ში ინსტრუქტორი ერთდროულად შენი პედაგოგი და საცეკვაო პარტნიორია. სწავლება შენს ტემპსა და მიზანს ერგება — იქნება ეს სასიამოვნო ყოველკვირეული რიტუალი, გამოსვლა თუ შეჯიბრებისკენ გზა.", caption: "Pro-Am მოძრაობაში", note: "პროფესიონალი პარტნიორი · პირადი ტემპი" },
+      kids: { kicker: "ბავშვებისთვის", title: "პატარა შესწორებები. დიდი თავდაჯერება.", body: "ბავშვი უკეთ სწავლობს, როცა ყურადღებას გრძნობს. ასაკზე მორგებული, მკაფიო მითითებები ტექნიკას, კოორდინაციასა და თავდაჯერებას ერთად ავითარებს — Ballroom & Latin-ში, ბალეტსა და ქართულ ცეკვაში.", caption: "სწავლება ყურადღებით", note: "Ballroom & Latin · ბალეტი · ქართული ცეკვა" },
+      tango: { kicker: "ქალების ტანგო", title: "ძალა, მუსიკალურობა და საკუთარი გამოხატვა.", body: "ქალების ტანგო ავითარებს პოზას, ბალანსსა და გამომსახველ მოძრაობას. აქ მუსიკის უკეთ გაგებას, სხეულის დახვეწასა და მეტ თავისუფლებას სწავლობ.", caption: "Tango On Bars", note: "ტექნიკა, ბალანსი და გამომსახველობა" },
+      tangoGroup: { kicker: "ჯგუფის შიგნით", title: "ტექნიკა საერთო ენერგიად იქცევა.", body: "კონცენტრირებული ვარჯიში და ერთად ცეკვის ატმოსფერო — ერთი მიმართულების ორი მხარეა.", caption: "ქალების ტანგოს ჯგუფი", note: "ნამდვილი გაკვეთილი Tela-ში" },
+      georgian: { kicker: "ქართული ცეკვა", title: "ტრადიცია, რომელიც მოძრაობაში ცოცხლობს.", body: "რიტმი, სიზუსტე და ჯგუფური ენერგია მოცეკვავეს ქართული მოძრაობის კულტურასთან აკავშირებს. ქართული ცეკვა ხელმისაწვდომია ზრდასრულებისა და ბავშვებისთვის.", caption: "ქართული ცეკვა Tela-ში", note: "ზრდასრულებისა და ბავშვებისთვის" },
+      closing: { kicker: "გრძნობა გაკვეთილის შემდეგ", title: "მოდი ცეკვისთვის. დარჩი სიხარულისთვის.", body: "ტექნიკა მნიშვნელოვანია. ადამიანური მხარეც — სიცილი, ენერგია და ის მომენტები, რომლებიც დაბრუნების სურვილს გიტოვებს.", caption: "ცხოვრება Tela-ში", note: "სტუდიის სპონტანური მხარე" },
+    },
   },
   RU: {
     skip: "Перейти к направлениям", audienceKicker: "Найдите свой путь", audienceTitle: "Для кого вы выбираете?",
@@ -76,7 +97,15 @@ const interfaceCopy: Record<Language, {
     whoBodyChild: "Детям, которые готовы открывать ритм, координацию и уверенность под внимательным руководством.",
     lessonTitle: "Что даст первый урок", lessonBody: "Вы познакомитесь с подходом преподавателя, попробуете движение и поймёте, подходит ли вам направление. Первый урок бесплатный.",
     practicalTitle: "Практическая информация", practicalBody: "Точный уровень группы, преподаватель и возраст уточняются. Перед визитом мы поможем выбрать подходящую группу.",
-    related: "Вам также может подойти", scheduleLink: "Посмотреть расписание студии",
+    related: "Вам также может подойти", scheduleLink: "Посмотреть расписание студии", playFilm: "Включить видео", pauseFilm: "Поставить видео на паузу", watchFilm: "Настоящие моменты из Tela", languageLabel: "Язык", navigationLabel: "Основная навигация", socialLabel: "Локация и социальные сети", nextSection: "Перейти к следующему разделу", sinceLabel: "История с",
+    films: {
+      proam: { kicker: "Ballroom & Latin · Pro-Am", title: "Учитесь рядом с профессионалом.", body: "В Pro-Am преподаватель становится и вашим танцевальным партнёром. Каждая деталь подстраивается под ваш темп — хотите ли вы красивый еженедельный ритуал, выступление или путь к соревнованиям.", caption: "Pro-Am в движении", note: "Профессиональный партнёр · персональный темп" },
+      kids: { kicker: "Для детей", title: "Небольшие подсказки. Уверенность надолго.", body: "Дети лучше учатся, когда чувствуют внимание. Понятные объяснения по возрасту помогают одновременно развивать технику, координацию и уверенность — в Ballroom & Latin, балете и грузинских танцах.", caption: "Обучение с вниманием", note: "Ballroom & Latin · Балет · Грузинские танцы" },
+      tango: { kicker: "Women’s Tango", title: "Сила, музыкальность и своё выражение.", body: "Women’s Tango развивает осанку, баланс и выразительное движение. Здесь можно глубже понять музыку, почувствовать тело и танцевать свободнее.", caption: "Tango On Bars", note: "Техника, баланс и выразительность" },
+      tangoGroup: { kicker: "Внутри группы", title: "Техника становится общей энергией.", body: "Сосредоточенная практика и атмосфера совместного танца — две стороны одного направления.", caption: "Группа Women’s Tango", note: "Настоящий момент занятия в Tela" },
+      georgian: { kicker: "Грузинские танцы", title: "Традиция, которая живёт в движении.", body: "Ритм, точность и ансамблевая энергия соединяют танцоров с культурой грузинского движения. Направление доступно взрослым и детям.", caption: "Грузинские танцы в Tela", note: "Для взрослых и детей" },
+      closing: { kicker: "Ощущение после занятия", title: "Приходите за танцем. Оставайтесь ради радости.", body: "Техника важна. Но важна и человеческая сторона — смех, энергия и моменты, ради которых хочется вернуться.", caption: "Жизнь в Tela", note: "Спонтанная сторона студии" },
+    },
   },
 };
 
@@ -122,13 +151,13 @@ function SocialIcon({ channel }: { channel: string }) {
 }
 
 function LanguageSwitcher({ language, onChange }: { language: Language; onChange: (language: Language) => void }) {
-  return <div className="language-switcher" aria-label="Language">{(["EN", "KA", "RU"] as Language[]).map((item) => <button className={language === item ? "is-active" : ""} key={item} onClick={() => onChange(item)} type="button" aria-pressed={language === item}>{item}</button>)}</div>;
+  return <div className="language-switcher" aria-label={interfaceCopy[language].languageLabel}>{(["EN", "KA", "RU"] as Language[]).map((item) => <button className={language === item ? "is-active" : ""} key={item} onClick={() => onChange(item)} type="button" aria-pressed={language === item}>{item}</button>)}</div>;
 }
 function Header({ language, copy, onLanguage, internal = false }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void; internal?: boolean }) {
   const home = languagePath[language];
   return <header className={"header" + (internal ? " header-internal" : "")}>
     <a className="brand" href={home} aria-label={copy.footer.studio}><Logo header /><span className="brand-type">Dance Studio Tela</span></a>
-    <nav className="desktop-nav" aria-label="Primary navigation">{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
+    <nav className="desktop-nav" aria-label={interfaceCopy[language].navigationLabel}>{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
     <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><a className="header-cta" href={internal ? home + "#contact" : "#contact"}>{copy.bookShort}</a></div>
   </header>;
 }
@@ -140,16 +169,120 @@ function PortraitMedia({ label, reserved, number, image = false, warm = false }:
   </figure>;
 }
 
+function CinematicVideo({ base, number, copy, playLabel, pauseLabel, className = "", loop = true }: {
+  base: string; number: string; copy: FilmCopy; playLabel: string; pauseLabel: string; className?: string; loop?: boolean;
+}) {
+  const frameRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const manuallyPaused = useRef(false);
+  const userActivated = useRef(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [inView, setInView] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const [playRequest, setPlayRequest] = useState(0);
+  const [pageVisible, setPageVisible] = useState(!document.hidden);
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPreference = () => setReduceMotion(preference.matches);
+    syncPreference();
+    preference.addEventListener("change", syncPreference);
+    return () => preference.removeEventListener("change", syncPreference);
+  }, []);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    const loadObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !saveData) setShouldLoad(true);
+    }, { rootMargin: "600px 0px", threshold: 0.01 });
+    const playbackObserver = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting && entry.intersectionRatio >= 0.35);
+    }, { threshold: [0, 0.35, 0.75] });
+    loadObserver.observe(frame);
+    playbackObserver.observe(frame);
+    return () => { loadObserver.disconnect(); playbackObserver.disconnect(); };
+  }, [saveData]);
+
+  useEffect(() => {
+    const onVisibility = () => setPageVisible(!document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
+  useEffect(() => {
+    const pauseForAnotherFilm = (event: Event) => {
+      if ((event as CustomEvent<string>).detail !== base) videoRef.current?.pause();
+    };
+    window.addEventListener("tela:film-play", pauseForAnotherFilm);
+    return () => window.removeEventListener("tela:film-play", pauseForAnotherFilm);
+  }, [base]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (!shouldLoad || !inView || !pageVisible || manuallyPaused.current || (reduceMotion && !userActivated.current)) {
+      video.pause();
+      return;
+    }
+    void video.play().catch(() => undefined);
+  }, [inView, pageVisible, playRequest, reduceMotion, shouldLoad]);
+
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (!video.paused) {
+      manuallyPaused.current = true;
+      userActivated.current = false;
+      video.pause();
+      return;
+    }
+    manuallyPaused.current = false;
+    userActivated.current = true;
+    setShouldLoad(true);
+    setPlayRequest((request) => request + 1);
+  };
+
+  return <figure ref={frameRef} className={`cinematic-video ${className}`.trim()}>
+    <div className="cinematic-video-frame">
+      <video
+        ref={videoRef}
+        width={720}
+        height={1280}
+        muted
+        loop={loop}
+        playsInline
+        preload="none"
+        poster={`/media/sections/${base}-poster.webp`}
+        aria-hidden="true"
+        onPlay={() => { setIsPlaying(true); window.dispatchEvent(new CustomEvent("tela:film-play", { detail: base })); }}
+        onPause={() => setIsPlaying(false)}
+      >
+        {shouldLoad && <><source src={`/media/sections/${base}.webm`} type="video/webm" /><source src={`/media/sections/${base}.mp4`} type="video/mp4" /></>}
+      </video>
+      <span className="cinematic-video-number" aria-hidden="true">{number}</span>
+      <button className="cinematic-video-control" type="button" onClick={togglePlayback} aria-label={isPlaying ? pauseLabel : playLabel}>
+        <span className={isPlaying ? "media-icon media-icon-pause" : "media-icon media-icon-play"} aria-hidden="true" />
+      </button>
+    </div>
+    <figcaption><span>{copy.caption}</span><small>{copy.note}</small></figcaption>
+  </figure>;
+}
+
 function ProgramList({ language, programs, action }: { language: Language; programs: Program[]; action: string }) {
   return <div className="program-list">{programs.map((program) => <a className="program-row" href={programHref(language, program)} key={program.number}>
-    <span className="program-row-number">{program.number}</span><div><p>{program.tag}</p><h3>{program.title}</h3><span>{program.body}</span></div><small>{action}</small><i aria-hidden="true">↗</i>
+    <span className="program-row-number">{program.number}</span><div><p>{program.tag}</p><h3>{program.title}</h3><span>{program.body}</span></div><small>{action}</small><i aria-hidden="true">→</i>
   </a>)}</div>;
 }
 
 function HomePage({ language, copy, onLanguage }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void }) {
   const [audience, setAudience] = useState<"adults" | "children">("adults");
   const [activeSchedule, setActiveSchedule] = useState(scheduleGroups[0].id);
-  const [showMobileBook, setShowMobileBook] = useState(false);
+  const [heroPlaying, setHeroPlaying] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const heroManuallyPaused = useRef(false);
   const ui = interfaceCopy[language];
   const adultPrograms = copy.programs.items.filter((program) => program.audience === "adults");
   const childrenPrograms = copy.programs.items.filter((program) => program.audience === "children");
@@ -157,31 +290,37 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
   const selectedSchedule = scheduleGroups.find((group) => group.id === activeSchedule) ?? scheduleGroups[0];
 
   useEffect(() => {
+    const video = heroVideoRef.current;
     const hero = document.querySelector(".hero");
-    if (!hero) return;
-    const observer = new IntersectionObserver(([entry]) => setShowMobileBook(!entry.isIntersecting), { threshold: 0.08 });
-    observer.observe(hero);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const video = document.querySelector<HTMLVideoElement>(".hero-video video");
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!video) return;
+    if (!video || !hero) return;
+    let heroInView = true;
     const syncMotion = () => {
-      if (motionPreference.matches) video.pause();
+      if (motionPreference.matches || !heroInView || document.hidden || heroManuallyPaused.current) video.pause();
       else void video.play().catch(() => undefined);
     };
+    const observer = new IntersectionObserver(([entry]) => { heroInView = entry.isIntersecting; syncMotion(); }, { threshold: 0.12 });
     syncMotion();
+    observer.observe(hero);
     motionPreference.addEventListener("change", syncMotion);
-    return () => motionPreference.removeEventListener("change", syncMotion);
+    document.addEventListener("visibilitychange", syncMotion);
+    const pauseForSectionFilm = (event: Event) => { if ((event as CustomEvent<string>).detail !== "hero") video.pause(); };
+    window.addEventListener("tela:film-play", pauseForSectionFilm);
+    return () => { observer.disconnect(); motionPreference.removeEventListener("change", syncMotion); document.removeEventListener("visibilitychange", syncMotion); window.removeEventListener("tela:film-play", pauseForSectionFilm); };
   }, []);
+
+  const toggleHeroPlayback = () => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+    if (video.paused) { heroManuallyPaused.current = false; void video.play().catch(() => undefined); }
+    else { heroManuallyPaused.current = true; video.pause(); }
+  };
 
   return <main className={"site-shell language-" + language.toLowerCase()}>
     <a className="skip-link" href="#programs">{ui.skip}</a>
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero-video" aria-hidden="true">
-        <video autoPlay muted loop playsInline preload="metadata" poster="/media/hero-tela-poster.webp">
+        <video ref={heroVideoRef} muted loop playsInline preload="metadata" poster="/media/hero-tela-poster.webp" onPlay={() => { setHeroPlaying(true); window.dispatchEvent(new CustomEvent("tela:film-play", { detail: "hero" })); }} onPause={() => setHeroPlaying(false)}>
           <source src="/media/hero-tela.webm" type="video/webm" />
           <source src="/media/hero-tela.mp4" type="video/mp4" />
         </video>
@@ -192,7 +331,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
         <div className="hero-copy">
           <div className="hero-meta">
             <p className="eyebrow">{copy.hero.eyebrow}</p>
-            <div className="hero-meta-icons" aria-label="Location and social channels">
+            <div className="hero-meta-icons" aria-label={ui.socialLabel}>
               {["Google Maps", "Instagram", "Facebook"].map((channel) => <span className="hero-meta-icon" role="img" aria-label={channel} key={channel}><SocialIcon channel={channel} /></span>)}
             </div>
           </div>
@@ -200,58 +339,75 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
           <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}</a><a className="button button-secondary" href="#contact">{copy.hero.secondary}</a></div>
           <ul className="reassurance" aria-label="Beginner reassurance">{copy.hero.notes.map((note) => <li key={note}><span aria-hidden="true">✦</span>{note}</li>)}</ul>
         </div>
-        <a className="hero-scroll" href="#orientation" aria-label="Continue to the next section"><span aria-hidden="true" /></a>
+        <a className="hero-scroll" href="#orientation" aria-label={ui.nextSection}><span aria-hidden="true" /></a>
+        <button className="hero-media-control" type="button" onClick={toggleHeroPlayback} aria-label={heroPlaying ? ui.pauseFilm : ui.playFilm}><span className={heroPlaying ? "media-icon media-icon-pause" : "media-icon media-icon-play"} aria-hidden="true" /></button>
       </div>
     </section>
 
     <section className="orientation section-ivory" id="orientation" aria-labelledby="orientation-title"><div className="section-wrap orientation-grid">
-      <div className="orientation-year" aria-label="Since 1970"><span>Since</span><strong>1970</strong></div>
-      <div className="orientation-copy"><SectionLabel>{copy.intro.kicker}</SectionLabel><h2 id="orientation-title">{copy.intro.title}</h2><p>{copy.intro.body}</p></div>
+      <div className="orientation-year"><span>{ui.sinceLabel}</span><strong>1970</strong></div>
+      <div className="orientation-copy"><h2 id="orientation-title">{copy.intro.title}</h2><p>{copy.intro.body}</p></div>
       <dl className="orientation-facts">{copy.hero.notes.map((note, index) => <div key={note}><dt>{String(index + 1).padStart(2, "0")}</dt><dd>{note}</dd></div>)}</dl>
     </div></section>
 
     <section className="programs section-sand" id="programs" aria-labelledby="programs-title"><div className="section-wrap">
       <div className="programs-heading"><div><SectionLabel>{ui.audienceKicker}</SectionLabel><h2 id="programs-title">{ui.audienceTitle}</h2></div><p>{ui.audienceBody}</p></div>
-      <div className="audience-switch" role="tablist" aria-label={copy.programs.title}>
-        <button className={audience === "adults" ? "is-active" : ""} type="button" role="tab" aria-selected={audience === "adults"} onClick={() => setAudience("adults")}><span>01</span><strong>{copy.programs.adultLabel}</strong><small>{ui.adultsNote}</small></button>
-        <button className={audience === "children" ? "is-active" : ""} type="button" role="tab" aria-selected={audience === "children"} onClick={() => setAudience("children")}><span>02</span><strong>{copy.programs.childrenLabel}</strong><small>{ui.childrenNote}</small></button>
+      <div className="audience-switch" role="group" aria-label={copy.programs.title}>
+        <button className={audience === "adults" ? "is-active" : ""} type="button" aria-pressed={audience === "adults"} onClick={() => setAudience("adults")}><span>01</span><strong>{copy.programs.adultLabel}</strong><small>{ui.adultsNote}</small></button>
+        <button className={audience === "children" ? "is-active" : ""} type="button" aria-pressed={audience === "children"} onClick={() => setAudience("children")}><span>02</span><strong>{copy.programs.childrenLabel}</strong><small>{ui.childrenNote}</small></button>
       </div>
-      <div className="programs-layout" role="tabpanel"><div className="programs-intro"><p>{copy.programs.body}</p><div className="programs-count"><span>0{visiblePrograms.length}</span><small>{copy.programs.kicker}</small></div></div><ProgramList language={language} programs={visiblePrograms} action={ui.viewProgram} /></div>
+      <div className="programs-layout"><div className="programs-intro"><p>{copy.programs.body}</p><div className="programs-count"><span>0{visiblePrograms.length}</span><small>{copy.programs.kicker}</small></div></div><ProgramList language={language} programs={visiblePrograms} action={ui.viewProgram} /></div>
     </div></section>
 
-    <section className="inside section-dark" aria-labelledby="inside-title"><div className="section-wrap inside-grid">
-      <PortraitMedia label={ui.adultFilm} reserved={ui.filmReserved} number="02" />
-      <div className="inside-copy"><SectionLabel light>{ui.insideKicker}</SectionLabel><h2 id="inside-title">{ui.insideTitle}</h2><p>{ui.insideBody}</p><div className="inside-values">{copy.benefits.slice(0, 4).map((benefit, index) => <span key={benefit}><i>{String(index + 1).padStart(2, "0")}</i>{benefit}</span>)}</div></div>
+    <section className="editorial-film proam-film section-dark" id="proam" aria-labelledby="proam-title"><div className="section-wrap editorial-split">
+      <CinematicVideo base="proam-story" number="01" copy={ui.films.proam} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-arch" />
+      <div className="editorial-copy"><SectionLabel light>{ui.films.proam.kicker}</SectionLabel><h2 id="proam-title">{ui.films.proam.title}</h2><p>{ui.films.proam.body}</p>
+        <div className="editorial-facts">{copy.proam.points.map((point) => <div key={point.number}><span>{point.number}</span><p><strong>{point.title}</strong>{point.body}</p></div>)}</div>
+        <a className="text-link text-link-light" href={languagePath[language] + "adults/pro-am/"}>{ui.proamLink}<span aria-hidden="true">→</span></a>
+      </div>
     </div></section>
 
-    <section className="kids-feature section-ivory" aria-labelledby="kids-title"><div className="section-wrap kids-grid">
-      <div className="kids-copy"><SectionLabel>{ui.kidsKicker}</SectionLabel><h2 id="kids-title">{ui.kidsTitle}</h2><p>{ui.kidsBody}</p><div className="kids-program-links">{childrenPrograms.map((program) => <a href={programHref(language, program)} key={program.number}>{program.title}<span aria-hidden="true">↗</span></a>)}</div></div>
-      <PortraitMedia label={ui.childFilm} reserved={ui.filmReserved} number="03" warm />
+    <section className="editorial-film kids-film section-ivory" aria-labelledby="kids-title"><div className="section-wrap editorial-split editorial-split-reverse">
+      <div className="editorial-copy"><SectionLabel>{ui.films.kids.kicker}</SectionLabel><h2 id="kids-title">{ui.films.kids.title}</h2><p>{ui.films.kids.body}</p>
+        <div className="kids-program-links">{childrenPrograms.map((program) => <a href={programHref(language, program)} key={program.number}>{program.title}<span aria-hidden="true">→</span></a>)}</div>
+      </div>
+      <CinematicVideo base="kids-coaching" number="02" copy={ui.films.kids} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-soft" />
     </div></section>
 
-    <section className="proam section-plum" id="proam" aria-labelledby="proam-title"><div className="proam-monogram" aria-hidden="true"><span>PRO</span><i /><span>AM</span></div><div className="section-wrap proam-grid">
-      <div className="proam-heading"><SectionLabel light>{copy.proam.kicker}</SectionLabel><h2 id="proam-title">{copy.proam.title}</h2><p>{copy.proam.body}</p><a className="text-link text-link-light" href={languagePath[language] + "adults/pro-am/"}>{ui.proamLink}<span aria-hidden="true">↗</span></a></div>
-      <div className="proam-points">{copy.proam.points.map((point) => <article className="proam-point" key={point.number}><span>{point.number}</span><div><h3>{point.title}</h3><p>{point.body}</p></div></article>)}</div>
+    <section className="tango-chapter section-plum" aria-labelledby="tango-title"><div className="section-wrap">
+      <div className="tango-heading"><div><SectionLabel light>{ui.films.tango.kicker}</SectionLabel><h2 id="tango-title">{ui.films.tango.title}</h2></div><div><p>{ui.films.tango.body}</p><a className="text-link text-link-light" href={languagePath[language] + "adults/womens-tango/"}>{ui.viewProgram}<span aria-hidden="true">→</span></a></div></div>
+      <div className="tango-films">
+        <CinematicVideo base="tango-on-bars" number="03" copy={ui.films.tango} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-main" />
+        <div className="tango-film-note"><SectionLabel light>{ui.films.tangoGroup.kicker}</SectionLabel><h3>{ui.films.tangoGroup.title}</h3><p>{ui.films.tangoGroup.body}</p></div>
+        <CinematicVideo base="tango-group" number="04" copy={ui.films.tangoGroup} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-secondary" />
+      </div>
     </div></section>
 
-    <section className="journey section-dark" aria-labelledby="journey-title"><div className="section-wrap"><div className="section-heading-row"><div><SectionLabel light>{copy.journey.kicker}</SectionLabel><h2 id="journey-title">{copy.journey.title}</h2></div><p>{copy.journey.body}</p></div><div className="journey-grid">{copy.journey.steps.map((step) => <article className="journey-card" key={step.number}><span>{step.number}</span><i aria-hidden="true" /><h3>{step.title}</h3><p>{step.body}</p></article>)}</div></div></section>
+    <section className="editorial-film georgian-film section-sand" aria-labelledby="georgian-title"><div className="section-wrap editorial-split">
+      <div className="editorial-copy"><SectionLabel>{ui.films.georgian.kicker}</SectionLabel><h2 id="georgian-title">{ui.films.georgian.title}</h2><p>{ui.films.georgian.body}</p><a className="text-link" href={languagePath[language] + "adults/georgian-dance/"}>{ui.viewProgram}<span aria-hidden="true">→</span></a></div>
+      <CinematicVideo base="georgian-dance" number="05" copy={ui.films.georgian} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="cinematic-video-offset" />
+    </div></section>
+
+    <section className="journey section-dark" aria-labelledby="journey-title"><div className="section-wrap"><div className="section-heading-row"><div><SectionLabel light>{copy.journey.kicker}</SectionLabel><h2 id="journey-title">{copy.journey.title}</h2></div><p>{copy.journey.body}</p></div><div className="journey-grid">{copy.journey.steps.slice(0, 3).map((step) => <article className="journey-card" key={step.number}><span>{step.number}</span><i aria-hidden="true" /><h3>{step.title}</h3><p>{step.body}</p></article>)}</div></div></section>
 
     <section className="schedule-section section-sand" id="schedule" aria-labelledby="schedule-title"><div className="section-wrap">
       <div className="schedule-header"><div><SectionLabel>{copy.schedule.kicker}</SectionLabel><h2 id="schedule-title">{copy.schedule.title}</h2></div><div><p>{copy.schedule.body}</p><span>{copy.schedule.draft}</span></div></div>
-      <div className="schedule-layout"><div className="schedule-tabs" role="tablist" aria-label={copy.schedule.title}>{scheduleGroups.map((group) => <button key={group.id} type="button" role="tab" aria-selected={activeSchedule === group.id} className={activeSchedule === group.id ? "is-active" : ""} onClick={() => setActiveSchedule(group.id)}><span>{group.label[language]}</span><i aria-hidden="true">{activeSchedule === group.id ? "●" : "○"}</i></button>)}</div>
-        <div className="schedule-panel" role="tabpanel"><div className="schedule-panel-title"><span>{selectedSchedule.label[language]}</span><i>{String(selectedSchedule.classes.length).padStart(2, "0")}</i></div><div className="class-list">{selectedSchedule.classes.map((item, index) => <article className="class-row" key={item.time + item.title + index}><time>{item.time}</time><div><h3>{item.title}</h3>{item.teachers && <p>{copy.schedule.teachers} {item.teachers}</p>}</div><span aria-hidden="true">↗</span></article>)}</div></div>
+      <div className="schedule-layout"><div className="schedule-tabs" role="group" aria-label={copy.schedule.title}>{scheduleGroups.map((group) => <button key={group.id} type="button" aria-pressed={activeSchedule === group.id} className={activeSchedule === group.id ? "is-active" : ""} onClick={() => setActiveSchedule(group.id)}><span>{group.label[language]}</span><i aria-hidden="true">{activeSchedule === group.id ? "●" : "○"}</i></button>)}</div>
+        <div className="schedule-panel"><div className="schedule-panel-title"><span>{selectedSchedule.label[language]}</span><i>{String(selectedSchedule.classes.length).padStart(2, "0")}</i></div><div className="class-list">{selectedSchedule.classes.map((item, index) => <article className="class-row" key={item.time + item.title + index}><time>{item.time}</time><div><h3>{item.title}</h3>{item.teachers && <p>{copy.schedule.teachers} {item.teachers}</p>}</div></article>)}</div></div>
       </div>
     </div></section>
 
-    <section className="heritage section-dark" id="story" aria-labelledby="heritage-title"><div className="section-wrap heritage-grid"><div className="heritage-emblem"><Logo full /></div><div className="heritage-copy"><SectionLabel light>{copy.heritage.kicker}</SectionLabel><h2 id="heritage-title">{copy.heritage.title}</h2><p>{copy.heritage.body}</p></div><div className="heritage-year"><span>Since</span><strong>{copy.heritage.year}</strong></div></div></section>
+    <section className="heritage section-dark" id="story" aria-labelledby="heritage-title"><div className="section-wrap heritage-grid"><div className="heritage-emblem"><Logo full /></div><div className="heritage-copy"><SectionLabel light>{copy.heritage.kicker}</SectionLabel><h2 id="heritage-title">{copy.heritage.title}</h2><p>{copy.heritage.body}</p></div><div className="heritage-year"><span>{ui.sinceLabel}</span><strong>{copy.heritage.year}</strong></div></div></section>
 
-    <section className="faq section-ivory" aria-labelledby="faq-title"><div className="section-wrap faq-grid"><div className="faq-heading"><SectionLabel>{copy.faq.kicker}</SectionLabel><h2 id="faq-title">{copy.faq.title}</h2></div><div className="faq-list">{copy.faq.items.map((item, index) => <details key={item.question} open={index === 0}><summary><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.question}</strong><i aria-hidden="true">+</i></summary><p>{item.answer}</p></details>)}</div></div></section>
+    <section className="faq section-ivory" aria-labelledby="faq-title"><div className="section-wrap faq-grid"><div className="faq-heading"><SectionLabel>{copy.faq.kicker}</SectionLabel><h2 id="faq-title">{copy.faq.title}</h2></div><div className="faq-list">{[0, 1, 3, 5, 6].map((sourceIndex, index) => { const item = copy.faq.items[sourceIndex]; return <details key={item.question} open={index === 0}><summary><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.question}</strong><i aria-hidden="true">+</i></summary><p>{item.answer}</p></details>; })}</div></div></section>
 
-    <section className="closing-film section-ivory" aria-labelledby="closing-title"><div className="section-wrap closing-grid"><PortraitMedia label={ui.closingKicker} reserved={ui.filmReserved} number="06" warm /><div className="closing-copy"><SectionLabel>{ui.closingKicker}</SectionLabel><h2 id="closing-title">{ui.closingTitle}</h2><p>{ui.closingBody}</p><a className="button button-ink" href="#contact">{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div></div></section>
+    <section className="closing-reel section-dark" aria-labelledby="closing-title"><div className="section-wrap closing-reel-stage">
+      <CinematicVideo base="closing-emotional" number="06" copy={ui.films.closing} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="closing-reel-video" loop={false} />
+      <div className="closing-reel-copy"><SectionLabel light>{ui.films.closing.kicker}</SectionLabel><h2 id="closing-title">{ui.films.closing.title}</h2><p>{ui.films.closing.body}</p><a className="button button-light" href="#contact">{copy.hero.secondary}</a></div>
+    </div></section>
 
-    <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2 id="contact-title">{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><div className="contact-channels" aria-label={copy.contact.channels}>{copy.contact.channels.split(" · ").map((channel) => <span className="contact-channel" key={channel}><span><i className="social-icon"><SocialIcon channel={channel} /></i>{channel}</span><small>{copy.contact.pending}</small></span>)}</div></div></div></section>
+    <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="section-wrap contact-grid"><div><SectionLabel light>{copy.contact.kicker}</SectionLabel><h2 id="contact-title">{copy.contact.title}</h2></div><div className="contact-action"><p>{copy.contact.body}</p><div className="contact-channels" aria-label={copy.contact.channels}>{copy.contact.channels.split(" · ").map((channel) => <span className="contact-channel" key={channel}><span><i className="social-icon"><SocialIcon channel={channel} /></i>{channel}</span></span>)}</div><p className="contact-pending">{copy.contact.pending}</p></div></div></section>
     <Footer copy={copy} />
-    {showMobileBook && <a className="mobile-book" href="#contact">{copy.hero.secondary}<span aria-hidden="true">↗</span></a>}
   </main>;
 }
 

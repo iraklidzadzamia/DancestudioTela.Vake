@@ -87,7 +87,7 @@ const en: SiteCopy = {
     body: "Since 1970, Tela has helped adults and children discover dance. Today in Vake, we teach Ballroom & Latin, ballet, Georgian dance and Women’s Tango.",
     primary: "Choose your program",
     secondary: "Book a free first lesson",
-    notes: ["For adults and children", "Start at any level", "First lesson free in every program"],
+    notes: ["For adults and children", "Different directions in one studio", "First lesson free in every program"],
     directions: [
       { label: "For adults", summary: "Ballroom & Latin · Ballet · Georgian Dance · Women’s Tango" },
       { label: "For children", summary: "Ballroom & Latin · Ballet · Georgian Dance" },
@@ -96,8 +96,8 @@ const en: SiteCopy = {
   },
   intro: {
     kicker: "Tela · Since 1970",
-    title: "A dance studio where every generation can find its rhythm.",
-    body: "Tela’s dance story began in 1970. Today adults and children meet here through beautiful movement, thoughtful teaching and a first lesson that is free in every direction.",
+    title: "Dance for every generation.",
+    body: "Tela’s dance story began in 1970. Today in Vake, adults and children meet here through movement, music and thoughtful teaching.",
   },
   proam: {
     kicker: "What is Pro-Am?",
@@ -113,7 +113,7 @@ const en: SiteCopy = {
   benefits: ["Movement", "Confidence", "Music", "Progress", "Connection", "Joy"],
   journey: {
     kicker: "Beginning at Tela",
-    title: "A simple first step. A direction that can grow with you.",
+    title: "Your first step, made simple.",
     body: "You do not need experience or a finished goal. We help you choose the right class, begin comfortably and build from there.",
     steps: [
       { number: "01", title: "Choose your path", body: "Tell us whether you are choosing for yourself or a child and what kind of movement draws you in." },
@@ -147,14 +147,14 @@ const en: SiteCopy = {
   },
   heritage: {
     kicker: "Tela · Since 1970",
-    title: "A new chapter of a dance story that began more than half a century ago.",
+    title: "A dance story still moving since 1970.",
     body: "Tela’s story began in 1970. More than half a century later, that experience lives on in classes for adults and children — from Ballroom & Latin to ballet, Georgian dance, Women’s Tango and Pro-Am.",
     year: "1970",
     note: "Archive photography and the verified studio chronology will be added here.",
   },
   faq: {
     kicker: "Before your first step",
-    title: "The questions almost every beginner asks.",
+    title: "Before your first lesson.",
     items: [
       { question: "Do I need a dance partner?", answer: "Tell us which direction interests you and we will explain the format. For Pro-Am you do not need a partner — your professional instructor dances with you." },
       { question: "What if I have never danced?", answer: "That is completely fine. Your first lesson begins at your current level and moves at your pace." },
@@ -167,7 +167,7 @@ const en: SiteCopy = {
   },
   contact: {
     kicker: "Your first lesson is free",
-    title: "The first step can be beautifully simple.",
+    title: "We’ll help you choose your first step.",
     body: "Choose your direction, start from your current level and contact us in the way that feels easiest for you.",
     channels: "Instagram · Facebook · WhatsApp",
     pending: "Direct contact links are being connected",
@@ -194,7 +194,7 @@ const ka: SiteCopy = {
     body: "1970 წლიდან Tela ზრდასრულებსა და ბავშვებს ცეკვის აღმოჩენაში ეხმარება. დღეს ვაკეში ვასწავლით Ballroom & Latin-ს, ბალეტს, ქართულ ცეკვასა და ქალების ტანგოს.",
     primary: "იპოვე შენი მიმართულება",
     secondary: "დაჯავშნე პირველი უფასო გაკვეთილი",
-    notes: ["ზრდასრულებისა და ბავშვებისთვის", "დაიწყე ნებისმიერი დონიდან", "პირველი გაკვეთილი ყველა პროგრამაში უფასოა"],
+    notes: ["ზრდასრულებისა და ბავშვებისთვის", "სხვადასხვა მიმართულება ერთ სტუდიაში", "პირველი გაკვეთილი ყველა პროგრამაში უფასოა"],
     directions: [
       { label: "ზრდასრულებისთვის", summary: "Ballroom & Latin · ბალეტი · ქართული ცეკვა · ქალების ტანგო" },
       { label: "ბავშვებისთვის", summary: "Ballroom & Latin · ბალეტი · ქართული ცეკვა" },
@@ -203,8 +203,8 @@ const ka: SiteCopy = {
   },
   intro: {
     kicker: "Tela · 1970 წლიდან",
-    title: "საცეკვაო სტუდია, სადაც ყველა თაობა საკუთარ რიტმს პოულობს.",
-    body: "Tela-ს საცეკვაო ისტორია 1970 წელს დაიწყო. დღეს აქ ზრდასრულები და ბავშვები ერთიანდებიან ლამაზი მოძრაობით, ყურადღებიანი სწავლებითა და ყველა მიმართულებაში უფასო პირველი გაკვეთილით.",
+    title: "ცეკვა ყველა თაობისთვის.",
+    body: "Tela-ს საცეკვაო ისტორია 1970 წელს დაიწყო. დღეს ვაკეში ზრდასრულები და ბავშვები მოძრაობით, მუსიკითა და ყურადღებიანი სწავლებით ერთიანდებიან.",
   },
   proam: {
     kicker: "რა არის Pro-Am?",
@@ -220,7 +220,7 @@ const ka: SiteCopy = {
   benefits: ["მოძრაობა", "თავდაჯერება", "მუსიკა", "პროგრესი", "კავშირი", "სიხარული"],
   journey: {
     kicker: "დასაწყისი Tela-ში",
-    title: "მარტივი პირველი ნაბიჯი. მიმართულება, რომელიც შენთან ერთად იზრდება.",
+    title: "პირველი ნაბიჯი — მარტივად.",
     body: "გამოცდილება და საბოლოო მიზანი საჭირო არ არის. დაგეხმარებით სწორი კლასის არჩევაში, კომფორტულად დაწყებასა და თანდათან განვითარებაში.",
     steps: [
       { number: "01", title: "აირჩიე შენი გზა", body: "გვითხარი, შენთვის ირჩევ თუ ბავშვისთვის და როგორი მოძრაობა გიზიდავს." },
@@ -254,14 +254,14 @@ const ka: SiteCopy = {
   },
   heritage: {
     kicker: "Tela · 1970 წლიდან",
-    title: "ნახევარ საუკუნეზე მეტი ხნის წინ დაწყებული საცეკვაო ისტორიის ახალი თავი.",
+    title: "1970 წლიდან ცოცხალი საცეკვაო ისტორია.",
     body: "Tela-ს ისტორია 1970 წელს დაიწყო. ნახევარ საუკუნეზე მეტი ხნის შემდეგ ეს გამოცდილება ზრდასრულებისა და ბავშვების კლასებში გრძელდება — Ballroom & Latin-იდან ბალეტამდე, ქართულ ცეკვამდე, ქალების ტანგომდე და Pro-Am-მდე.",
     year: "1970",
     note: "აქ დაემატება საარქივო ფოტოები და სტუდიის დაზუსტებული ქრონოლოგია.",
   },
   faq: {
     kicker: "პირველ ნაბიჯამდე",
-    title: "კითხვები, რომლებსაც თითქმის ყველა დამწყები სვამს.",
+    title: "პირველ გაკვეთილამდე.",
     items: [
       { question: "მჭირდება საცეკვაო პარტნიორი?", answer: "გვითხარი, რომელი მიმართულება გაინტერესებს და ფორმატს აგიხსნით. Pro-Am-ისთვის პარტნიორი არ გჭირდება — შენთან პროფესიონალი ინსტრუქტორი ცეკვავს." },
       { question: "თუ არასოდეს მიცეკვია?", answer: "სრულიად ნორმალურია. პირველი გაკვეთილი იწყება შენი დონიდან და მიდის შენს ტემპში." },
@@ -274,7 +274,7 @@ const ka: SiteCopy = {
   },
   contact: {
     kicker: "პირველი გაკვეთილი უფასოა",
-    title: "პირველი ნაბიჯი შეიძლება ძალიან მარტივი იყოს.",
+    title: "პირველი ნაბიჯის არჩევაში დაგეხმარებით.",
     body: "აირჩიე მიმართულება, დაიწყე შენი დღევანდელი დონიდან და დაგვიკავშირდი შენთვის მოსახერხებელი გზით.",
     channels: "Instagram · Facebook · WhatsApp",
     pending: "პირდაპირი საკონტაქტო ბმულები მალე დაემატება",
@@ -301,7 +301,7 @@ const ru: SiteCopy = {
     body: "С 1970 года Tela помогает взрослым и детям открывать танец. Сегодня в Ваке мы преподаём Ballroom & Latin, балет, грузинские танцы и Women’s Tango.",
     primary: "Выбрать направление",
     secondary: "Записаться на бесплатный урок",
-    notes: ["Для взрослых и детей", "Можно начать с нуля", "Первый урок бесплатный в каждом направлении"],
+    notes: ["Для взрослых и детей", "Разные направления в одной студии", "Первый урок бесплатный в каждом направлении"],
     directions: [
       { label: "Для взрослых", summary: "Ballroom & Latin · Балет · Грузинские танцы · Женское танго" },
       { label: "Для детей", summary: "Ballroom & Latin · Балет · Грузинские танцы" },
@@ -310,8 +310,8 @@ const ru: SiteCopy = {
   },
   intro: {
     kicker: "Tela · С 1970 года",
-    title: "Танцевальная студия, где каждое поколение находит свой ритм.",
-    body: "Танцевальная история Tela началась в 1970 году. Сегодня здесь встречаются взрослые и дети — через красивое движение, внимательное обучение и бесплатный первый урок в каждом направлении.",
+    title: "Танец для каждого поколения.",
+    body: "Танцевальная история Tela началась в 1970 году. Сегодня в Ваке Tela объединяет взрослых и детей через движение, музыку и внимательное обучение.",
   },
   proam: {
     kicker: "Что такое Pro-Am?",
@@ -327,7 +327,7 @@ const ru: SiteCopy = {
   benefits: ["Движение", "Уверенность", "Музыка", "Прогресс", "Общение", "Радость"],
   journey: {
     kicker: "Начало в Tela",
-    title: "Простой первый шаг. Направление, которое может расти вместе с вами.",
+    title: "Первый шаг — без сложностей.",
     body: "Опыт и готовая цель не нужны. Мы поможем выбрать подходящее занятие, комфортно начать и постепенно двигаться дальше.",
     steps: [
       { number: "01", title: "Выберите свой путь", body: "Расскажите, выбираете вы для себя или ребёнка и какое движение вам ближе." },
@@ -361,14 +361,14 @@ const ru: SiteCopy = {
   },
   heritage: {
     kicker: "Tela · С 1970 года",
-    title: "Новая глава танцевальной истории, начавшейся более полувека назад.",
+    title: "Танцевальная история, которая продолжается с 1970 года.",
     body: "История Tela началась в 1970 году. Спустя более полувека этот опыт продолжается в занятиях для взрослых и детей — от Ballroom & Latin до балета, грузинских танцев, Women’s Tango и Pro-Am.",
     year: "1970",
     note: "Здесь появятся архивные фотографии и проверенная хронология студии.",
   },
   faq: {
     kicker: "Перед первым шагом",
-    title: "Вопросы, которые задаёт почти каждый начинающий.",
+    title: "Перед первым занятием.",
     items: [
       { question: "Мне нужен танцевальный партнёр?", answer: "Расскажите, какое направление вас интересует, и мы объясним формат. Для Pro-Am партнёр не нужен — с вами танцует профессиональный преподаватель." },
       { question: "Что, если я никогда не танцевал(а)?", answer: "Это совершенно нормально. Первый урок начинается с вашего текущего уровня и проходит в комфортном темпе." },
@@ -381,7 +381,7 @@ const ru: SiteCopy = {
   },
   contact: {
     kicker: "Первый урок бесплатный",
-    title: "Первый шаг может быть удивительно простым.",
+    title: "Поможем выбрать ваш первый шаг.",
     body: "Выберите направление, начните с вашего уровня и свяжитесь с нами удобным способом.",
     channels: "Instagram · Facebook · WhatsApp",
     pending: "Прямые контактные ссылки скоро будут добавлены",
