@@ -93,7 +93,7 @@ function programHref(language: Language, program: Program) {
 }
 
 function Logo({ full = false }: { full?: boolean }) {
-  return <span className={full ? "logo-full" : "logo-crop"} aria-hidden="true"><img src="/tela-logo.png" alt="" /></span>;
+  return <span className={full ? "logo-full" : "logo-crop"} aria-hidden="true"><img src="/tela-logo.png" alt="" loading="eager" fetchPriority="high" decoding="async" /></span>;
 }
 function SectionLabel({ children, light = false }: { children: string; light?: boolean }) {
   return <p className={"section-label" + (light ? " section-label-light" : "")}>{children}</p>;
@@ -181,7 +181,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
             </div>
           </div>
           <h1 id="hero-title">{copy.hero.title}<em>{copy.hero.accent}</em></h1><p className="hero-body">{copy.hero.body}</p>
-          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}<span aria-hidden="true">↗</span></a><a className="button button-secondary" href="#contact">{copy.hero.secondary}<span aria-hidden="true">↗</span></a></div>
+          <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}</a><a className="button button-secondary" href="#contact">{copy.hero.secondary}</a></div>
           <ul className="reassurance" aria-label="Beginner reassurance">{copy.hero.notes.map((note) => <li key={note}><span aria-hidden="true">✦</span>{note}</li>)}</ul>
         </div>
         <a className="hero-scroll" href="#orientation" aria-label="Continue to the next section"><span aria-hidden="true" /></a>
