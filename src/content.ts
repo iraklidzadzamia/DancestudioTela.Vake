@@ -82,17 +82,17 @@ const en: SiteCopy = {
   bookShort: "Book",
   hero: {
     eyebrow: "TELA · SINCE 1970 · VAKE, TBILISI",
-    title: "Where every generation",
-    accent: "falls in love with dance.",
+    title: "Find your",
+    accent: "way to dance.",
     body: "A dance studio for adults and children: Ballroom & Latin, ballet, Georgian dance and Women’s Tango — taught with care in Vake since 1970.",
-    primary: "Find your direction",
+    primary: "Choose your program",
     secondary: "Book a free first lesson",
     notes: ["For adults and children", "Start at any level", "First lesson free in every program"],
     directions: [
       { label: "For adults", summary: "Ballroom & Latin · Ballet · Georgian Dance · Women’s Tango" },
       { label: "For children", summary: "Ballroom & Latin · Ballet · Georgian Dance" },
     ],
-    media: "DanceStudio Tela classes for adults and children",
+    media: "A cinematic tour of the real Tela studio interior",
   },
   intro: {
     kicker: "Tela · Since 1970",
@@ -189,8 +189,8 @@ const ka: SiteCopy = {
   bookShort: "დაჯავშნა",
   hero: {
     eyebrow: "TELA · 1970 წლიდან · ვაკე, თბილისი",
-    title: "სადაც ყველა თაობას",
-    accent: "ცეკვა უყვარდება.",
+    title: "იპოვე შენი",
+    accent: "ცეკვა.",
     body: "საცეკვაო სტუდია ზრდასრულებისა და ბავშვებისთვის: Ballroom & Latin, ბალეტი, ქართული ცეკვა და ქალების ტანგო — ყურადღებიანი სწავლებით ვაკეში, 1970 წლიდან.",
     primary: "იპოვე შენი მიმართულება",
     secondary: "დაჯავშნე პირველი უფასო გაკვეთილი",
@@ -199,7 +199,7 @@ const ka: SiteCopy = {
       { label: "ზრდასრულებისთვის", summary: "Ballroom & Latin · ბალეტი · ქართული ცეკვა · ქალების ტანგო" },
       { label: "ბავშვებისთვის", summary: "Ballroom & Latin · ბალეტი · ქართული ცეკვა" },
     ],
-    media: "სტუდია Tela-ს ცეკვის გაკვეთილები ზრდასრულებისა და ბავშვებისთვის",
+    media: "ნამდვილი Tela-ს სტუდიის კინემატოგრაფიული ვიდეო",
   },
   intro: {
     kicker: "Tela · 1970 წლიდან",
@@ -296,17 +296,17 @@ const ru: SiteCopy = {
   bookShort: "Запись",
   hero: {
     eyebrow: "TELA · С 1970 ГОДА · ВАКЕ, ТБИЛИСИ",
-    title: "Здесь каждое поколение",
-    accent: "влюбляется в танец.",
+    title: "Найдите свой",
+    accent: "танец.",
     body: "Танцевальная студия для взрослых и детей: Ballroom & Latin, балет, грузинские танцы и Women’s Tango — с внимательным обучением в Ваке с 1970 года.",
-    primary: "Найти своё направление",
+    primary: "Выбрать направление",
     secondary: "Записаться на бесплатный урок",
     notes: ["Для взрослых и детей", "Можно начать с нуля", "Первый урок бесплатный в каждом направлении"],
     directions: [
       { label: "Для взрослых", summary: "Ballroom & Latin · Балет · Грузинские танцы · Женское танго" },
       { label: "Для детей", summary: "Ballroom & Latin · Балет · Грузинские танцы" },
     ],
-    media: "Занятия в танцевальной студии Tela для взрослых и детей",
+    media: "Кинематографичное видео настоящего интерьера студии Tela",
   },
   intro: {
     kicker: "Tela · С 1970 года",

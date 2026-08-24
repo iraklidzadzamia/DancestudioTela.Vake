@@ -147,22 +147,40 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const video = document.querySelector<HTMLVideoElement>(".hero-video video");
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!video) return;
+    const syncMotion = () => {
+      if (motionPreference.matches) video.pause();
+      else void video.play().catch(() => undefined);
+    };
+    syncMotion();
+    motionPreference.addEventListener("change", syncMotion);
+    return () => motionPreference.removeEventListener("change", syncMotion);
+  }, []);
+
   return <main className={"site-shell language-" + language.toLowerCase()}>
     <a className="skip-link" href="#programs">{ui.skip}</a>
     <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-material" aria-hidden="true" /><div className="hero-orbit hero-orbit-one" aria-hidden="true" /><div className="hero-orbit hero-orbit-two" aria-hidden="true" />
+      <div className="hero-video" aria-hidden="true">
+        <video autoPlay muted loop playsInline preload="metadata" poster="/media/hero-tela-poster.webp">
+          <source src="/media/hero-tela.webm" type="video/webm" />
+          <source src="/media/hero-tela.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div className="hero-video-shade" aria-hidden="true" />
       <Header language={language} copy={copy} onLanguage={onLanguage} />
-      <div className="hero-grid" id="top">
+      <div className="hero-stage" id="top">
         <div className="hero-copy"><p className="eyebrow">{copy.hero.eyebrow}</p><h1 id="hero-title">{copy.hero.title}<em>{copy.hero.accent}</em></h1><p className="hero-body">{copy.hero.body}</p>
           <div className="hero-actions"><a className="button button-primary" href="#programs">{copy.hero.primary}<span aria-hidden="true">↗</span></a><a className="button button-secondary" href="#contact">{copy.hero.secondary}</a></div>
           <ul className="reassurance" aria-label="Beginner reassurance">{copy.hero.notes.map((note) => <li key={note}><span aria-hidden="true">✦</span>{note}</li>)}</ul>
         </div>
-        <PortraitMedia label={copy.hero.media} reserved="Hero film" number="01" image />
-        <div className="hero-directions" aria-label={copy.programs.title}>{copy.hero.directions.map((direction, index) => <a href="#programs" key={direction.label} onClick={() => setAudience(index === 0 ? "adults" : "children")}><small>{String(index + 1).padStart(2, "0")}</small><strong>{direction.label}</strong><span>{direction.summary}</span><i aria-hidden="true">↗</i></a>)}</div>
+        <a className="hero-scroll" href="#orientation"><span>Scroll</span><i aria-hidden="true">↓</i></a>
       </div>
     </section>
 
-    <section className="orientation section-ivory" aria-labelledby="orientation-title"><div className="section-wrap orientation-grid">
+    <section className="orientation section-ivory" id="orientation" aria-labelledby="orientation-title"><div className="section-wrap orientation-grid">
       <div className="orientation-year" aria-label="Since 1970"><span>Since</span><strong>1970</strong></div>
       <div className="orientation-copy"><SectionLabel>{copy.intro.kicker}</SectionLabel><h2 id="orientation-title">{copy.intro.title}</h2><p>{copy.intro.body}</p></div>
       <dl className="orientation-facts">{copy.hero.notes.map((note, index) => <div key={note}><dt>{String(index + 1).padStart(2, "0")}</dt><dd>{note}</dd></div>)}</dl>
