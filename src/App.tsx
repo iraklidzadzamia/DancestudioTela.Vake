@@ -171,6 +171,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
   const [audience, setAudience] = useState<"adults" | "children">("adults");
   const [activeSchedule, setActiveSchedule] = useState(scheduleGroups[0].id);
   const [heroPlaying, setHeroPlaying] = useState(false);
+  const [heroManuallyPausedVisible, setHeroManuallyPausedVisible] = useState(false);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const heroManuallyPaused = useRef(false);
   const ui = interfaceCopy[language];
@@ -202,8 +203,15 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
   const toggleHeroPlayback = () => {
     const video = heroVideoRef.current;
     if (!video) return;
-    if (video.paused) { heroManuallyPaused.current = false; void video.play().catch(() => undefined); }
-    else { heroManuallyPaused.current = true; video.pause(); }
+    if (video.paused) {
+      heroManuallyPaused.current = false;
+      setHeroManuallyPausedVisible(false);
+      void video.play().catch(() => undefined);
+    } else {
+      heroManuallyPaused.current = true;
+      setHeroManuallyPausedVisible(true);
+      video.pause();
+    }
   };
 
   return <main className={"site-shell language-" + language.toLowerCase()}>
@@ -234,7 +242,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
           <source src="/media/hero-tela.webm" type="video/webm" />
           <source src="/media/hero-tela.mp4" type="video/mp4" />
         </video>
-        {!heroPlaying && <span className="hero-play-affordance media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
+        {heroManuallyPausedVisible && <span className="hero-play-affordance media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
       </div>
       <div className="hero-video-shade" aria-hidden="true" />
       <Header language={language} copy={copy} onLanguage={onLanguage} />

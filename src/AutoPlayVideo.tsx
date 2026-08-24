@@ -26,6 +26,7 @@ export function AutoPlayVideo({
   const [shouldLoad, setShouldLoad] = useState(false);
   const [inView, setInView] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isManuallyPaused, setIsManuallyPaused] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [playRequest, setPlayRequest] = useState(0);
   const [pageVisible, setPageVisible] = useState(!document.hidden);
@@ -94,11 +95,13 @@ export function AutoPlayVideo({
     if (isPlaying) {
       manuallyPaused.current = true;
       userActivated.current = false;
+      setIsManuallyPaused(true);
       video.pause();
       return;
     }
     manuallyPaused.current = false;
     userActivated.current = true;
+    setIsManuallyPaused(false);
     setShouldLoad(true);
     setPlayRequest((request) => request + 1);
   };
@@ -133,7 +136,7 @@ export function AutoPlayVideo({
           <source src={`/media/sections/${base}.mp4`} type="video/mp4" />
         </>}
       </video>
-      {!isPlaying && <span className="media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
+      {isManuallyPaused && <span className="media-play-affordance" aria-hidden="true"><span className="media-icon media-icon-play" /></span>}
     </button>
     {caption && <figcaption><span>{caption.title}</span><small>{caption.note}</small></figcaption>}
   </figure>;

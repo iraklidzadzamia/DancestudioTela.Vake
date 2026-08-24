@@ -87,6 +87,7 @@ describe("AutoPlayVideo", () => {
     expect(screen.getByRole("button", { name: "Play film" })).toBeInTheDocument();
     expect(container.querySelector("video")).toHaveAttribute("poster", "/media/sections/proam-story-poster.webp");
     expect(container.querySelectorAll("source")).toHaveLength(0);
+    expect(container.querySelector(".media-play-affordance")).not.toBeInTheDocument();
   });
 
   it("adds WebM and MP4 sources only when the frame approaches the viewport", () => {
@@ -122,6 +123,7 @@ describe("AutoPlayVideo", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Pause film" }));
     expect(pause).toHaveBeenCalled();
+    expect(document.querySelector(".media-play-affordance")).toBeInTheDocument();
 
     act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: false, intersectionRatio: 0 }));
     act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
@@ -129,5 +131,8 @@ describe("AutoPlayVideo", () => {
 
     expect(play).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("button", { name: "Play film" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Play film" }));
+    expect(document.querySelector(".media-play-affordance")).not.toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
@@ -52,5 +52,23 @@ describe("program hero media", () => {
 
     expect(container.querySelector(".program-hero-film video")).toHaveAttribute("poster", "/media/sections/tango-on-bars-poster.webp");
     expect(container.querySelector(".portrait-media-poster")).not.toBeInTheDocument();
+  });
+
+  it("shows the hero play affordance only after a manual pause", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    const heroVideo = container.querySelector(".hero-video video") as HTMLVideoElement;
+
+    expect(container.querySelector(".hero-play-affordance")).not.toBeInTheDocument();
+
+    Object.defineProperty(heroVideo, "paused", { configurable: true, value: false });
+    fireEvent.play(heroVideo);
+    fireEvent.click(heroVideo);
+    expect(container.querySelector(".hero-play-affordance")).toBeInTheDocument();
+
+    Object.defineProperty(heroVideo, "paused", { configurable: true, value: true });
+    fireEvent.click(heroVideo);
+    expect(container.querySelector(".hero-play-affordance")).not.toBeInTheDocument();
   });
 });
