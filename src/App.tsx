@@ -167,6 +167,13 @@ export default function App() {
                 {copy.hero.secondary}
               </a>
             </div>
+            <div className="hero-socials" aria-label={copy.contact.channels}>
+              {["Instagram", "Facebook", "WhatsApp"].map((channel) => (
+                <span className="hero-social" key={channel} role="img" aria-label={channel}>
+                  <SocialIcon channel={channel} />
+                </span>
+              ))}
+            </div>
             <ul className="reassurance" aria-label="Beginner reassurance">
               {copy.hero.notes.map((note) => (
                 <li key={note}><span aria-hidden="true">✦</span>{note}</li>

@@ -491,6 +491,38 @@ h1 em {
   border-color: rgba(255,255,255,0.52);
 }
 
+.hero-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1.35rem;
+}
+
+.hero-social {
+  width: 2.45rem;
+  height: 2.45rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 50%;
+  color: rgba(255,255,255,0.72);
+}
+
+.hero-social svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.45;
+}
+
+.hero-social .social-icon-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
 .reassurance {
   display: flex;
   flex-wrap: wrap;
@@ -1570,6 +1602,10 @@ h1 em {
     gap: 0.55rem 1rem;
     margin-top: 1.35rem;
     font-size: 0.7rem;
+  }
+
+  .hero-socials {
+    margin-top: 1.1rem;
   }
 
   .scroll-cue {
