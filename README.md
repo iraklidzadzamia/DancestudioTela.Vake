@@ -12,7 +12,7 @@ Premium mobile-first website for DanceStudio Tela in Vake, Tbilisi.
 - The real vertical studio film is used in the hero.
 - Six additional approved content videos are prepared for Pro-Am, kids, Women's Tango, Georgian dance, and the emotional closing section.
 - Program pages reuse the matching approved films; adult ballet temporarily uses an AI-generated photograph based on the real Tela interior and should be replaced when authentic ballet media is supplied.
-- Teacher profiles, exact public class names, age groups, address, and direct contact links remain pending owner confirmation.
+- The public address is confirmed as 2/5 Ateni Street, Vake, Tbilisi. Teacher profiles, exact public class names, and age groups remain pending owner confirmation.
 
 ## Continue on another computer
 
@@ -38,9 +38,11 @@ pnpm dev
 pnpm build
 ```
 
-The project is configured for Vercel. `vercel.json` preserves direct access to the `/en/`, `/ka/`, and `/ru/` language paths.
+The project is configured for Vercel. The production build pre-renders the `/en/`, `/ka/`, and `/ru/` language and program paths, then generates `sitemap.xml`, `robots.txt`, and `404.html`.
 
 Production: https://dancestudio-tela-vake.vercel.app
+
+The intended permanent domain is `tela-vake.ge`. Keep the Vercel URL as `VITE_SITE_ORIGIN` until that domain is purchased and connected. The exact migration sequence and the remaining owner decisions are recorded in [`docs/plans/2026-08-25-tela-vake-domain-handoff.md`](docs/plans/2026-08-25-tela-vake-domain-handoff.md).
 
 ## Google Analytics and Google Ads measurement
 
