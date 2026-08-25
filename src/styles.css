@@ -155,6 +155,8 @@ h1,
 }
 
 .hero {
+  --hero-split: 48vw;
+  --hero-media-width: 52vw;
   min-height: 100svh;
   position: relative;
   isolation: isolate;
@@ -172,21 +174,22 @@ h1,
   mix-blend-mode: soft-light;
 }
 .hero-video {
-  --hero-media-width: 59%;
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: #151113 url("/media/hero-tela-poster.webp") center / cover no-repeat;
+  background: #151113;
 }
-.hero-video::before {
+.hero-video::after {
   content: "";
+  width: 1px;
   position: absolute;
-  inset: -3rem;
-  background: url("/media/hero-tela-poster.webp") center / cover no-repeat;
-  filter: blur(24px) saturate(0.65);
-  opacity: 0.48;
-  transform: scale(1.08);
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: var(--hero-split);
+  background: rgba(208, 173, 107, 0.38);
+  pointer-events: none;
 }
 .hero-video video {
   width: var(--hero-media-width);
@@ -212,9 +215,7 @@ h1,
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(19, 13, 16, 0.98) 0%, rgba(24, 16, 20, 0.92) 37%, rgba(24, 16, 20, 0.42) 64%, rgba(12, 9, 10, 0.18) 100%),
-    linear-gradient(180deg, rgba(11, 8, 9, 0.48) 0%, transparent 24%, transparent 70%, rgba(11, 8, 9, 0.62) 100%);
+  background: linear-gradient(180deg, rgba(11, 8, 9, 0.48) 0%, transparent 24%, transparent 70%, rgba(11, 8, 9, 0.62) 100%);
 }
 .hero-stage {
   width: var(--wrap);
@@ -227,8 +228,8 @@ h1,
   padding: clamp(4rem, 7vw, 7rem) 0 clamp(5rem, 8vw, 7rem);
   pointer-events: none;
 }
-.hero-copy { width: min(52%, 44rem); max-width: 44rem; pointer-events: auto; }
-.hero-meta { max-width: 42rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.6rem; }
+.hero-copy { width: calc(var(--hero-split) - max(2rem, calc((100vw - 1320px) / 2))); max-width: none; pointer-events: auto; }
+.hero-meta { width: 100%; max-width: none; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.6rem; }
 .eyebrow { display: flex; align-items: center; gap: 0.8rem; margin: 0 0 1.6rem; color: var(--gold); font-size: 0.67rem; letter-spacing: 0.21em; line-height: 1.5; }
 .hero-meta .eyebrow { min-width: 0; margin: 0; }
 .eyebrow::before { content: ""; width: 2.5rem; height: 1px; background: currentColor; }
@@ -258,6 +259,8 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
 .reassurance { display: flex; flex-wrap: wrap; gap: 0.65rem 1.25rem; padding: 0; margin: 1.45rem 0 0; list-style: none; color: rgba(255, 255, 255, 0.72); font-size: 0.72rem; font-weight: 400; line-height: 1.45; text-shadow: 0 0.3rem 1.2rem rgba(0, 0, 0, 0.72); }
 .reassurance li { display: inline-flex; align-items: center; gap: 0.45rem; }
 .reassurance span { color: var(--gold); font-size: 0.58rem; }
+.language-en .reassurance { display: grid; grid-template-columns: max-content max-content minmax(0, 1fr); }
+.language-en .reassurance li:last-child { justify-self: end; }
 .hero-scroll {
   width: 32px;
   height: 40px;
@@ -601,8 +604,8 @@ body.booking-open { overflow: hidden; }
 @media (max-width: 1120px) {
   .header { grid-template-columns: 1fr auto; }
   .desktop-nav { display: none; }
-  .hero-video { --hero-media-width: 66%; }
-  .hero-copy { width: 56%; }
+  .hero { --hero-split: 55vw; --hero-media-width: 45vw; }
+  .hero-copy { width: calc(var(--hero-split) - max(2rem, calc((100vw - 1320px) / 2))); }
   .hero-copy h1, .language-ru .hero-copy h1, .language-ka .hero-copy h1 { font-size: clamp(3.8rem, 6.8vw, 6rem); }
   .orientation-grid { grid-template-columns: minmax(10rem, 0.32fr) minmax(0, 1fr); }
   .orientation-facts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); }
@@ -624,8 +627,8 @@ body.booking-open { overflow: hidden; }
   .hero .header { padding-inline: 1rem; background: transparent; }
   .header-cta { display: none; }
   .logo-header { width: 58px; height: 46px; }
-  .hero-video::before { display: none; }
-  .hero-video { --hero-media-width: 100%; }
+  .hero { --hero-split: 0; --hero-media-width: 100vw; }
+  .hero-video::after { display: none; }
   .hero-video video { height: 100%; inset: 0; object-fit: cover; object-position: center; }
   .hero-play-affordance { left: auto; right: 1rem; top: auto; bottom: 1.25rem; transform: none; }
   .hero-video-shade {
@@ -644,6 +647,7 @@ body.booking-open { overflow: hidden; }
   .hero-actions .button { width: 100%; }
   .hero-actions .button-secondary { width: fit-content; min-height: 44px; padding-inline: 1.15rem; border: 1px solid rgba(255, 255, 255, 0.28); }
   .reassurance { flex-direction: column; gap: 0.42rem; margin-top: 1rem; color: rgba(255, 255, 255, 0.74); font-size: 0.71rem; }
+  .language-en .reassurance { display: flex; }
   .reassurance li:nth-child(2) { display: none; }
   .hero-scroll { right: auto; bottom: 1rem; left: 50%; }
   .orientation-grid, .programs-heading, .programs-layout, .inside-grid, .kids-grid, .proam-grid, .section-heading-row, .schedule-header, .schedule-layout, .heritage-grid, .faq-grid, .closing-grid, .contact-grid, .detail-hero-grid { grid-template-columns: 1fr; }
