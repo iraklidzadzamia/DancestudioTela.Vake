@@ -27,6 +27,19 @@ describe("desktop hero split", () => {
     );
   });
 
+  it("adds a static atmospheric treatment only to the desktop copy panel", () => {
+    expect(css).toMatch(
+      /@media \(min-width: 821px\)[\s\S]*?\.hero::before \{[\s\S]*?width: var\(--hero-split\);[\s\S]*?radial-gradient\([\s\S]*?pointer-events: none;/,
+    );
+    expect(css).toMatch(
+      /@media \(min-width: 821px\)[\s\S]*?\.hero::after \{[\s\S]*?width: var\(--hero-split\);[\s\S]*?feTurbulence[\s\S]*?mix-blend-mode: soft-light;/,
+    );
+    expect(css).not.toMatch(/@keyframes hero-(?:glow|gradient|atmosphere)/);
+    expect(css).toMatch(
+      /@media \(max-width: 820px\)[\s\S]*?--hero-split: 0; --hero-media-width: 100vw;/,
+    );
+  });
+
   it("uses one multilingual navigation axis and safe hero boundary", () => {
     expect(css).toContain(".desktop-nav-group { display: flex;");
     expect(css).toContain(".hero .desktop-nav { position: absolute;");

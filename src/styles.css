@@ -178,6 +178,32 @@ h1,
   background-image: repeating-linear-gradient(112deg, transparent 0 7px, rgba(255, 255, 255, 0.025) 7px 8px);
   mix-blend-mode: soft-light;
 }
+
+@media (min-width: 821px) {
+  .hero::before {
+    content: "";
+    width: var(--hero-split);
+    position: absolute;
+    z-index: 1;
+    inset: 0 auto 0 0;
+    background:
+      radial-gradient(ellipse 78% 56% at 36% 55%, rgba(184, 144, 204, 0.13) 0%, rgba(119, 66, 99, 0.075) 38%, transparent 72%),
+      radial-gradient(ellipse 56% 80% at 100% 42%, rgba(208, 173, 107, 0.075) 0%, rgba(121, 82, 59, 0.035) 42%, transparent 74%),
+      linear-gradient(145deg, rgba(91, 38, 63, 0.12) 0%, transparent 42%),
+      linear-gradient(180deg, rgba(8, 6, 7, 0.2) 0%, transparent 24%, transparent 70%, rgba(8, 6, 7, 0.32) 100%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    width: var(--hero-split);
+    inset: 0 auto 0 0;
+    opacity: 0.12;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.58'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    mix-blend-mode: soft-light;
+  }
+}
+
 .hero-video {
   position: absolute;
   inset: 0;
