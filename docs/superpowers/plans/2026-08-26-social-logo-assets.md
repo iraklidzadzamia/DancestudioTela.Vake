@@ -4,9 +4,9 @@
 
 **Goal:** Produce a reusable square logo and a crop-safe Open Graph image from the exact existing Tela logo.
 
-**Architecture:** A small Node script writes a temporary SVG atmosphere and uses the installed `ffmpeg` binary to composite the untouched center-cropped source logo onto deterministic 1200×1200 and 1200×630 canvases. The existing `/og.png` URL remains unchanged; a lightweight PNG-header test guards both output dimensions.
+**Architecture:** A small Node script uses native `ffmpeg` color, gradient, and grain filters to create deterministic 1200×1200 and 1200×630 canvases, then composites the untouched center-cropped source logo onto them. The existing `/og.png` URL remains unchanged; a lightweight PNG-header test guards both output dimensions.
 
-**Tech Stack:** Node.js built-ins, SVG filters/gradients, `ffmpeg`, Vitest, PNG assets.
+**Tech Stack:** Node.js built-ins, native `ffmpeg` filters, Vitest, PNG assets.
 
 ## Global Constraints
 
@@ -76,11 +76,11 @@ Create a Node script that:
 
 1. Resolves the repository root from `import.meta.url`.
 2. Creates a temporary directory with `mkdtempSync(join(tmpdir(), "tela-social-"))`.
-3. Writes an SVG background containing:
+3. Builds a native `ffmpeg` background filter containing:
    - base `#150f13`;
    - a restrained plum radial glow centered behind the logo;
    - a very soft warm glow near the right edge;
-   - low-opacity `feTurbulence` grain.
+   - low-strength, fixed-seed grain.
 4. Runs `ffmpeg` twice using `spawnSync` with argument arrays, not a shell string.
 5. Center-crops the source from 4000×2828 to 2828×2828 at `x=586`, preserving proportions.
 6. Scales the cropped logo to 1000×1000 for the square asset and 520×520 for the Open Graph asset with Lanczos filtering.
