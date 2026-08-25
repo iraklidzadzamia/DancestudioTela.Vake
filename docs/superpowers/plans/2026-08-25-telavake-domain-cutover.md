@@ -28,7 +28,7 @@
 - Consumes: `DEFAULT_SITE_ORIGIN`, `getSeoData()`, runtime head metadata.
 - Produces: тестовые ожидания для `https://telavake.ge`.
 
-- [ ] **Step 1: Заменить ожидаемый временный origin на новый домен**
+- [x] **Step 1: Заменить ожидаемый временный origin на новый домен**
 
 ```ts
 expect(DEFAULT_SITE_ORIGIN).toBe("https://telavake.ge");
@@ -38,7 +38,7 @@ expect(document.querySelector('link[hreflang="ka"]')).toHaveAttribute(
 );
 ```
 
-- [ ] **Step 2: Запустить целевые тесты и подтвердить, что они падают до изменения реализации**
+- [x] **Step 2: Запустить целевые тесты и подтвердить, что они падают до изменения реализации**
 
 Run: `pnpm test -- src/site.test.ts src/App.test.tsx`
 Expected: FAIL на старом `dancestudio-tela-vake.vercel.app`.
@@ -57,24 +57,24 @@ Expected: FAIL на старом `dancestudio-tela-vake.vercel.app`.
 - Consumes: `VITE_SITE_ORIGIN` и fallback `DEFAULT_SITE_ORIGIN`.
 - Produces: canonical, hreflang, Open Graph, JSON-LD, sitemap и robots на `https://telavake.ge`.
 
-- [ ] **Step 1: Обновить единый fallback origin**
+- [x] **Step 1: Обновить единый fallback origin**
 
 ```ts
 export const DEFAULT_SITE_ORIGIN = "https://telavake.ge";
 ```
 
-- [ ] **Step 2: Обновить статические fallback URL в HTML и пример переменной окружения**
+- [x] **Step 2: Обновить статические fallback URL в HTML и пример переменной окружения**
 
 ```text
 VITE_SITE_ORIGIN=https://telavake.ge
 ```
 
-- [ ] **Step 3: Обновить актуальную документацию и отметить завершённые пункты DNS/SSL**
+- [x] **Step 3: Обновить актуальную документацию и отметить завершённые пункты DNS/SSL**
 
 Run: `rg -n 'dancestudio-tela-vake\.vercel\.app|tela-vake\.ge' src index.html .env.example README.md DOMAIN_LAUNCH_CHECKLIST.md docs/plans/2026-08-25-tela-vake-domain-handoff.md`
 Expected: старый и ошибочный домены отсутствуют в актуальных файлах.
 
-- [ ] **Step 4: Запустить целевые тесты**
+- [x] **Step 4: Запустить целевые тесты**
 
 Run: `pnpm test -- src/site.test.ts src/App.test.tsx`
 Expected: PASS.
@@ -92,22 +92,22 @@ Expected: PASS.
 - Consumes: production build output.
 - Produces: проверенный набор статических страниц для Vercel.
 
-- [ ] **Step 1: Запустить полный тестовый набор**
+- [x] **Step 1: Запустить полный тестовый набор**
 
 Run: `pnpm test`
 Expected: PASS.
 
-- [ ] **Step 2: Собрать production build**
+- [x] **Step 2: Собрать production build**
 
 Run: `pnpm build`
 Expected: exit 0.
 
-- [ ] **Step 3: Проверить новый домен в сгенерированных SEO-файлах**
+- [x] **Step 3: Проверить новый домен в сгенерированных SEO-файлах**
 
 Run: `rg -n 'https://telavake\.ge' dist/en/index.html dist/ka/index.html dist/ru/index.html dist/sitemap.xml dist/robots.txt`
 Expected: новый домен присутствует во всех проверяемых файлах.
 
-- [ ] **Step 4: Убедиться, что временный домен не публикуется**
+- [x] **Step 4: Убедиться, что временный домен не публикуется**
 
 Run: `rg -n 'dancestudio-tela-vake\.vercel\.app|tela-vake\.ge' dist`
 Expected: no matches.
@@ -122,22 +122,21 @@ Expected: no matches.
 - Consumes: проверенный Git commit и Vercel project configuration.
 - Produces: живой сайт с новым production origin.
 
-- [ ] **Step 1: Проверить значение `VITE_SITE_ORIGIN` в Vercel**
+- [x] **Step 1: Проверить значение `VITE_SITE_ORIGIN` в Vercel**
 
 Expected: переменная отсутствует либо равна `https://telavake.ge` для Production.
 
-- [ ] **Step 2: Опубликовать проверенные изменения через подключённый репозиторий**
+- [x] **Step 2: Опубликовать проверенные изменения через подключённый репозиторий**
 
 Run: `git push origin main`
 Expected: Vercel запускает production deployment.
 
-- [ ] **Step 3: Проверить HTTP, HTTPS и www-редирект**
+- [x] **Step 3: Проверить HTTP, HTTPS и www-редирект**
 
 Run: `curl -sSIL https://telavake.ge/` и `curl -sSIL https://www.telavake.ge/`
 Expected: основной домен ведёт на `/en/`, `www` возвращает постоянный редирект на `https://telavake.ge/`.
 
-- [ ] **Step 4: Проверить опубликованные canonical, sitemap и robots**
+- [x] **Step 4: Проверить опубликованные canonical, sitemap и robots**
 
 Run: `curl -sS https://telavake.ge/en/`, `curl -sS https://telavake.ge/sitemap.xml`, `curl -sS https://telavake.ge/robots.txt`
 Expected: только `https://telavake.ge`.
-
