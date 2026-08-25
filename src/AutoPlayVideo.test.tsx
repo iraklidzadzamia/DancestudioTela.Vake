@@ -143,6 +143,20 @@ describe("AutoPlayVideo", () => {
     expect(container.querySelector("video")).toHaveAttribute("autoplay");
   });
 
+  it("keeps two visible films playing when they share a playback group", () => {
+    render(<>
+      <AutoPlayVideo base="tango-on-bars" playbackGroup="tango-chapter" playLabel="Play film" pauseLabel="Pause film" />
+      <AutoPlayVideo base="tango-group" playbackGroup="tango-chapter" playLabel="Play film" pauseLabel="Pause film" />
+    </>);
+
+    act(() => TestIntersectionObserver.instances[0].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[1].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+    act(() => TestIntersectionObserver.instances[2].trigger({ isIntersecting: true, intersectionRatio: 0.01 }));
+    act(() => TestIntersectionObserver.instances[3].trigger({ isIntersecting: true, intersectionRatio: 0.35 }));
+
+    expect(screen.getAllByRole("button", { name: "Pause film" })).toHaveLength(2);
+  });
+
   it("loads and autoplays near-view video even when Save Data is enabled", () => {
     Object.defineProperty(navigator, "connection", {
       configurable: true,

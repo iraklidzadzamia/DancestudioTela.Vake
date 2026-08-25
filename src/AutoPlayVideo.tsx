@@ -4,6 +4,7 @@ import { attemptVideoPlayback } from "./videoPlayback";
 
 export type AutoPlayVideoProps = {
   base: string;
+  playbackGroup?: string;
   playLabel: string;
   pauseLabel: string;
   className?: string;
@@ -13,12 +14,14 @@ export type AutoPlayVideoProps = {
 
 export function AutoPlayVideo({
   base,
+  playbackGroup,
   playLabel,
   pauseLabel,
   className = "",
   loop = true,
   caption,
 }: AutoPlayVideoProps) {
+  const playbackIdentity = playbackGroup ?? base;
   const figureRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const manuallyPaused = useRef(false);
@@ -56,11 +59,11 @@ export function AutoPlayVideo({
 
   useEffect(() => {
     const pauseForAnotherFilm = (event: Event) => {
-      if ((event as CustomEvent<string>).detail !== base) videoRef.current?.pause();
+      if ((event as CustomEvent<string>).detail !== playbackIdentity) videoRef.current?.pause();
     };
     window.addEventListener("tela:film-play", pauseForAnotherFilm);
     return () => window.removeEventListener("tela:film-play", pauseForAnotherFilm);
-  }, [base]);
+  }, [playbackIdentity]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -138,7 +141,7 @@ export function AutoPlayVideo({
         onPlay={() => {
           setIsPlaying(true);
           setAutoplayBlocked(false);
-          window.dispatchEvent(new CustomEvent("tela:film-play", { detail: base }));
+          window.dispatchEvent(new CustomEvent("tela:film-play", { detail: playbackIdentity }));
         }}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}

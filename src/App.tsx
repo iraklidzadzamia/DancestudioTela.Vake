@@ -563,9 +563,9 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
     <section className="tango-chapter section-plum" aria-labelledby="tango-title"><div className="section-wrap">
       <div className="tango-heading"><div><SectionLabel light>{ui.films.tango.kicker}</SectionLabel><h2 id="tango-title">{ui.films.tango.title}</h2></div><div><p>{ui.films.tango.body}</p><a className="text-link text-link-light" href={languagePath[language] + "adults/womens-tango/"}>{ui.viewProgram}<span aria-hidden="true">→</span></a></div></div>
       <div className="tango-films">
-        <AutoPlayVideo base="tango-on-bars" caption={{ title: ui.films.tango.caption, note: ui.films.tango.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-main" />
+        <AutoPlayVideo base="tango-on-bars" playbackGroup="tango-chapter" caption={{ title: ui.films.tango.caption, note: ui.films.tango.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-main" />
         <div className="tango-film-note"><SectionLabel light>{ui.films.tangoGroup.kicker}</SectionLabel><h3>{ui.films.tangoGroup.title}</h3><p>{ui.films.tangoGroup.body}</p></div>
-        <AutoPlayVideo base="tango-group" caption={{ title: ui.films.tangoGroup.caption, note: ui.films.tangoGroup.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-secondary" />
+        <AutoPlayVideo base="tango-group" playbackGroup="tango-chapter" caption={{ title: ui.films.tangoGroup.caption, note: ui.films.tangoGroup.note }} playLabel={ui.playFilm} pauseLabel={ui.pauseFilm} className="tango-film-secondary" />
       </div>
     </div></section>
 

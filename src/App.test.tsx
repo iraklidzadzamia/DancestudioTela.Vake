@@ -31,7 +31,9 @@ describe("program hero media", () => {
       dispatchEvent: vi.fn(),
     })));
     play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
-    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(function (this: HTMLMediaElement) {
+      this.dispatchEvent(new Event("pause"));
+    });
   });
 
   afterEach(() => {
@@ -83,6 +85,18 @@ describe("program hero media", () => {
     expect(groups).toHaveLength(2);
     expect(groups[0].querySelectorAll("a")).toHaveLength(2);
     expect(groups[1].querySelectorAll("a")).toHaveLength(2);
+  });
+
+  it("keeps both Tango films playing as one visible chapter", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    const tangoVideos = container.querySelectorAll<HTMLVideoElement>(".tango-films video");
+    fireEvent.play(tangoVideos[0]);
+    fireEvent.play(tangoVideos[1]);
+
+    const tangoFrames = container.querySelectorAll<HTMLButtonElement>(".tango-films .cinematic-video-frame");
+    expect(Array.from(tangoFrames).map((frame) => frame.getAttribute("aria-pressed"))).toEqual(["true", "true"]);
   });
 
   it("keeps children and Georgian actions after their films in reading order", () => {
