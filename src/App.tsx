@@ -309,9 +309,10 @@ function LanguageSwitcher({ language, onChange }: { language: Language; onChange
 }
 function Header({ language, copy, onLanguage, internal = false }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void; internal?: boolean }) {
   const home = languagePath[language];
+  const navigationGroups = [copy.nav.slice(0, 2), copy.nav.slice(2)];
   return <header className={"header" + (internal ? " header-internal" : "")}>
     <a className="brand" href={home} aria-label={copy.footer.studio}><Logo header /><span className="brand-type">Dance Studio Tela</span></a>
-    <nav className="desktop-nav" aria-label={interfaceCopy[language].navigationLabel}>{copy.nav.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</nav>
+    <nav className="desktop-nav" aria-label={interfaceCopy[language].navigationLabel}>{navigationGroups.map((group, index) => <span className="desktop-nav-group" key={index}>{group.map((item) => <a href={internal ? home + item.href : item.href} key={item.href}>{item.label}</a>)}</span>)}</nav>
     <div className="header-actions"><LanguageSwitcher language={language} onChange={onLanguage} /><button className="header-cta" type="button" onClick={() => openBookingDialog("header")}>{copy.bookShort}</button></div>
   </header>;
 }

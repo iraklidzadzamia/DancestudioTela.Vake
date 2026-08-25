@@ -101,10 +101,10 @@ h1,
   gap: 2rem;
   border-bottom: 1px solid var(--line-light);
 }
-.brand { display: inline-flex; align-items: center; gap: 0.72rem; justify-self: start; }
+.brand { display: inline-flex; align-items: flex-end; gap: 0.72rem; justify-self: start; }
 .logo-header {
-  width: 64px;
-  height: 50px;
+  width: 58px;
+  height: auto;
   display: block;
   overflow: hidden;
   flex: 0 0 auto;
@@ -123,10 +123,11 @@ h1,
 .logo-crop img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .logo-crop img { transform: none; border-radius: 50%; filter: none; }
 .brand-type { color: rgba(255, 255, 255, 0.92); font-family: Georgia, "Times New Roman", serif; font-size: 1.34rem; font-weight: 400; letter-spacing: 0.018em; line-height: 1; white-space: nowrap; text-shadow: 0 0.35rem 1.2rem rgba(0, 0, 0, 0.72); }
-.desktop-nav { display: flex; gap: clamp(1.3rem, 2.5vw, 2.8rem); color: rgba(255, 255, 255, 0.68); font-size: 0.7rem; letter-spacing: 0.09em; text-transform: uppercase; }
+.desktop-nav { --nav-gap: clamp(1.3rem, 2.5vw, 2.8rem); display: flex; gap: var(--nav-gap); color: rgba(255, 255, 255, 0.68); font-size: 0.7rem; letter-spacing: 0.09em; text-transform: uppercase; }
+.desktop-nav-group { display: flex; align-items: center; gap: var(--nav-gap); white-space: nowrap; }
 .desktop-nav a, .language-switcher button { transition: color 180ms ease; }
 .desktop-nav a:hover, .language-switcher button:hover { color: var(--lilac); }
-.header-actions { display: flex; align-items: center; justify-self: end; gap: 1rem; }
+.header-actions { grid-column: 3; display: flex; align-items: center; justify-self: end; gap: 1rem; }
 .language-switcher { display: flex; gap: 0.1rem; }
 .language-switcher button { min-width: 40px; min-height: 44px; padding: 0.35rem; border: 0; color: rgba(255, 255, 255, 0.46); background: transparent; cursor: pointer; font-size: 0.68rem; letter-spacing: 0.07em; }
 .language-switcher button.is-active { color: #fff; }
@@ -153,6 +154,10 @@ h1,
   border-bottom: 0;
   background: transparent;
 }
+.hero .desktop-nav { position: absolute; width: 0; top: 50%; left: var(--hero-split); gap: 0; transform: translateY(-50%); }
+.hero .desktop-nav-group { position: absolute; }
+.hero .desktop-nav-group:first-child { right: calc(var(--nav-gap) / 2); }
+.hero .desktop-nav-group:last-child { left: calc(var(--nav-gap) / 2); }
 
 .hero {
   --hero-split: 48vw;
@@ -256,7 +261,7 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
 .button-secondary:hover { border-color: rgba(255, 255, 255, 0.5); color: #fff; background: rgba(255, 255, 255, 0.06); }
 .button-ink { background: var(--ink); color: #fff; }
 .button-light { background: var(--ivory); color: var(--ink); }
-.reassurance { display: flex; flex-wrap: wrap; gap: 0.65rem 1.25rem; padding: 0; margin: 1.45rem 0 0; list-style: none; color: rgba(255, 255, 255, 0.72); font-size: 0.72rem; font-weight: 400; line-height: 1.45; text-shadow: 0 0.3rem 1.2rem rgba(0, 0, 0, 0.72); }
+.reassurance { max-width: calc(100% - 1rem); display: flex; flex-wrap: wrap; gap: 0.65rem 1.25rem; padding: 0; margin: 1.45rem 0 0; list-style: none; color: rgba(255, 255, 255, 0.72); font-size: 0.72rem; font-weight: 400; line-height: 1.45; text-shadow: 0 0.3rem 1.2rem rgba(0, 0, 0, 0.72); }
 .reassurance li { display: inline-flex; align-items: center; gap: 0.45rem; }
 .reassurance span { color: var(--gold); font-size: 0.58rem; }
 .language-en .reassurance { display: grid; grid-template-columns: max-content max-content minmax(0, 1fr); }
@@ -603,6 +608,7 @@ body.booking-open { overflow: hidden; }
 
 @media (max-width: 1120px) {
   .header { grid-template-columns: 1fr auto; }
+  .header-actions { grid-column: 2; }
   .desktop-nav { display: none; }
   .hero { --hero-split: 55vw; --hero-media-width: 45vw; }
   .hero-copy { width: calc(var(--hero-split) - max(2rem, calc((100vw - 1320px) / 2))); }
@@ -626,7 +632,7 @@ body.booking-open { overflow: hidden; }
   .header { min-height: 84px; gap: 0.75rem; }
   .hero .header { padding-inline: 1rem; background: transparent; }
   .header-cta { display: none; }
-  .logo-header { width: 58px; height: 46px; }
+  .logo-header { width: 52px; }
   .hero { --hero-split: 0; --hero-media-width: 100vw; }
   .hero-video::after { display: none; }
   .hero-video video { height: 100%; inset: 0; object-fit: cover; object-position: center; }
@@ -646,7 +652,7 @@ body.booking-open { overflow: hidden; }
   .hero-actions { align-items: stretch; flex-direction: column; }
   .hero-actions .button { width: 100%; }
   .hero-actions .button-secondary { width: fit-content; min-height: 44px; padding-inline: 1.15rem; border: 1px solid rgba(255, 255, 255, 0.28); }
-  .reassurance { flex-direction: column; gap: 0.42rem; margin-top: 1rem; color: rgba(255, 255, 255, 0.74); font-size: 0.71rem; }
+  .reassurance { max-width: none; flex-direction: column; gap: 0.42rem; margin-top: 1rem; color: rgba(255, 255, 255, 0.74); font-size: 0.71rem; }
   .language-en .reassurance { display: flex; }
   .reassurance li:nth-child(2) { display: none; }
   .hero-scroll { right: auto; bottom: 1rem; left: 50%; }
@@ -770,7 +776,7 @@ body.booking-open { overflow: hidden; }
 }
 
 @media (max-width: 400px) {
-  .logo-header { width: 50px; height: 42px; }
+  .logo-header { width: 46px; }
   .brand { gap: 0.45rem; }
   .brand-type { font-size: 0.95rem; }
   .language-switcher button { min-width: 35px; }
@@ -783,7 +789,7 @@ body.booking-open { overflow: hidden; }
 @media (max-width: 360px) {
   .hero .header { padding-inline: 0.75rem; }
   .header { gap: 0.35rem; }
-  .logo-header { width: 44px; height: 40px; }
+  .logo-header { width: 42px; }
   .brand { gap: 0.3rem; }
   .brand-type { font-size: 0.84rem; }
   .language-switcher button { min-width: 32px; font-size: 0.61rem; }

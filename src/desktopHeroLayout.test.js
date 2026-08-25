@@ -26,4 +26,17 @@ describe("desktop hero split", () => {
       /@media \(max-width: 1120px\)[\s\S]*?--hero-split: 55vw; --hero-media-width: 45vw;[\s\S]*?\.hero-copy \{ width: calc\(var\(--hero-split\) - max\(2rem, calc\(\(100vw - 1320px\) \/ 2\)\)\); \}/,
     );
   });
+
+  it("uses one multilingual navigation axis and safe hero boundary", () => {
+    expect(css).toContain(".desktop-nav-group { display: flex;");
+    expect(css).toContain(".hero .desktop-nav { position: absolute;");
+    expect(css).toContain("right: calc(var(--nav-gap) / 2);");
+    expect(css).toContain("left: calc(var(--nav-gap) / 2);");
+    expect(css).toContain("max-width: calc(100% - 1rem);");
+    expect(css).toContain(".brand { display: inline-flex; align-items: flex-end;");
+    expect(css).toMatch(/\.logo-header \{[\s\S]*?width: 58px;[\s\S]*?height: auto;/);
+    expect(css).toContain(".header-actions { grid-column: 3;");
+    expect(css).toMatch(/@media \(max-width: 1120px\)[\s\S]*?\.header-actions \{ grid-column: 2;/);
+    expect(css).not.toMatch(/\.language-(?:en|ka|ru) \.desktop-nav/);
+  });
 });

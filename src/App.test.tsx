@@ -74,6 +74,17 @@ describe("program hero media", () => {
     expect(container.querySelector(".editorial-facts > div > span")).not.toBeInTheDocument();
   });
 
+  it("groups desktop navigation around the hero split", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    const groups = container.querySelectorAll(".hero .desktop-nav-group");
+
+    expect(groups).toHaveLength(2);
+    expect(groups[0].querySelectorAll("a")).toHaveLength(2);
+    expect(groups[1].querySelectorAll("a")).toHaveLength(2);
+  });
+
   it("keeps children and Georgian actions after their films in reading order", () => {
     window.history.replaceState({}, "", "/en/");
 
