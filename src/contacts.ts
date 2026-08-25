@@ -16,7 +16,7 @@ const phoneNumber = normalizedPhone(import.meta.env.VITE_PHONE_NUMBER) ?? defaul
 
 const whatsappMessages: Record<Language, string> = {
   EN: "Hello! I’d like to book a free first lesson at Dance Studio Tela.",
-  KA: "გამარჯობა! მსურს Dance Studio Tela-ში პირველ უფასო გაკვეთილზე ჩაწერა.",
+  KA: "გამარჯობა! მინდა პირველ უფასო გაკვეთილზე ჩავეწერო.",
   RU: "Здравствуйте! Хочу записаться на бесплатный первый урок в Dance Studio Tela.",
 };
 

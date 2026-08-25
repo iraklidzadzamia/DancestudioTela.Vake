@@ -11,9 +11,9 @@ const consentCopy: Record<Language, { title: string; body: string; accept: strin
     settings: "Cookie settings",
   },
   KA: {
-    title: "თქვენი კონფიდენციალურობა",
-    body: "თქვენი თანხმობით Google Analytics და Google Ads გვეხმარება გავიგოთ, რომელი გვერდები და რეკლამები იზიდავს ადამიანებს Tela-ში.",
-    accept: "ანალიტიკის მიღება",
+    title: "შენი კონფიდენციალურობა — შენი არჩევანი",
+    body: "შენი თანხმობით Google Analytics და Google Ads გვეხმარება გავიგოთ, რომელი გვერდები და რეკლამები იზიდავს ადამიანებს „თელაში“.",
+    accept: "ანალიტიკის დაშვება",
     necessary: "მხოლოდ აუცილებელი",
     settings: "ქუქიების პარამეტრები",
   },

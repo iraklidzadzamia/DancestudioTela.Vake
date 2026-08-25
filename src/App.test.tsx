@@ -259,4 +259,25 @@ describe("program hero media", () => {
       "https://dancestudio-tela-vake.vercel.app/en/adults/ballet/",
     );
   });
+
+  it("renders the editor-approved Georgian interface copy", () => {
+    window.history.replaceState({}, "", "/ka/");
+
+    const { container } = render(<App />);
+    expect(container).toHaveTextContent("ქალთა ტანგო");
+
+    fireEvent.click(container.querySelector(".hero-actions .button-secondary")!);
+    const dialog = container.querySelector<HTMLDialogElement>(".booking-dialog")!;
+    expect(dialog).toHaveTextContent("აირჩიე ჩაწერის მოსახერხებელი გზა.");
+    expect(dialog).toHaveTextContent("გახსენი პირადი ჩატი შენთვის მოსახერხებელ არხში.");
+  });
+
+  it("renders the editor-approved Georgian privacy copy", () => {
+    window.history.replaceState({}, "", "/ka/privacy/");
+
+    const { container } = render(<App />);
+    expect(container).toHaveTextContent("კონფიდენციალურობა „თელაში“");
+    expect(container).toHaveTextContent("სტუდია „თელას“ ვებსაიტი");
+    expect(container).toHaveTextContent("Google Analytics და Google Ads მხოლოდ ანალიტიკურ ქუქიებზე თანხმობის შემდეგ იტვირთება.");
+  });
 });
