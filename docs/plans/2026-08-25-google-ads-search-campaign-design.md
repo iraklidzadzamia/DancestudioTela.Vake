@@ -298,7 +298,7 @@ All headlines below are at most 30 characters. All descriptions are at most
 
 ### 01 | General + Local — English RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/en/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/en/`
 Paths: `dance` / `vake`
 
 Headlines:
@@ -327,7 +327,7 @@ Visit our website, choose a class and contact us to book your free first lesson.
 
 ### 01 | General + Local — Russian RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`
 Paths: `dance` / `vake`
 
 Headlines:
@@ -356,7 +356,7 @@ Ballroom & Latin, балет, грузинские танцы и женское 
 
 ### 02 | Pro-Am — English RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/en/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/en/`
 Paths: `pro-am` / `vake`
 
 Headlines:
@@ -385,7 +385,7 @@ Discover Pro-Am on our website and contact Tela to book your free first lesson.
 
 ### 02 | Pro-Am — Russian RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`
 Paths: `pro-am` / `vake`
 
 Headlines:
@@ -414,7 +414,7 @@ Ballroom и Latin с профессиональным партнёром. Зан
 
 ### 03 | Ballroom + Latin — English RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/en/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/en/`
 Paths: `ballroom` / `vake`
 
 Headlines:
@@ -443,7 +443,7 @@ View the program on our website and contact us to book your free first lesson.
 
 ### 03 | Ballroom + Latin — Russian RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`
 Paths: `ballroom` / `vake`
 
 Headlines:
@@ -472,7 +472,7 @@ Ballroom и Latin для взрослых и детей в Ваке. Друже�
 
 ### 04 | Women's Tango — English RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/en/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/en/`
 Paths: `tango` / `vake`
 
 Headlines:
@@ -501,7 +501,7 @@ Explore Women's Tango on our website and contact us to book your first class.
 
 ### 04 | Women's Tango — Russian RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`
 Paths: `tango` / `vake`
 
 Headlines:
@@ -530,7 +530,7 @@ Descriptions:
 
 ### 05 | Georgian Dance — English RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/en/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/en/`
 Paths: `georgian-dance` / `vake`
 
 Headlines:
@@ -559,7 +559,7 @@ View the program on our website and contact us to book your free first lesson.
 
 ### 05 | Georgian Dance — Russian RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`
 Paths: `georgian-dance` / `vake`
 
 Headlines:
@@ -588,7 +588,7 @@ Descriptions:
 
 ### 06 | Ballet — English RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/en/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/en/`
 Paths: `ballet` / `vake`
 
 Headlines:
@@ -617,7 +617,7 @@ View the ballet program on our website and contact us to book your first class.
 
 ### 06 | Ballet — Russian RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`
 Paths: `ballet` / `vake`
 
 Headlines:
@@ -646,7 +646,7 @@ Descriptions:
 
 ### 07 | Kids Dance — English RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/en/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/en/`
 Paths: `kids-dance` / `vake`
 
 Headlines:
@@ -675,7 +675,7 @@ Explore children's classes on our website and contact us to book a first lesson.
 
 ### 07 | Kids Dance — Russian RSA
 
-Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`  
+Final URL: `https://dancestudio-tela-vake.vercel.app/ru/`
 Paths: `kids-dance` / `vake`
 
 Headlines:
