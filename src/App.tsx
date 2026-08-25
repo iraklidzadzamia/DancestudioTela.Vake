@@ -5,15 +5,10 @@ import { trackBookingModalOpen, trackContactIntent, trackPageView, trackScrollDe
 import { scheduleGroups, siteCopy, type Language, type SiteCopy } from "./content";
 import { bookingContactChannels, contactHref, formattedPhoneNumber, heroContactChannels, opensOutsidePage, sectionContactChannels, type ContactChannel } from "./contacts";
 import { getProgramMedia } from "./programMedia";
+import { getSeoData, languagePaths as languagePath, matchSiteRoute, programSlugs } from "./site";
 import { useFirstVideoFrame, VideoPoster } from "./VideoPoster";
 import { attemptVideoPlayback } from "./videoPlayback";
 
-const languagePath: Record<Language, string> = { EN: "/en/", KA: "/ka/", RU: "/ru/" };
-const siteOrigin = "https://dancestudio-tela-vake.vercel.app";
-const programSlugs: Record<string, string> = {
-  "01": "ballroom-latin", "02": "womens-tango", "03": "ballet", "04": "georgian-dance",
-  "05": "ballroom-latin", "06": "ballet", "07": "georgian-dance",
-};
 type Program = SiteCopy["programs"]["items"][number];
 
 type FilmCopy = { kicker: string; title: string; body: string; caption: string; note: string };
@@ -41,12 +36,12 @@ const interfaceCopy: Record<Language, InterfaceCopy> = {
     kidsBody: "Children learn through age-appropriate guidance, clear corrections and the pleasure of moving together — in Ballroom & Latin, ballet and Georgian dance.",
     proamLink: "Explore Pro-Am", storyLink: "Our story", closingKicker: "Life at Tela",
     closingTitle: "The best reason to dance is how it makes you feel.",
-    closingBody: "The final film will hold the spontaneous, funny and human side of the studio — the feeling people remember after class.",
+    closingBody: "The film captures the spontaneous, joyful and human side of the studio — the feeling people remember after class.",
     back: "Back to all programs", programFor: "Program for", whoTitle: "Who this is for",
     whoBodyAdult: "For adults who want to move beautifully, learn with attention and begin at a level that feels comfortable.",
     whoBodyChild: "For children who are ready to discover rhythm, coordination and confidence with thoughtful guidance.",
     lessonTitle: "What the first lesson gives you", lessonBody: "You meet the teaching style, try the movement and understand whether this direction feels right. The first lesson is free.",
-    practicalTitle: "Practical details", practicalBody: "Exact group level, teacher and age information is being confirmed. We will help you choose the right group before your visit.",
+    practicalTitle: "Practical details", practicalBody: "Group placement depends on age, experience and goals. Contact us before your visit and we will recommend the most suitable group.",
     related: "You may also like", scheduleLink: "See the studio timetable", playFilm: "Play film", pauseFilm: "Pause film", watchFilm: "Real moments from Tela", languageLabel: "Language", navigationLabel: "Main navigation", socialLabel: "Location and social channels", nextSection: "Continue to the next section", sinceLabel: "Story since",
     films: {
       proam: { kicker: "Ballroom & Latin · Pro-Am", title: "Learn with a professional beside you.", body: "In Pro-Am, your instructor is both teacher and dance partner. Every detail is shaped around your pace — whether you want a beautiful weekly ritual, a performance or a path toward competition.", caption: "Pro-Am in motion", note: "Professional partner · personal pace" },
@@ -68,12 +63,12 @@ const interfaceCopy: Record<Language, InterfaceCopy> = {
     kidsBody: "ბავშვები ასაკზე მორგებული მითითებებით, მკაფიო შესწორებებითა და ერთად მოძრაობის სიხარულით სწავლობენ — Ballroom & Latin-ს, ბალეტსა და ქართულ ცეკვას.",
     proamLink: "გაეცანი Pro-Am-ს", storyLink: "ჩვენი ისტორია", closingKicker: "ცხოვრება Tela-ში",
     closingTitle: "ცეკვის საუკეთესო მიზეზი ის გრძნობაა, რომელსაც ის გაძლევს.",
-    closingBody: "ფინალური ვიდეო აჩვენებს სტუდიის სპონტანურ, მხიარულ და ადამიანურ მხარეს — ემოციას, რომელიც გაკვეთილის შემდეგ რჩება.",
+    closingBody: "ვიდეო აჩვენებს სტუდიის სპონტანურ, მხიარულ და ადამიანურ მხარეს — ემოციას, რომელიც გაკვეთილის შემდეგ რჩება.",
     back: "ყველა პროგრამაზე დაბრუნება", programFor: "პროგრამა", whoTitle: "ვისთვის არის",
     whoBodyAdult: "ზრდასრულებისთვის, ვისაც სურს ლამაზად მოძრაობა, ყურადღებით სწავლა და კომფორტული დონიდან დაწყება.",
     whoBodyChild: "ბავშვებისთვის, რომლებიც მზად არიან გააცნობიერონ რიტმი, კოორდინაცია და თავდაჯერება ყურადღებიანი სწავლებით.",
     lessonTitle: "რას გაძლევს პირველი გაკვეთილი", lessonBody: "გაიცნობ სწავლების სტილს, მოსინჯავ მოძრაობას და გაიგებ, შეგეფერება თუ არა ეს მიმართულება. პირველი გაკვეთილი უფასოა.",
-    practicalTitle: "პრაქტიკული ინფორმაცია", practicalBody: "ჯგუფის დონე, პედაგოგი და ასაკი ზუსტდება. ვიზიტამდე სწორი ჯგუფის შერჩევაში დაგეხმარებით.",
+    practicalTitle: "პრაქტიკული ინფორმაცია", practicalBody: "ჯგუფის შერჩევა დამოკიდებულია ასაკზე, გამოცდილებასა და მიზნებზე. ვიზიტამდე დაგვიკავშირდი და ყველაზე შესაფერის ჯგუფს გირჩევთ.",
     related: "შეიძლება ასევე მოგეწონოს", scheduleLink: "სტუდიის განრიგის ნახვა", playFilm: "ვიდეოს ჩართვა", pauseFilm: "ვიდეოს დაპაუზება", watchFilm: "რეალური მომენტები Tela-დან", languageLabel: "ენა", navigationLabel: "მთავარი ნავიგაცია", socialLabel: "მდებარეობა და სოციალური არხები", nextSection: "შემდეგ სექციაზე გადასვლა", sinceLabel: "ისტორია დაიწყო",
     films: {
       proam: { kicker: "Ballroom & Latin · Pro-Am", title: "ისწავლე პროფესიონალთან ერთად.", body: "Pro-Am-ში ინსტრუქტორი ერთდროულად შენი პედაგოგი და საცეკვაო პარტნიორია. სწავლება შენს ტემპსა და მიზანს ერგება — იქნება ეს სასიამოვნო ყოველკვირეული რიტუალი, გამოსვლა თუ შეჯიბრებისკენ გზა.", caption: "Pro-Am მოძრაობაში", note: "პროფესიონალი პარტნიორი · პირადი ტემპი" },
@@ -95,12 +90,12 @@ const interfaceCopy: Record<Language, InterfaceCopy> = {
     kidsBody: "Дети учатся через понятные объяснения, бережные корректировки и удовольствие от совместного движения — в Ballroom & Latin, балете и грузинских танцах.",
     proamLink: "Открыть Pro-Am", storyLink: "Наша история", closingKicker: "Жизнь в Tela",
     closingTitle: "Лучшая причина танцевать — то, как вы себя чувствуете.",
-    closingBody: "Финальное видео покажет спонтанную, смешную и человеческую сторону студии — эмоцию, которая остаётся после занятия.",
+    closingBody: "Видео показывает спонтанную, радостную и человеческую сторону студии — эмоцию, которая остаётся после занятия.",
     back: "Вернуться ко всем направлениям", programFor: "Направление для", whoTitle: "Кому подходит",
     whoBodyAdult: "Взрослым, которые хотят красиво двигаться, учиться с вниманием и начать с комфортного для себя уровня.",
     whoBodyChild: "Детям, которые готовы открывать ритм, координацию и уверенность под внимательным руководством.",
     lessonTitle: "Что даст первый урок", lessonBody: "Вы познакомитесь с подходом преподавателя, попробуете движение и поймёте, подходит ли вам направление. Первый урок бесплатный.",
-    practicalTitle: "Практическая информация", practicalBody: "Точный уровень группы, преподаватель и возраст уточняются. Перед визитом мы поможем выбрать подходящую группу.",
+    practicalTitle: "Практическая информация", practicalBody: "Выбор группы зависит от возраста, опыта и целей. Свяжитесь с нами перед визитом — мы порекомендуем наиболее подходящую группу.",
     related: "Вам также может подойти", scheduleLink: "Посмотреть расписание студии", playFilm: "Включить видео", pauseFilm: "Поставить видео на паузу", watchFilm: "Настоящие моменты из Tela", languageLabel: "Язык", navigationLabel: "Основная навигация", socialLabel: "Локация и социальные сети", nextSection: "Перейти к следующему разделу", sinceLabel: "История с",
     films: {
       proam: { kicker: "Ballroom & Latin · Pro-Am", title: "Учитесь рядом с профессионалом.", body: "В Pro-Am преподаватель становится и вашим танцевальным партнёром. Каждая деталь подстраивается под ваш темп — хотите ли вы красивый еженедельный ритуал, выступление или путь к соревнованиям.", caption: "Pro-Am в движении", note: "Профессиональный партнёр · персональный темп" },
@@ -113,12 +108,34 @@ const interfaceCopy: Record<Language, InterfaceCopy> = {
   },
 };
 
-function updateMeta(selector: string, value: string) { document.querySelector(selector)?.setAttribute("content", value); }
-function languageFromPath(): Language {
-  const segment = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
-  if (segment === "ka") return "KA";
-  if (segment === "ru") return "RU";
-  return "EN";
+function updateMeta(attribute: "name" | "property", key: string, value: string) {
+  let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
+  if (!element) {
+    element = document.createElement("meta");
+    element.setAttribute(attribute, key);
+    document.head.appendChild(element);
+  }
+  element.content = value;
+}
+function updateCanonical(href: string) {
+  let element = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (!element) {
+    element = document.createElement("link");
+    element.rel = "canonical";
+    document.head.appendChild(element);
+  }
+  element.href = href;
+}
+function updateAlternates(alternates: ReturnType<typeof getSeoData>["alternates"]) {
+  document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((element) => element.remove());
+  Object.entries(alternates).forEach(([hreflang, href]) => {
+    if (!href) return;
+    const element = document.createElement("link");
+    element.rel = "alternate";
+    element.hreflang = hreflang;
+    element.href = href;
+    document.head.appendChild(element);
+  });
 }
 function programHref(language: Language, program: Program) {
   const audience = program.audience === "adults" ? "adults" : "kids";
@@ -303,6 +320,83 @@ function ProgramList({ language, programs, action }: { language: Language; progr
   return <div className="program-list">{programs.map((program) => <a className="program-row" href={programHref(language, program)} key={program.number}>
     <div><p>{program.tag}</p><h3>{program.title}</h3><span>{program.body}</span></div><small>{action}</small><i aria-hidden="true">→</i>
   </a>)}</div>;
+}
+
+const privacyCopy: Record<Language, {
+  kicker: string;
+  title: string;
+  intro: string;
+  sections: { title: string; body: string }[];
+  contactTitle: string;
+  contactBody: string;
+}> = {
+  EN: {
+    kicker: "Privacy at Tela",
+    title: "Privacy policy",
+    intro: "This page explains what the DanceStudio Tela Vake website measures and which choices remain in your control.",
+    sections: [
+      { title: "Information on this website", body: "The website does not contain an account system, payment form or application form. When you open a contact channel, you continue to that provider and communicate there under its privacy terms." },
+      { title: "Analytics and advertising", body: "Google Analytics and Google Ads measurement load only after you accept analytics cookies. They help us understand page visits and which contact actions follow an advertising campaign. We do not use this website to sell personal data." },
+      { title: "Cookies and your choice", body: "Necessary browser storage remembers your cookie choice. You can reopen Cookie settings in the footer at any time and change that choice for future visits." },
+      { title: "External services", body: "Google Maps, Instagram, Facebook Messenger, WhatsApp and telephone links are separate services. Their own terms apply after you open them." },
+    ],
+    contactTitle: "Contact",
+    contactBody: "Questions about this website can be directed to DanceStudio Tela, Vake at 2/5 Ateni Street, Vake, Tbilisi, Georgia or by phone at +995 505 05 16 14.",
+  },
+  KA: {
+    kicker: "კონფიდენციალურობა Tela-ში",
+    title: "კონფიდენციალურობის პოლიტიკა",
+    intro: "ეს გვერდი განმარტავს, რას ზომავს სტუდია „თელა“, ვაკეს ვებსაიტი და რომელი არჩევანი რჩება შენს კონტროლში.",
+    sections: [
+      { title: "ინფორმაცია ამ ვებსაიტზე", body: "ვებსაიტზე არ არის ანგარიში, გადახდის ან განაცხადის ფორმა. საკონტაქტო არხის გახსნისას შესაბამის სერვისზე გადადიხარ და იქ მოქმედი კონფიდენციალურობის პირობებით ურთიერთობ." },
+      { title: "ანალიტიკა და რეკლამა", body: "Google Analytics-ისა და Google Ads-ის გაზომვა მხოლოდ ანალიტიკური ქუქიების მიღების შემდეგ იტვირთება. ეს გვეხმარება გავიგოთ გვერდების მონახულება და რეკლამის შემდეგ განხორციელებული საკონტაქტო მოქმედებები. ვებსაიტი პერსონალურ მონაცემებს არ ყიდის." },
+      { title: "ქუქიები და შენი არჩევანი", body: "ბრაუზერის აუცილებელი საცავი იმახსოვრებს ქუქიების არჩევანს. პარამეტრების ხელახლა გახსნა და მომავალი ვიზიტებისთვის არჩევანის შეცვლა ნებისმიერ დროს შეგიძლია გვერდის ბოლოში." },
+      { title: "გარე სერვისები", body: "Google Maps, Instagram, Facebook Messenger, WhatsApp და სატელეფონო ბმულები დამოუკიდებელი სერვისებია. მათი გახსნის შემდეგ შესაბამისი პირობები მოქმედებს." },
+    ],
+    contactTitle: "კონტაქტი",
+    contactBody: "ვებსაიტთან დაკავშირებული კითხვებისთვის მოგვმართე მისამართზე: ათენის ქუჩა 2/5, ვაკე, თბილისი, საქართველო, ან დარეკე ნომერზე +995 505 05 16 14.",
+  },
+  RU: {
+    kicker: "Конфиденциальность в Tela",
+    title: "Конфиденциальность",
+    intro: "Здесь объясняется, какие действия измеряет сайт студии «Тела» в Ваке и какие настройки остаются под вашим контролем.",
+    sections: [
+      { title: "Информация на сайте", body: "На сайте нет личного кабинета, формы оплаты или анкеты. Открывая контактный канал, вы переходите во внешний сервис и общаетесь согласно его условиям конфиденциальности." },
+      { title: "Аналитика и реклама", body: "Измерение Google Analytics и Google Ads загружается только после вашего согласия на аналитические cookies. Оно помогает понять посещения страниц и контактные действия после рекламной кампании. Сайт не используется для продажи персональных данных." },
+      { title: "Cookies и ваш выбор", body: "Необходимое хранилище браузера запоминает ваш выбор cookies. Настройки можно снова открыть внизу страницы и изменить для будущих посещений." },
+      { title: "Внешние сервисы", body: "Google Maps, Instagram, Facebook Messenger, WhatsApp и телефон являются отдельными сервисами. После перехода применяются их собственные условия." },
+    ],
+    contactTitle: "Контакты",
+    contactBody: "По вопросам о сайте можно обратиться в студию «Тела», Ваке: 2/5 Ateni Street, Vake, Tbilisi, Georgia, телефон +995 505 05 16 14.",
+  },
+};
+
+const notFoundCopy: Record<Language, { kicker: string; title: string; body: string; action: string }> = {
+  EN: { kicker: "404", title: "Page not found", body: "The address may be outdated or typed incorrectly.", action: "Return to the studio" },
+  KA: { kicker: "404", title: "გვერდი ვერ მოიძებნა", body: "მისამართი შესაძლოა მოძველებული ან არასწორად აკრეფილი იყოს.", action: "სტუდიის გვერდზე დაბრუნება" },
+  RU: { kicker: "404", title: "Страница не найдена", body: "Возможно, адрес устарел или был введён с ошибкой.", action: "Вернуться на страницу студии" },
+};
+
+function PrivacyPage({ language, copy, onLanguage }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void }) {
+  const page = privacyCopy[language];
+  return <main className={"site-shell legal-shell language-" + language.toLowerCase()}>
+    <Header language={language} copy={copy} onLanguage={onLanguage} internal />
+    <section className="legal-hero section-dark"><div className="section-wrap"><SectionLabel light>{page.kicker}</SectionLabel><h1>{page.title}</h1><p>{page.intro}</p></div></section>
+    <section className="legal-content section-ivory"><div className="section-wrap legal-grid">
+      {page.sections.map((section) => <article key={section.title}><h2>{section.title}</h2><p>{section.body}</p></article>)}
+      <article className="legal-contact"><h2>{page.contactTitle}</h2><p>{page.contactBody}</p></article>
+    </div></section>
+    <Footer copy={copy} language={language} />
+  </main>;
+}
+
+function NotFoundPage({ language, copy, onLanguage }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void }) {
+  const page = notFoundCopy[language];
+  return <main className={"site-shell not-found-shell language-" + language.toLowerCase()}>
+    <Header language={language} copy={copy} onLanguage={onLanguage} internal />
+    <section className="not-found section-dark"><div className="section-wrap"><SectionLabel light>{page.kicker}</SectionLabel><h1>{page.title}</h1><p>{page.body}</p><a className="button button-light" href={languagePath[language]}>{page.action}</a></div></section>
+    <Footer copy={copy} language={language} />
+  </main>;
 }
 
 function HomePage({ language, copy, onLanguage }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void }) {
@@ -510,7 +604,7 @@ function HomePage({ language, copy, onLanguage }: { language: Language; copy: Si
 }
 
 function Footer({ copy, language }: { copy: SiteCopy; language: Language }) {
-  return <footer className="footer"><div className="section-wrap footer-grid"><div className="footer-brand"><Logo /><strong>{copy.footer.studio}</strong></div><p>{copy.footer.location}</p><div className="footer-legal"><p>© {new Date().getFullYear()} · {copy.footer.rights}</p><ConsentSettingsButton language={language} /></div></div></footer>;
+  return <footer className="footer"><div className="section-wrap footer-grid"><div className="footer-brand"><Logo /><strong>{copy.footer.studio}</strong></div><p className="footer-address">{copy.footer.location}</p><div className="footer-legal"><p>© {new Date().getFullYear()} · {copy.footer.rights}</p><a className="footer-privacy" href={languagePath[language] + "privacy/"}>{copy.footer.privacy}</a><ConsentSettingsButton language={language} /></div></div></footer>;
 }
 
 function ProgramPage({ language, copy, onLanguage, audience, slug }: { language: Language; copy: SiteCopy; onLanguage: (language: Language) => void; audience: "adults" | "kids"; slug: string }) {
@@ -537,36 +631,52 @@ function ProgramPage({ language, copy, onLanguage, audience, slug }: { language:
   </main>;
 }
 
-export default function App() {
-  const [path, setPath] = useState(window.location.pathname);
-  const language = languageFromPath();
+export default function App({ initialPath, staticRender = false }: { initialPath?: string; staticRender?: boolean } = {}) {
+  const browserPath = typeof window === "undefined" ? "/en/" : window.location.pathname;
+  const [path, setPath] = useState(initialPath ?? browserPath);
+  const route = matchSiteRoute(path);
+  const language = route.language;
   const copy = siteCopy[language];
-  const segments = path.split("/").filter(Boolean);
-  const audience = segments[1] === "adults" || segments[1] === "kids" ? segments[1] : null;
-  const slug = audience ? segments[2] : null;
 
-  useEffect(() => { const syncRoute = () => setPath(window.location.pathname); window.addEventListener("popstate", syncRoute); return () => window.removeEventListener("popstate", syncRoute); }, []);
   useEffect(() => {
-    document.documentElement.lang = copy.languageCode;
-    const detailProgram = copy.programs.items.find((program) => programSlugs[program.number] === slug && program.audience === (audience === "adults" ? "adults" : "children"));
-    const detailTitle = slug === "pro-am" ? "Pro-Am" : detailProgram?.title;
-    const pageTitle = audience && slug && detailTitle ? detailTitle + " — " + copy.footer.studio : copy.pageTitle;
-    const pageDescription = audience && slug ? (slug === "pro-am" ? copy.proam.body : detailProgram?.body ?? copy.pageDescription) : copy.pageDescription;
-    const canonicalUrl = siteOrigin + path;
-    document.title = pageTitle; document.querySelector('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
-    updateMeta('meta[name="description"]', pageDescription); updateMeta('meta[property="og:url"]', canonicalUrl);
-    updateMeta('meta[property="og:title"]', pageTitle); updateMeta('meta[property="og:description"]', pageDescription);
-    updateMeta('meta[name="twitter:title"]', pageTitle); updateMeta('meta[name="twitter:description"]', pageDescription);
-    trackPageView(path, pageTitle, language);
-  }, [audience, copy, language, path, slug]);
+    if (staticRender) return;
+    const syncRoute = () => setPath(window.location.pathname);
+    window.addEventListener("popstate", syncRoute);
+    return () => window.removeEventListener("popstate", syncRoute);
+  }, [staticRender]);
+
+  useEffect(() => {
+    if (staticRender) return;
+    const seo = getSeoData(path);
+    document.documentElement.lang = seo.lang;
+    document.title = seo.title;
+    updateCanonical(seo.canonical);
+    updateAlternates(seo.alternates);
+    updateMeta("name", "description", seo.description);
+    updateMeta("name", "robots", seo.robots);
+    updateMeta("property", "og:url", seo.canonical);
+    updateMeta("property", "og:title", seo.title);
+    updateMeta("property", "og:description", seo.description);
+    updateMeta("name", "twitter:title", seo.title);
+    updateMeta("name", "twitter:description", seo.description);
+    trackPageView(route.path, seo.title, language);
+  }, [language, path, route.path, staticRender]);
 
   const changeLanguage = (nextLanguage: Language) => {
-    const parts = path.split("/").filter(Boolean); if (parts.length === 0) parts.push(nextLanguage.toLowerCase()); else parts[0] = nextLanguage.toLowerCase();
-    const nextPath = "/" + parts.join("/") + "/"; window.history.pushState({}, "", nextPath); setPath(nextPath); window.scrollTo({ top: 0, behavior: "smooth" });
+    let nextPath = languagePath[nextLanguage];
+    if (route.kind === "program") nextPath += `${route.audience}/${route.slug}/`;
+    if (route.kind === "privacy") nextPath += "privacy/";
+    window.history.pushState({}, "", nextPath);
+    setPath(nextPath);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const page = audience && slug
-    ? <ProgramPage language={language} copy={copy} onLanguage={changeLanguage} audience={audience} slug={slug} />
-    : <HomePage language={language} copy={copy} onLanguage={changeLanguage} />;
-  return <>{page}<EngagementTracker language={language} path={path} /><BookingDialog language={language} /><ConsentBanner language={language} /></>;
+  let page;
+  if (route.kind === "program") page = <ProgramPage language={language} copy={copy} onLanguage={changeLanguage} audience={route.audience} slug={route.slug} />;
+  else if (route.kind === "privacy") page = <PrivacyPage language={language} copy={copy} onLanguage={changeLanguage} />;
+  else if (route.kind === "not-found") page = <NotFoundPage language={language} copy={copy} onLanguage={changeLanguage} />;
+  else page = <HomePage language={language} copy={copy} onLanguage={changeLanguage} />;
+
+  if (staticRender) return page;
+  return <>{page}<EngagementTracker language={language} path={route.path} /><BookingDialog language={language} /><ConsentBanner language={language} /></>;
 }

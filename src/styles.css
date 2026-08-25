@@ -484,8 +484,23 @@ h1 em { display: block; color: var(--lilac); font-weight: 400; }
 .footer p { margin: 0; font-size: 0.7rem; letter-spacing: 0.07em; text-align: center; text-transform: uppercase; }
 .footer-legal { display: grid; justify-items: end; gap: 0.5rem; }
 .footer-legal p { text-align: right; }
+.footer-privacy { border-bottom: 1px solid rgba(255, 255, 255, 0.22); color: rgba(255, 255, 255, 0.52); font-size: 0.65rem; }
+.footer-privacy:hover { color: var(--ivory); border-color: rgba(255, 255, 255, 0.52); }
 .footer-consent { padding: 0; border: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.22); color: rgba(255, 255, 255, 0.52); background: transparent; cursor: pointer; font-size: 0.65rem; }
 .footer-consent:hover { color: var(--ivory); border-color: rgba(255, 255, 255, 0.52); }
+
+.legal-shell .header, .not-found-shell .header { position: relative; background: #120d0f; }
+.legal-hero { padding: clamp(5rem, 10vw, 9rem) 0; }
+.legal-hero h1, .not-found h1 { max-width: 12ch; margin: 1.5rem 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(3.4rem, 8vw, 7rem); font-weight: 400; letter-spacing: -0.055em; line-height: 0.94; }
+.legal-hero > div > p:last-child, .not-found p { max-width: 44rem; color: rgba(255, 255, 255, 0.65); font-size: clamp(1rem, 1.7vw, 1.22rem); line-height: 1.75; }
+.legal-content { padding: var(--section-y) 0; }
+.legal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line-dark); border: 1px solid var(--line-dark); }
+.legal-grid article { min-width: 0; padding: clamp(2rem, 4vw, 4rem); background: var(--ivory); }
+.legal-grid h2 { margin: 0 0 1rem; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.5rem, 2.5vw, 2.25rem); font-weight: 400; letter-spacing: -0.035em; }
+.legal-grid p { margin: 0; color: var(--ink-soft); line-height: 1.75; }
+.legal-contact { grid-column: 1 / -1; }
+.not-found { min-height: calc(100vh - 8rem); display: grid; align-items: center; padding: var(--section-y) 0; }
+.not-found .button { margin-top: 2rem; }
 
 .consent-banner {
   width: min(calc(100% - 2rem), 74rem);
@@ -667,6 +682,8 @@ body.booking-open { overflow: hidden; }
   .footer-grid { grid-template-columns: 1fr; justify-items: center; gap: 1rem; }
   .footer p { text-align: center; }
   .footer-legal { justify-items: center; }
+  .legal-grid { grid-template-columns: 1fr; }
+  .legal-contact { grid-column: auto; }
   .consent-banner { grid-template-columns: 1fr; gap: 1rem; }
   .consent-actions { justify-content: flex-end; }
   .booking-dialog { width: min(calc(100% - 1.25rem), 42rem); }

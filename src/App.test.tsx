@@ -216,4 +216,47 @@ describe("program hero media", () => {
     fireEvent.click(dialog.querySelector(".booking-close")!);
     expect(dialog).not.toHaveAttribute("open");
   });
+
+  it("shows the confirmed address and a localized privacy link", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+
+    expect(container.querySelector(".footer-address")).toHaveTextContent("2/5 Ateni Street, Vake, Tbilisi, Georgia");
+    expect(container.querySelector('a[href="/en/privacy/"]')).toHaveTextContent("Privacy policy");
+  });
+
+  it("renders a localized privacy page", () => {
+    window.history.replaceState({}, "", "/ru/privacy/");
+
+    const { getByRole, getByText } = render(<App />);
+
+    expect(getByRole("heading", { level: 1 })).toHaveTextContent("Конфиденциальность");
+    expect(getByText(/Google Analytics/)).toBeInTheDocument();
+    expect(getByText(/2\/5 Ateni Street/)).toBeInTheDocument();
+  });
+
+  it("renders a localized not-found page and keeps it out of the index", () => {
+    window.history.replaceState({}, "", "/ru/not-real/");
+
+    const { getByRole } = render(<App />);
+
+    expect(getByRole("heading", { level: 1 })).toHaveTextContent("Страница не найдена");
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute("content", "noindex, follow");
+  });
+
+  it("updates equivalent-language links for the same program", () => {
+    window.history.replaceState({}, "", "/ru/adults/ballet/");
+
+    render(<App />);
+
+    expect(document.querySelector('link[hreflang="ka"]')).toHaveAttribute(
+      "href",
+      "https://dancestudio-tela-vake.vercel.app/ka/adults/ballet/",
+    );
+    expect(document.querySelector('link[hreflang="x-default"]')).toHaveAttribute(
+      "href",
+      "https://dancestudio-tela-vake.vercel.app/en/adults/ballet/",
+    );
+  });
 });

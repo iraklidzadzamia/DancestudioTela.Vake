@@ -66,7 +66,7 @@ export interface SiteCopy {
     channels: string;
     pending: string;
   };
-  footer: { studio: string; location: string; rights: string };
+  footer: { studio: string; location: string; privacy: string; rights: string };
 }
 
 const en: SiteCopy = {
@@ -141,8 +141,8 @@ const en: SiteCopy = {
   schedule: {
     kicker: "Studio timetable",
     title: "Find your time to dance.",
-    body: "Choose a day pair to see the current working timetable. Final public class names and age groups are being confirmed.",
-    draft: "Working schedule · confirmation in progress",
+    body: "Choose a day pair to see the current timetable. Contact us before your first visit and we will recommend the most suitable group for your age, experience and goals.",
+    draft: "Current timetable · confirm your group before visiting",
     teachers: "With",
   },
   heritage: {
@@ -150,7 +150,7 @@ const en: SiteCopy = {
     title: "A dance story still moving since 1970.",
     body: "Tela’s story began in 1970. More than half a century later, that experience lives on in classes for adults and children — from Ballroom & Latin to ballet, Georgian dance, Women’s Tango and Pro-Am.",
     year: "1970",
-    note: "Archive photography and the verified studio chronology will be added here.",
+    note: "More than half a century of dance experience continues in the studio today.",
   },
   faq: {
     kicker: "Before your first step",
@@ -172,7 +172,7 @@ const en: SiteCopy = {
     channels: "Google Maps · Instagram Direct · Messenger · WhatsApp · Phone",
     pending: "",
   },
-  footer: { studio: "DanceStudio Tela, Vake", location: "Vake · Tbilisi · Georgia", rights: "All rights reserved" },
+  footer: { studio: "DanceStudio Tela, Vake", location: "2/5 Ateni Street, Vake, Tbilisi, Georgia", privacy: "Privacy policy", rights: "All rights reserved" },
 };
 
 const ka: SiteCopy = {
@@ -248,8 +248,8 @@ const ka: SiteCopy = {
   schedule: {
     kicker: "სტუდიის განრიგი",
     title: "იპოვე შენი დრო ცეკვისთვის.",
-    body: "აირჩიე დღეების წყვილი და ნახე სამუშაო განრიგი. ჯგუფების საბოლოო სახელები და ასაკები ზუსტდება.",
-    draft: "სამუშაო განრიგი · მიმდინარეობს დაზუსტება",
+    body: "აირჩიე დღეების წყვილი და ნახე მიმდინარე განრიგი. პირველ ვიზიტამდე დაგვიკავშირდი და ასაკის, გამოცდილებისა და მიზნების მიხედვით ყველაზე შესაფერის ჯგუფს გირჩევთ.",
+    draft: "მიმდინარე განრიგი · ვიზიტამდე დაადასტურე ჯგუფი",
     teachers: "პედაგოგები",
   },
   heritage: {
@@ -257,7 +257,7 @@ const ka: SiteCopy = {
     title: "1970 წლიდან ცოცხალი საცეკვაო ისტორია.",
     body: "Tela-ს ისტორია 1970 წელს დაიწყო. ნახევარ საუკუნეზე მეტი ხნის შემდეგ ეს გამოცდილება ზრდასრულებისა და ბავშვების კლასებში გრძელდება — Ballroom & Latin-იდან ბალეტამდე, ქართულ ცეკვამდე, ქალების ტანგომდე და Pro-Am-მდე.",
     year: "1970",
-    note: "აქ დაემატება საარქივო ფოტოები და სტუდიის დაზუსტებული ქრონოლოგია.",
+    note: "ნახევარ საუკუნეზე მეტი საცეკვაო გამოცდილება სტუდიაში დღესაც გრძელდება.",
   },
   faq: {
     kicker: "პირველ ნაბიჯამდე",
@@ -279,7 +279,7 @@ const ka: SiteCopy = {
     channels: "Google Maps · Instagram Direct · Messenger · WhatsApp · ტელეფონი",
     pending: "",
   },
-  footer: { studio: "სტუდია „თელა“, ვაკე", location: "ვაკე · თბილისი · საქართველო", rights: "ყველა უფლება დაცულია" },
+  footer: { studio: "სტუდია „თელა“, ვაკე", location: "ათენის ქუჩა 2/5 · ვაკე · თბილისი · საქართველო", privacy: "კონფიდენციალურობის პოლიტიკა", rights: "ყველა უფლება დაცულია" },
 };
 
 const ru: SiteCopy = {
@@ -355,8 +355,8 @@ const ru: SiteCopy = {
   schedule: {
     kicker: "Расписание студии",
     title: "Найдите своё время для танца.",
-    body: "Выберите пару дней, чтобы посмотреть рабочее расписание. Публичные названия групп и возрастные категории уточняются.",
-    draft: "Рабочее расписание · информация уточняется",
+    body: "Выберите пару дней, чтобы посмотреть актуальное расписание. Перед первым визитом свяжитесь с нами — мы порекомендуем группу с учётом возраста, опыта и целей.",
+    draft: "Актуальное расписание · подтвердите группу перед визитом",
     teachers: "Преподаватели",
   },
   heritage: {
@@ -364,7 +364,7 @@ const ru: SiteCopy = {
     title: "Танцевальная история, которая продолжается с 1970 года.",
     body: "История Tela началась в 1970 году. Спустя более полувека этот опыт продолжается в занятиях для взрослых и детей — от Ballroom & Latin до балета, грузинских танцев, Women’s Tango и Pro-Am.",
     year: "1970",
-    note: "Здесь появятся архивные фотографии и проверенная хронология студии.",
+    note: "Более полувека танцевального опыта продолжаются в студии сегодня.",
   },
   faq: {
     kicker: "Перед первым шагом",
@@ -386,7 +386,7 @@ const ru: SiteCopy = {
     channels: "Google Maps · Instagram Direct · Messenger · WhatsApp · Телефон",
     pending: "",
   },
-  footer: { studio: "Танцевальная студия «Тела», Ваке", location: "Ваке · Тбилиси · Грузия", rights: "Все права защищены" },
+  footer: { studio: "Танцевальная студия «Тела», Ваке", location: "улица Атени, 2/5 · Ваке · Тбилиси · Грузия", privacy: "Политика конфиденциальности", rights: "Все права защищены" },
 };
 
 export const siteCopy: Record<Language, SiteCopy> = { EN: en, KA: ka, RU: ru };
