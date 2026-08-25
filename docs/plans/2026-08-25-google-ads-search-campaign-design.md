@@ -35,16 +35,16 @@ advance.
 | Status while building | Paused / draft |
 | Type | Search |
 | Goal | Leads |
-| Networks | Google Search only; Search Partners off; Display off |
-| Bidding at launch | Maximize Clicks |
-| Budget | Owner-selected; use 50 GEL/day as a provisional starting point if no other number is chosen |
+| Networks | Google Search + Display Expansion; Search Partners off initially |
+| Bidding at launch | Maximize Conversions, initially using `Get directions`; add verified GA4 contact conversions when available |
+| Budget | US$25/day average daily budget |
 | Final URL expansion / text customization | Off |
 | Geography | 5 km radius around the approved Google Maps pin: `41.7099898, 44.7722754` |
 | Location option | Presence: people in or regularly in the targeted locations |
 | Languages | All languages; ad and keyword content is English/Russian at launch |
 | Ad schedule | All days initially; restrict later only from lead-quality evidence |
 | Auto-tagging | On; already verified |
-| Conversion bidding | Do not use until imported actions and real lead quality are reliable |
+| Conversion follow-up | GA4 Recent events was still empty during setup; verify contact events in Realtime/DebugView, mark them as key events, import them to Google Ads and make the intended lead actions primary when available |
 
 The radius must be visually checked in Google Ads to confirm the desired
 coverage of Vake, Saburtalo and Mtatsminda before publishing.
@@ -98,16 +98,24 @@ Phrase:
 "dance studio tela"
 "tela dance studio"
 "студия танцев tela"
+"dance classes for adults tbilisi"
+"dance classes for beginners tbilisi"
+"танцы тбилиси"
+"школа танцев тбилиси"
 ```
 
 Exact:
 
 ```text
+[dance studio tbilisi]
+[dance classes tbilisi]
 [dance studio vake]
 [dance classes vake]
 [dance studio tela]
 [танцевальная студия ваке]
+[танцы тбилиси]
 [танцы в ваке]
+[школа танцев тбилиси]
 [студия танцев tela]
 ```
 
@@ -314,6 +322,11 @@ Since 1970
 Classes Near Saburtalo
 Find Your Dance at Tela
 Book Your Free First Class
+Dance Studio in Tbilisi
+Beginner Dance Classes
+Adult Dance Classes
+Dance Classes Near You
+Choose Your Dance Style
 ```
 
 Descriptions:
