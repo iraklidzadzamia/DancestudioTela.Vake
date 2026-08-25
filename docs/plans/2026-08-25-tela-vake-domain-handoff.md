@@ -1,4 +1,4 @@
-# Передача сайта на `tela-vake.ge`
+# Передача сайта на `telavake.ge`
 
 ## Зачем была нужна эта работа
 
@@ -17,32 +17,29 @@
 - Убран SPA catch-all, из-за которого сервер отдавал одну страницу по любому URL.
 - Основной адрес сайта управляется одной переменной: `VITE_SITE_ORIGIN`.
 
-## До покупки домена
+## Текущее состояние домена
 
-- Продолжать использовать `https://dancestudio-tela-vake.vercel.app`.
-- Не ставить `tela-vake.ge` в canonical, рекламу или профили, пока домен не куплен и не подключён.
-- После публикации текущих изменений проверить живой Vercel deployment.
-- По желанию подтвердить временный Vercel URL в Search Console, но это не обязательно, если домен будет куплен скоро.
+- Домен `telavake.ge` куплен и активен до 26.08.2027.
+- В Domenebi.ge установлены собственные nameserver `ns1.vercel-dns.com` и `ns2.vercel-dns.com`.
+- `telavake.ge` и `www.telavake.ge` имеют статус Valid Configuration в Vercel.
+- `telavake.ge` подключён к Production, а `www.telavake.ge` перенаправляется на него кодом 308.
+- Публичные DNS-серверы Google и Cloudflare уже видят Vercel; локальные DNS-кэши могут обновляться позже.
 
-## После покупки `tela-vake.ge`
+## Оставшиеся действия
 
 Выполнять по порядку:
 
-1. Добавить `tela-vake.ge` и `www.tela-vake.ge` в тот же проект Vercel.
-2. У регистратора домена установить DNS-записи, которые покажет Vercel, и дождаться статуса Valid Configuration / SSL active.
-3. Сделать `tela-vake.ge` основным доменом, а `www.tela-vake.ge` перенаправлять на него.
-4. В Vercel → Project Settings → Environment Variables установить для Production:
+1. В Vercel → Project Settings → Environment Variables установить для Production, если переменная существует:
 
    ```text
-   VITE_SITE_ORIGIN=https://tela-vake.ge
+   VITE_SITE_ORIGIN=https://telavake.ge
    ```
 
-5. Выполнить новый production deploy. Не менять эту переменную до подключения домена: иначе sitemap и canonical будут вести на неработающий адрес.
-6. Проверить страницы `/en/`, `/ka/`, `/ru/`, одну программу каждого языка, `/privacy/`, `robots.txt`, `sitemap.xml` и несуществующий URL.
-7. Создать Domain property `tela-vake.ge` в Google Search Console и подтвердить её DNS TXT-записью.
-8. Отправить `https://tela-vake.ge/sitemap.xml` в Search Console и запросить индексацию `/en/`, `/ka/` и `/ru/`.
-9. Обновить Website URL в Google Business Profile, GA4 Web stream, Google Ads final URLs, Instagram и Facebook.
-10. После проверки нового домена при необходимости обновить fallback в `.env.example` и `src/site.ts`; production уже будет работать через `VITE_SITE_ORIGIN`.
+2. Выполнить новый production deploy с canonical, sitemap, robots и Open Graph на новом домене.
+3. Проверить страницы `/en/`, `/ka/`, `/ru/`, одну программу каждого языка, `/privacy/`, `robots.txt`, `sitemap.xml` и несуществующий URL.
+4. Создать Domain property `telavake.ge` в Google Search Console и подтвердить её DNS TXT-записью.
+5. Отправить `https://telavake.ge/sitemap.xml` в Search Console и запросить индексацию `/en/`, `/ka/` и `/ru/`.
+6. Обновить Website URL в Google Business Profile, GA4 Web stream, Google Ads final URLs, Instagram и Facebook.
 
 ## Google Analytics и Google Ads после появления данных
 
@@ -60,9 +57,8 @@
 ## Финальная проверка после миграции
 
 - Все основные URL возвращают `200`, неизвестный URL — `404`.
-- Canonical, Open Graph, sitemap и JSON-LD используют только `https://tela-vake.ge`.
-- `www` и HTTP перенаправляются на `https://tela-vake.ge` одним постоянным redirect.
+- Canonical, Open Graph, sitemap и JSON-LD используют только `https://telavake.ge`.
+- `www` и HTTP перенаправляются на `https://telavake.ge` одним постоянным redirect.
 - Favicon виден во вкладке браузера и в результате мобильного добавления на экран.
 - Search Console не показывает проблем с индексацией, sitemap или structured data.
 - GA4 Realtime продолжает получать события после смены домена.
-

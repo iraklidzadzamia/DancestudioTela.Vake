@@ -10,28 +10,28 @@ import {
 } from "./site";
 
 describe("site route and SEO configuration", () => {
-  it("uses the current production host until a permanent origin is configured", () => {
-    expect(DEFAULT_SITE_ORIGIN).toBe("https://dancestudio-tela-vake.vercel.app");
+  it("uses the permanent telavake.ge production origin by default", () => {
+    expect(DEFAULT_SITE_ORIGIN).toBe("https://telavake.ge");
     expect(normalizeSiteOrigin()).toBe(DEFAULT_SITE_ORIGIN);
   });
 
-  it("normalizes the future production origin and rejects unsafe protocols", () => {
-    expect(normalizeSiteOrigin("https://tela-vake.ge/")).toBe("https://tela-vake.ge");
+  it("normalizes the production origin and rejects unsafe protocols", () => {
+    expect(normalizeSiteOrigin("https://telavake.ge/")).toBe("https://telavake.ge");
     expect(normalizeSiteOrigin("http://localhost:4173///")).toBe("http://localhost:4173");
     expect(() => normalizeSiteOrigin("javascript:alert(1)")).toThrow("http or https");
   });
 
   it("builds localized canonical and equivalent-language program alternates", () => {
-    const seo = getSeoData("/ru/adults/ballet/", "https://tela-vake.ge");
+    const seo = getSeoData("/ru/adults/ballet/", "https://telavake.ge");
 
-    expect(seo.canonical).toBe("https://tela-vake.ge/ru/adults/ballet/");
+    expect(seo.canonical).toBe("https://telavake.ge/ru/adults/ballet/");
     expect(seo.title).toContain("Балет");
     expect(seo.title).toContain("Ваке");
     expect(seo.alternates).toEqual({
-      en: "https://tela-vake.ge/en/adults/ballet/",
-      ka: "https://tela-vake.ge/ka/adults/ballet/",
-      ru: "https://tela-vake.ge/ru/adults/ballet/",
-      "x-default": "https://tela-vake.ge/en/adults/ballet/",
+      en: "https://telavake.ge/en/adults/ballet/",
+      ka: "https://telavake.ge/ka/adults/ballet/",
+      ru: "https://telavake.ge/ru/adults/ballet/",
+      "x-default": "https://telavake.ge/en/adults/ballet/",
     });
   });
 
@@ -52,7 +52,7 @@ describe("site route and SEO configuration", () => {
   });
 
   it("publishes the confirmed branch address and phone in local business data", () => {
-    const jsonLd = getLocalBusinessJsonLd("https://tela-vake.ge") as {
+    const jsonLd = getLocalBusinessJsonLd("https://telavake.ge") as {
       "@type": string[];
       url: string;
       telephone: string;
@@ -67,7 +67,7 @@ describe("site route and SEO configuration", () => {
       neighborhood: "Vake",
     });
     expect(jsonLd["@type"]).toEqual(["LocalBusiness", "DanceSchool"]);
-    expect(jsonLd.url).toBe("https://tela-vake.ge/en/");
+    expect(jsonLd.url).toBe("https://telavake.ge/en/");
     expect(jsonLd.telephone).toBe("+995505051614");
     expect(jsonLd.address).toMatchObject({
       streetAddress: "2/5 Ateni Street",

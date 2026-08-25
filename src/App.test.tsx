@@ -263,11 +263,11 @@ describe("program hero media", () => {
 
     expect(document.querySelector('link[hreflang="ka"]')).toHaveAttribute(
       "href",
-      "https://dancestudio-tela-vake.vercel.app/ka/adults/ballet/",
+      "https://telavake.ge/ka/adults/ballet/",
     );
     expect(document.querySelector('link[hreflang="x-default"]')).toHaveAttribute(
       "href",
-      "https://dancestudio-tela-vake.vercel.app/en/adults/ballet/",
+      "https://telavake.ge/en/adults/ballet/",
     );
   });
 

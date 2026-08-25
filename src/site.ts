@@ -1,6 +1,6 @@
 import { siteCopy, type Language, type SiteCopy } from "./content";
 
-export const DEFAULT_SITE_ORIGIN = "https://dancestudio-tela-vake.vercel.app";
+export const DEFAULT_SITE_ORIGIN = "https://telavake.ge";
 
 export const SITE_ADDRESS = {
   streetAddress: "2/5 Ateni Street",

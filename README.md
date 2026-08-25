@@ -40,9 +40,9 @@ pnpm build
 
 The project is configured for Vercel. The production build pre-renders the `/en/`, `/ka/`, and `/ru/` language and program paths, then generates `sitemap.xml`, `robots.txt`, and `404.html`.
 
-Production: https://dancestudio-tela-vake.vercel.app
+Production: https://telavake.ge
 
-The intended permanent domain is `tela-vake.ge`. Keep the Vercel URL as `VITE_SITE_ORIGIN` until that domain is purchased and connected. The exact migration sequence and the remaining owner decisions are recorded in [`docs/plans/2026-08-25-tela-vake-domain-handoff.md`](docs/plans/2026-08-25-tela-vake-domain-handoff.md).
+The permanent domain is `telavake.ge`; `www.telavake.ge` redirects to it permanently. Keep `VITE_SITE_ORIGIN=https://telavake.ge` for production. The domain migration record and remaining external-service steps are in [`docs/plans/2026-08-25-tela-vake-domain-handoff.md`](docs/plans/2026-08-25-tela-vake-domain-handoff.md).
 
 ## Google Analytics and Google Ads measurement
 
