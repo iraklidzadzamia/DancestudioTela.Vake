@@ -19,4 +19,12 @@ describe("Georgian consent copy", () => {
     expect(getByText(/შენი თანხმობით/)).toHaveTextContent("„თელაში“");
     expect(getByRole("button", { name: "ანალიტიკის დაშვება" })).toBeInTheDocument();
   });
+
+  it("uses the approved informal Russian cookie terminology", () => {
+    const { getByRole, getByText } = render(<ConsentBanner language="RU" />);
+
+    expect(getByText("Твоя конфиденциальность — твой выбор")).toBeInTheDocument();
+    expect(getByText(/С твоего согласия/)).toHaveTextContent("студию Tela");
+    expect(getByRole("button", { name: "Разрешить аналитику" })).toBeInTheDocument();
+  });
 });

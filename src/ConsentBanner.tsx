@@ -18,11 +18,11 @@ const consentCopy: Record<Language, { title: string; body: string; accept: strin
     settings: "ქუქიების პარამეტრები",
   },
   RU: {
-    title: "Ваша конфиденциальность — ваш выбор",
-    body: "С вашего согласия Google Analytics и Google Ads помогают нам понять, какие страницы и объявления приводят людей в Tela.",
+    title: "Твоя конфиденциальность — твой выбор",
+    body: "С твоего согласия Google Analytics и Google Ads помогают нам понять, какие страницы и объявления приводят людей в студию Tela.",
     accept: "Разрешить аналитику",
     necessary: "Только необходимые",
-    settings: "Настройки cookies",
+    settings: "Настройки файлов cookie",
   },
 };
 

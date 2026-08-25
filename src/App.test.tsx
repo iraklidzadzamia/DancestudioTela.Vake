@@ -233,7 +233,7 @@ describe("program hero media", () => {
 
     expect(getByRole("heading", { level: 1 })).toHaveTextContent("Конфиденциальность");
     expect(getByText(/Google Analytics/)).toBeInTheDocument();
-    expect(getByText(/2\/5 Ateni Street/)).toBeInTheDocument();
+    expect(getByText(/По вопросам работы сайта.*улица Атени, 2\/5/)).toBeInTheDocument();
   });
 
   it("renders a localized not-found page and keeps it out of the index", () => {
@@ -279,5 +279,30 @@ describe("program hero media", () => {
     expect(container).toHaveTextContent("კონფიდენციალურობა „თელაში“");
     expect(container).toHaveTextContent("სტუდია „თელას“ ვებსაიტი");
     expect(container).toHaveTextContent("Google Analytics და Google Ads მხოლოდ ანალიტიკურ ქუქიებზე თანხმობის შემდეგ იტვირთება.");
+  });
+
+  it("renders the approved informal Russian interface and booking copy", () => {
+    window.history.replaceState({}, "", "/ru/");
+
+    const { container } = render(<App />);
+    expect(container).toHaveTextContent("Для кого ты ищешь занятия?");
+    expect(container).toHaveTextContent("Женское танго");
+    expect(container).toHaveTextContent("Сила, музыкальность и свобода самовыражения.");
+
+    fireEvent.click(container.querySelector(".hero-actions .button-secondary")!);
+    const dialog = container.querySelector<HTMLDialogElement>(".booking-dialog")!;
+    expect(dialog).toHaveTextContent("Выбери, как тебе удобнее записаться.");
+    expect(dialog).toHaveTextContent("Открой личный чат в привычном мессенджере.");
+  });
+
+  it("renders the approved Russian privacy copy", () => {
+    window.history.replaceState({}, "", "/ru/privacy/");
+
+    const { container } = render(<App />);
+    expect(container).toHaveTextContent("Конфиденциальность в студии Tela");
+    expect(container).toHaveTextContent("что измеряется при использовании сайта студии Tela");
+    expect(container).toHaveTextContent("аналитические файлы cookie");
+    expect(container).toHaveTextContent("Кнопка карты открывает Google Maps");
+    expect(container).toHaveTextContent("улица Атени, 2/5, Ваке, Тбилиси, Грузия");
   });
 });
