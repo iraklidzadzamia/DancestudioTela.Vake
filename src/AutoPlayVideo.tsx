@@ -27,7 +27,7 @@ export function AutoPlayVideo({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
-  const [pageVisible, setPageVisible] = useState(!document.hidden);
+  const [pageVisible, setPageVisible] = useState(() => typeof document === "undefined" || !document.hidden);
   const { hasPresentedFrame, revealAfterFirstFrame } = useFirstVideoFrame();
   const posterSrc = `/media/sections/${base}-poster.webp`;
 

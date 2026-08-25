@@ -9,7 +9,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && pnpm build:client && pnpm build:ssr && node scripts/prerender.mjs",
+    "build:client": "vite build",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir .seo-ssr",
     "preview": "vite preview",
     "test": "vitest run"
   },
