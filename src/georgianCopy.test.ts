@@ -36,8 +36,8 @@ describe("native Georgian editorial copy", () => {
     expect(copy.faq.items[4].answer).toContain("გარკვეული მიმართულებების შესაძლებლობაა");
   });
 
-  it("uses Georgian brand forms in prose but keeps standalone brand labels", () => {
-    expect(copy.hero.eyebrow).toContain("TELA");
+  it("uses Georgian brand forms in prose but keeps the remaining standalone brand labels", () => {
+    expect(copy.hero.eyebrow).toBe("1970 წლიდან · ვაკე, თბილისი");
     expect(copy.intro.kicker).toContain("Tela");
     expect(copy.hero.body).toContain("„თელა“");
     expect(copy.intro.body).toContain("„თელას“");

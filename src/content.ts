@@ -81,7 +81,7 @@ const en: SiteCopy = {
   ],
   bookShort: "Book",
   hero: {
-    eyebrow: "TELA · SINCE 1970 · VAKE, TBILISI",
+    eyebrow: "SINCE 1970 · VAKE, TBILISI",
     title: "Find your",
     accent: "way to dance.",
     body: "Since 1970, Tela has helped adults and children discover dance. Today in Vake, we teach Ballroom & Latin, ballet, Georgian dance and Women’s Tango.",
@@ -188,7 +188,7 @@ const ka: SiteCopy = {
   ],
   bookShort: "ჩაწერა",
   hero: {
-    eyebrow: "TELA · 1970 წლიდან · ვაკე, თბილისი",
+    eyebrow: "1970 წლიდან · ვაკე, თბილისი",
     title: "იპოვე შენი",
     accent: "ცეკვა.",
     body: "1970 წლიდან „თელა“ ზრდასრულებსა და ბავშვებს ცეკვის აღმოჩენაში ეხმარება. დღეს ვაკეში ვასწავლით Ballroom & Latin-ს, ბალეტს, ქართულ ცეკვასა და ქალთა ტანგოს.",
@@ -295,7 +295,7 @@ const ru: SiteCopy = {
   ],
   bookShort: "Запись",
   hero: {
-    eyebrow: "TELA · С 1970 ГОДА · ВАКЕ, ТБИЛИСИ",
+    eyebrow: "С 1970 ГОДА · ВАКЕ, ТБИЛИСИ",
     title: "Найди свой",
     accent: "танец.",
     body: "С 1970 года студия Tela помогает взрослым и детям открывать для себя мир танца. Сегодня в Ваке мы преподаём Ballroom & Latin, балет, грузинские танцы и женское танго.",
