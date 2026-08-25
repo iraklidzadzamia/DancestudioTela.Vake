@@ -25,7 +25,7 @@ Temporarily hide WhatsApp from every actionable contact surface while keeping it
 ## Testing and verification
 
 - Add a failing test that requires WhatsApp to be absent from all three rendered contact surfaces while the other channels remain.
-- Add a source-level regression assertion that the analytics event mapping and WhatsApp URL generation remain present.
+- Add regression assertions for WhatsApp URL generation and the preserved click handlers, plus a runtime GA4 test proving a restored WhatsApp click still emits `contact_whatsapp` with its parameters.
 - Add a CSS regression assertion for the small mobile language-label correction and unchanged touch-target dimensions.
 - Run the focused tests, full test suite, production build, and `git diff --check`.
 - Verify the local and published UI in a real browser before completion.

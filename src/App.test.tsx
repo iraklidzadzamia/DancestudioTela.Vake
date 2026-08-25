@@ -191,7 +191,7 @@ describe("program hero media", () => {
     expect(play).toHaveBeenCalledTimes(2);
   });
 
-  it("connects the hero icons to directions and every approved direct conversation", () => {
+  it("connects the hero icons to active contact channels without WhatsApp", () => {
     window.history.replaceState({}, "", "/en/");
 
     const { container } = render(<App />);
@@ -201,12 +201,12 @@ describe("program hero media", () => {
       "https://maps.app.goo.gl/5v5F8D6VXWXjL9tk7",
       "https://ig.me/m/dancestudiotela.vake",
       "https://m.me/Dancestudiotelavake",
-      expect.stringContaining("https://wa.me/995505051614?text="),
     ]);
     expect(container.querySelector('.hero-meta-icons [aria-label="Messenger"]')).toBeInTheDocument();
+    expect(container.querySelector('.hero-meta-icons [aria-label="WhatsApp"]')).not.toBeInTheDocument();
   });
 
-  it("opens booking choices in place with WhatsApp, Instagram Direct and phone", () => {
+  it("opens booking choices in place without WhatsApp", () => {
     window.history.replaceState({}, "", "/ru/");
 
     const { container } = render(<App />);
@@ -217,15 +217,25 @@ describe("program hero media", () => {
     expect(dialog).toHaveAttribute("open");
     expect(document.body).toHaveClass("booking-open");
     expect(options.map((option) => option.getAttribute("href"))).toEqual([
-      expect.stringContaining("https://wa.me/995505051614?text="),
       "https://ig.me/m/dancestudiotela.vake",
       "https://m.me/Dancestudiotelavake",
       "tel:+995505051614",
     ]);
     expect(dialog.textContent).toContain("Messenger");
+    expect(dialog.textContent).not.toContain("WhatsApp");
 
     fireEvent.click(dialog.querySelector(".booking-close")!);
     expect(dialog).not.toHaveAttribute("open");
+  });
+
+  it("keeps WhatsApp out of the contact section while it is unavailable", () => {
+    window.history.replaceState({}, "", "/en/");
+
+    const { container } = render(<App />);
+    const links = Array.from(container.querySelectorAll<HTMLAnchorElement>(".contact-channels a"));
+
+    expect(links.some((link) => link.href.includes("wa.me"))).toBe(false);
+    expect(container.querySelector('.contact-channels [aria-label="WhatsApp"]')).not.toBeInTheDocument();
   });
 
   it("shows the confirmed address and a localized privacy link", () => {

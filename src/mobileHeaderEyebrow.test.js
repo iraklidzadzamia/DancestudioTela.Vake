@@ -32,7 +32,7 @@ describe("mobile header and eyebrow layout", () => {
       /\.brand-type \{[^}]*align-self: flex-end;[^}]*margin-bottom: 0\.4rem;/,
     );
     expect(mobileCss).toMatch(
-      /\.language-switcher button \{[^}]*padding-block: 0 0\.4rem;/,
+      /\.language-switcher button \{[^}]*padding-block: 0 0\.46rem;/,
     );
     expect(css).not.toMatch(/\.brand-type \{[^}]*transform:/);
   });

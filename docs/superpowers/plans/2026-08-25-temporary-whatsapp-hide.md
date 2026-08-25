@@ -23,7 +23,7 @@
 **Files:**
 - Modify: `src/contacts.ts:22-26`
 - Modify: `src/App.test.tsx:194-230`
-- Create: `src/contactAvailability.test.ts`
+- Create: `src/contactAvailability.test.js`
 
 **Interfaces:**
 - Consumes: `ContactChannel`, `contactHref`, the three channel arrays, and `trackContactIntent`
@@ -31,13 +31,12 @@
 
 - [ ] **Step 1: Write the failing availability and UI tests**
 
-Create `src/contactAvailability.test.ts`:
+Create `src/contactAvailability.test.js`:
 
 ```ts
 import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  WHATSAPP_ENABLED,
   bookingContactChannels,
   contactHref,
   heroContactChannels,
@@ -45,8 +44,14 @@ import {
 } from "./contacts";
 
 describe("temporary WhatsApp availability", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
+
   it("hides WhatsApp from rendered channel lists without deleting its integration", () => {
-    expect(WHATSAPP_ENABLED).toBe(false);
+    const contacts = readFileSync("src/contacts.ts", "utf8");
+    expect(contacts).toContain("export const WHATSAPP_ENABLED = false;");
     expect(heroContactChannels).not.toContain("WhatsApp");
     expect(bookingContactChannels).not.toContain("WhatsApp");
     expect(sectionContactChannels).not.toContain("WhatsApp");
@@ -61,6 +66,26 @@ describe("temporary WhatsApp availability", () => {
     expect(app).toMatch(/trackContactIntent\(channel, "booking_modal", language/);
     expect(app).toMatch(/trackContactIntent\(channel, "contact_section", language\)/);
   });
+
+  it("still maps a restored WhatsApp click to the existing GA4 event", async () => {
+    vi.resetModules();
+    vi.stubEnv("VITE_GA_MEASUREMENT_ID", "G-TEST");
+    window.history.replaceState({}, "", "/en/");
+    const gtag = vi.fn();
+    window.gtag = gtag;
+
+    const { trackContactIntent } = await import("./analytics");
+    trackContactIntent("WhatsApp", "booking_modal", "RU", "hero");
+
+    expect(gtag).toHaveBeenCalledWith("event", "contact_whatsapp", {
+      contact_channel: "whatsapp",
+      placement: "booking_modal",
+      booking_source: "hero",
+      page_path: "/en/",
+      language: "ru",
+      transport_type: "beacon",
+    });
+  });
 });
 ```
 
@@ -71,7 +96,7 @@ Update the existing hero and booking assertions in `src/App.test.tsx` to expect 
 Run:
 
 ```bash
-pnpm test src/contactAvailability.test.ts src/App.test.tsx
+pnpm test src/contactAvailability.test.js src/App.test.tsx
 ```
 
 Expected: FAIL because `WHATSAPP_ENABLED` does not exist and all three channel arrays still contain WhatsApp.
@@ -97,7 +122,7 @@ Do not edit `contactHref`, `trackContactIntent`, `contactEventNames`, or the exi
 Run:
 
 ```bash
-pnpm test src/contactAvailability.test.ts src/App.test.tsx
+pnpm test src/contactAvailability.test.js src/App.test.tsx
 ```
 
 Expected: PASS with WhatsApp absent from rendered UI and the integration guards intact.
@@ -180,7 +205,7 @@ Expected: all tests pass, the production build exits 0, and the diff check print
 - [ ] **Step 3: Commit and publish**
 
 ```bash
-git add src/contacts.ts src/App.test.tsx src/contactAvailability.test.ts src/mobileHeaderEyebrow.test.js src/styles.css
+git add src/contacts.ts src/App.test.tsx src/contactAvailability.test.js src/mobileHeaderEyebrow.test.js src/styles.css
 git commit -m "Temporarily hide WhatsApp contact actions"
 git push origin main
 ```

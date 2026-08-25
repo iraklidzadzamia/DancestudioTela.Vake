@@ -633,7 +633,7 @@ body.booking-open { overflow: hidden; }
   .hero .header { padding-inline: 1rem; background: transparent; }
   .header-cta { display: none; }
   .logo-header { width: 52px; }
-  .language-switcher button { display: grid; align-items: end; justify-items: center; padding-block: 0 0.4rem; line-height: 1; }
+  .language-switcher button { display: grid; align-items: end; justify-items: center; padding-block: 0 0.46rem; line-height: 1; }
   .hero { --hero-split: 0; --hero-media-width: 100vw; }
   .hero-video::after { display: none; }
   .hero-video video { height: 100%; inset: 0; object-fit: cover; object-position: center; }

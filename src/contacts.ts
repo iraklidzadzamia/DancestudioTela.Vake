@@ -20,10 +20,13 @@ const whatsappMessages: Record<Language, string> = {
   RU: "Здравствуйте! Хочу записаться на первый бесплатный урок.",
 };
 
+export const WHATSAPP_ENABLED = false;
+
 const optionalFacebook: ContactChannel[] = facebookMessenger ? ["Facebook"] : [];
-export const heroContactChannels: ContactChannel[] = ["Google Maps", "Instagram", ...optionalFacebook, "WhatsApp"];
-export const bookingContactChannels: ContactChannel[] = ["WhatsApp", "Instagram", ...optionalFacebook, "Phone"];
-export const sectionContactChannels: ContactChannel[] = ["Google Maps", "Instagram", ...optionalFacebook, "WhatsApp", "Phone"];
+const optionalWhatsApp: ContactChannel[] = WHATSAPP_ENABLED ? ["WhatsApp"] : [];
+export const heroContactChannels: ContactChannel[] = ["Google Maps", "Instagram", ...optionalFacebook, ...optionalWhatsApp];
+export const bookingContactChannels: ContactChannel[] = [...optionalWhatsApp, "Instagram", ...optionalFacebook, "Phone"];
+export const sectionContactChannels: ContactChannel[] = ["Google Maps", "Instagram", ...optionalFacebook, ...optionalWhatsApp, "Phone"];
 
 function optionalPublicUrl(value: string | undefined) {
   if (!value) return undefined;
