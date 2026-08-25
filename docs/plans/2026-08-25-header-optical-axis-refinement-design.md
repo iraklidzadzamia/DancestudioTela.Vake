@@ -11,7 +11,7 @@ Refine the header typography without moving or resizing the dancer mark:
 
 - Keep the dancer mark in its current position and at its current size.
 - Keep the header, navigation, language switcher, and booking control in their current positions.
-- Independently centre the wordmark within the mark-height brand container so its visual text axis matches `Programs / Pro-Am / Schedule / Our Story`.
+- Independently raise the wordmark by `0.4rem` so its visible text centre matches `Programs / Pro-Am / Schedule / Our Story`.
 - Do not move the whole brand group and do not use a transform.
 
 ## Approved mobile treatment
@@ -24,14 +24,14 @@ Refine the header typography without moving or resizing the dancer mark:
 
 ## Responsive behaviour
 
-- Desktop and tablet widths above the mobile breakpoint use the navigation-axis wordmark alignment.
-- At `820px` and below, switch to the smaller, controlled upward offset instead of full centring.
+- All widths use the same controlled `0.4rem` wordmark offset; this keeps the visible desktop text axis aligned with the navigation and gives the approved mobile lift.
+- At `820px` and below, apply the same `0.4rem` optical offset inside each language button while leaving its touch target fixed.
 - The existing mark widths at `52px`, `46px`, and `42px` remain unchanged.
 - No language-specific offsets are introduced.
 
 ## Verification
 
-- On desktop, compare the vertical centre of the wordmark with the main navigation text.
+- On desktop, compare the vertical centre of the wordmark with the visible main-navigation link text, not the zero-height navigation anchor.
 - On mobile, confirm the mark does not move while the wordmark and language labels rise together by roughly `6–8px`.
 - Verify at 360, 390, and 430 CSS pixels, plus a representative desktop viewport.
 - Confirm all language buttons retain their existing hit areas and language switching still works.

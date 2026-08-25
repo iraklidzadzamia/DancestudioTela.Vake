@@ -4,7 +4,7 @@
 
 **Goal:** Keep the dancer mark fixed while aligning the desktop wordmark with the navigation and raising the mobile wordmark and language labels by about 6–8px.
 
-**Architecture:** Preserve the existing header markup and use cross-axis alignment inside the current brand and language-button boxes. The logo remains the size-defining child, the desktop wordmark centres independently, and the mobile breakpoint replaces that centring with equal `0.4rem` optical offsets for the wordmark and visible language labels.
+**Architecture:** Preserve the existing header markup and use optical offsets inside the current brand and language-button boxes. The logo remains the size-defining child, the wordmark keeps its lower-edge alignment and rises by `0.4rem` at every width, and the mobile breakpoint applies the same `0.4rem` offset only to the visible language labels inside their fixed touch targets.
 
 **Tech Stack:** React 19, TypeScript, CSS, Vitest, Vite
 
@@ -28,7 +28,7 @@
 
 **Interfaces:**
 - Consumes: `.brand`, `.brand-type`, `.logo-header`, and `.language-switcher button`
-- Produces: a centred desktop wordmark and matching `0.4rem` mobile text offsets without changing element hit boxes
+- Produces: a `0.4rem` wordmark lift and matching mobile language-label lift without changing the logo or element hit boxes
 
 - [ ] **Step 1: Write the failing CSS regression test**
 
@@ -42,8 +42,7 @@ const desktopHeaderCss = css.slice(
 
 it("keeps the mark fixed while independently aligning header text", () => {
   expect(desktopHeaderCss).toMatch(/\.brand \{[^}]*align-items: flex-end;/);
-  expect(desktopHeaderCss).toMatch(/\.brand-type \{[^}]*align-self: center;/);
-  expect(mobileCss).toMatch(
+  expect(desktopHeaderCss).toMatch(
     /\.brand-type \{[^}]*align-self: flex-end;[^}]*margin-bottom: 0\.4rem;/,
   );
   expect(mobileCss).toMatch(
@@ -57,15 +56,16 @@ it("keeps the mark fixed while independently aligning header text", () => {
 
 Run: `pnpm test src/mobileHeaderEyebrow.test.js`
 
-Expected: FAIL because `.brand-type` has no independent desktop/mobile alignment and the language label has no `0.4rem` bottom padding.
+Expected: FAIL because `.brand-type` has no independent optical offset and the language label has no `0.4rem` bottom padding.
 
 - [ ] **Step 3: Implement the minimal CSS alignment**
 
-Add `align-self: center` to the existing base wordmark rule while leaving the brand and logo rules unchanged:
+Keep the wordmark flex-end aligned and add the measured `0.4rem` optical offset while leaving the brand and logo rules unchanged:
 
 ```css
 .brand-type {
-  align-self: center;
+  align-self: flex-end;
+  margin-bottom: 0.4rem;
   color: rgba(255, 255, 255, 0.92);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.34rem;
@@ -77,10 +77,9 @@ Add `align-self: center` to the existing base wordmark rule while leaving the br
 }
 ```
 
-At `max-width: 820px`, override only the wordmark and label interiors:
+At `max-width: 820px`, adjust only the language-label interiors:
 
 ```css
-.brand-type { align-self: flex-end; margin-bottom: 0.4rem; }
 .language-switcher button {
   display: grid;
   align-items: end;
@@ -111,7 +110,7 @@ Expected: PASS.
 Run the site at `1280x832` and measure the current homepage header before and after the CSS change. Confirm:
 
 - the logo rectangle has the same `top`, `bottom`, and `width` as the baseline measurement;
-- the vertical-centre difference between `.brand-type` and `.desktop-nav` is at most `1px`;
+- the vertical-centre difference between `.brand-type` and an actual `.desktop-nav a` link is at most `1px`;
 - the main navigation, language switcher, and booking button rectangles do not move.
 
 - [ ] **Step 2: Measure representative mobile viewports**

@@ -3,6 +3,10 @@ import { describe, expect, it } from "vitest";
 
 const content = readFileSync("src/content.ts", "utf8");
 const css = readFileSync("src/styles.css", "utf8");
+const desktopHeaderCss = css.slice(
+  css.indexOf(".brand {"),
+  css.indexOf(".desktop-nav {"),
+);
 const mobileCss = css.slice(
   css.indexOf("@media (max-width: 820px)"),
   css.indexOf("@media (max-width: 520px)"),
@@ -22,6 +26,17 @@ describe("multilingual hero eyebrow", () => {
 });
 
 describe("mobile header and eyebrow layout", () => {
+  it("keeps the mark fixed while independently aligning header text", () => {
+    expect(desktopHeaderCss).toMatch(/\.brand \{[^}]*align-items: flex-end;/);
+    expect(desktopHeaderCss).toMatch(
+      /\.brand-type \{[^}]*align-self: flex-end;[^}]*margin-bottom: 0\.4rem;/,
+    );
+    expect(mobileCss).toMatch(
+      /\.language-switcher button \{[^}]*padding-block: 0 0\.4rem;/,
+    );
+    expect(css).not.toMatch(/\.brand-type \{[^}]*transform:/);
+  });
+
   it("bottom-aligns the header content without shrinking the mark", () => {
     expect(mobileCss).toMatch(/\.header \{[^}]*align-items: end;/);
     expect(mobileCss).toMatch(
