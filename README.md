@@ -44,6 +44,10 @@ Production: https://dancestudio-tela-vake.vercel.app
 
 ## Google Analytics and Google Ads measurement
 
+The current verified tracking state, approved advertising decisions, and exact
+resume sequence for another computer or agent are in
+[`docs/plans/2026-08-25-google-ads-search-launch-strategy.md`](docs/plans/2026-08-25-google-ads-search-launch-strategy.md).
+
 Copy `.env.example` to `.env.local` for local testing, or add the same public values to the Vercel project environment:
 
 - `VITE_GA_MEASUREMENT_ID`: optional GA4 web stream override. Production defaults to Tela's `G-YZREYM9M7W` stream.
@@ -61,7 +65,7 @@ Measurement events:
 - `section_view`: emitted when a visitor reaches the main homepage sections.
 - `generate_lead`: reserved for a future successfully submitted website form or confirmed lead.
 
-Recommended Google Ads setup: link GA4 to Google Ads, enable auto-tagging, and import the five high-intent contact events as separate Primary conversion actions. Keep `booking_modal_open`, `page_view`, `scroll_depth`, and `section_view` Secondary. Create event-scoped GA4 custom dimensions for `placement`, `booking_source`, `contact_channel`, `section_name`, and `language`; page path remains available as a standard dimension. Because page views and scroll depth are sent manually, disable browser-history page views and Scrolls in GA4 Enhanced Measurement to avoid duplicate events.
+Recommended Google Ads setup: link GA4 to Google Ads, enable auto-tagging, and import the five high-intent contact events as separate conversion actions. Keep `booking_modal_open`, `page_view`, `scroll_depth`, and `section_view` as diagnostic-only events. Choose Primary versus Secondary contact actions deliberately after checking which channels produce qualified conversations and enrollments. `placement` and `booking_source` are registered as event-scoped GA4 custom dimensions; page path remains available as a standard dimension. Because page views and scroll depth are sent manually, disable browser-history page views and Scrolls in GA4 Enhanced Measurement to avoid duplicate events.
 
 ## Content
 
